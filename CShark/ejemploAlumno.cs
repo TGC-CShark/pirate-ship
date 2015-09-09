@@ -7,6 +7,7 @@ using Microsoft.DirectX.Direct3D;
 using System.Drawing;
 using Microsoft.DirectX;
 using TgcViewer.Utils.Modifiers;
+using TgcViewer.Utils.TgcGeometry;
 
 namespace AlumnoEjemplos.CShark
 {
@@ -16,6 +17,9 @@ namespace AlumnoEjemplos.CShark
     public class EjemploAlumno : TgcExample
     {
         Ship ship;
+        MainCamera mainCamera;
+        TgcBox boxRef;
+
         /// <summary>
         /// Categoría a la que pertenece el ejemplo.
         /// Influye en donde se va a haber en el árbol de la derecha de la pantalla.
@@ -81,11 +85,7 @@ namespace AlumnoEjemplos.CShark
 
 
 
-            ///////////////CONFIGURAR CAMARA ROTACIONAL//////////////////
-            //Es la camara que viene por default, asi que no hace falta hacerlo siempre
-            GuiController.Instance.RotCamera.Enable = true;
-            //Configurar centro al que se mira y distancia desde la que se mira
-            GuiController.Instance.RotCamera.setCamera(new Vector3(0, 0, 0), 100);
+            
 
 
             /*
@@ -127,6 +127,13 @@ namespace AlumnoEjemplos.CShark
             
             Vector3 shipPos = new Vector3(0, 0, 0);
             ship = new Ship(shipPos);
+            mainCamera = new MainCamera(ship);
+
+            //CAJA REFERENCIA DE PRUEBA
+            Vector3 positionRef = new Vector3(20, 0, 20);
+            Vector3 sizeRef = new Vector3(15, 40, 15);
+            Color colorRef = Color.Green;
+            boxRef = TgcBox.fromSize(positionRef, sizeRef, colorRef);
 
         }
 
@@ -167,14 +174,17 @@ namespace AlumnoEjemplos.CShark
             {
                 //Boton izq apretado
             }
+
             update(elapsedTime);
             ship.renderizar();
+            boxRef.render();
 
         }
 
         private void update(float elapsedTime)
         {
             ship.actualizar(elapsedTime);
+            mainCamera.actualizar(elapsedTime);
         }
 
         /// <summary>
@@ -184,6 +194,7 @@ namespace AlumnoEjemplos.CShark
         public override void close()
         {
             ship.dispose();
+            boxRef.dispose();
         }
 
     }

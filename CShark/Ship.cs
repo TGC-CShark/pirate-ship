@@ -14,16 +14,17 @@ namespace AlumnoEjemplos.CShark
     class Ship
     {
             TgcBox box;
-            Vector3 position;
+            public Vector3 position { get; set; }
             Vector3 size;
             float movementSpeed=50;
             Vector3 movement;
+         
 
             public Ship(Vector3 pos)
             {
-                position = pos;
-                Vector3 size = new Vector3(10, 10, 10);
-                Color color = Color.Red;
+                this.position = pos;
+                Vector3 size = new Vector3(15, 10, 30);
+                Color color = Color.Brown;
                 box = TgcBox.fromSize(position, size, color);
                 
             }
@@ -37,6 +38,7 @@ namespace AlumnoEjemplos.CShark
                movement = InputHandler.getMovement();
                movement *= movementSpeed * elapsedTime;
                box.move(movement);
+               position = box.BoundingBox.Position;
            }
 
 
