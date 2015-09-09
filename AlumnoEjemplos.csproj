@@ -87,7 +87,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MiGrupo\EjemploAlumno.cs" />
+    <Compile Include="CShark\EjemploAlumno.cs" />
+    <Compile Include="CShark\InputHandler.cs" />
+    <Compile Include="CShark\Ship.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
