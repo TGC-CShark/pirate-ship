@@ -60,7 +60,7 @@ namespace AlumnoEjemplos.CShark
             //Carpeta de archivos Media del alumno
             string alumnoMediaFolder = GuiController.Instance.AlumnoEjemplosMediaDir;
 
-
+            /*
             ///////////////USER VARS//////////////////
 
             //Crear una UserVar
@@ -84,7 +84,7 @@ namespace AlumnoEjemplos.CShark
             GuiController.Instance.Modifiers.addVertex3f("valorVertice", new Vector3(-100, -100, -100), new Vector3(50, 50, 50), new Vector3(0, 0, 0));
 
 
-
+            */
             
 
 
@@ -99,7 +99,7 @@ namespace AlumnoEjemplos.CShark
             */
 
 
-
+            /*
             ///////////////LISTAS EN C#//////////////////
             //crear
             List<string> lista = new List<string>();
@@ -123,7 +123,7 @@ namespace AlumnoEjemplos.CShark
             {
                 string element = lista[i];
             }
-
+            */
             
             Vector3 shipPos = new Vector3(0, 0, 0);
             ship = new Ship(shipPos);
@@ -134,7 +134,7 @@ namespace AlumnoEjemplos.CShark
             Vector3 sizeRef = new Vector3(15, 40, 15);
             Color colorRef = Color.Green;
             boxRef = TgcBox.fromSize(positionRef, sizeRef, colorRef);
-
+            
         }
 
 
@@ -149,7 +149,7 @@ namespace AlumnoEjemplos.CShark
             //Device de DirectX para renderizar
             Device d3dDevice = GuiController.Instance.D3dDevice;
 
-
+            /*
             //Obtener valor de UserVar (hay que castear)
             int valor = (int)GuiController.Instance.UserVars.getValue("variablePrueba");
 
@@ -158,6 +158,7 @@ namespace AlumnoEjemplos.CShark
             float valorFloat = (float)GuiController.Instance.Modifiers["valorFloat"];
             string opcionElegida = (string)GuiController.Instance.Modifiers["valorIntervalo"];
             Vector3 valorVertice = (Vector3)GuiController.Instance.Modifiers["valorVertice"];
+            */
 
 
             ///////////////INPUT//////////////////
