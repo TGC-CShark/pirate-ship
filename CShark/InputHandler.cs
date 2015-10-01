@@ -17,14 +17,14 @@ namespace AlumnoEjemplos.CShark
 
             Vector3 movement = new Vector3(0, 0, 0);
 
-               if (input.keyDown(Key.Left) || input.keyDown(Key.A))
+              /* if (input.keyDown(Key.Left) || input.keyDown(Key.A))
                {
                    movement.X = 1;
                }
                else if (input.keyDown(Key.Right) || input.keyDown(Key.D))
                {
                    movement.X = -1;
-               }
+               }*/
                if (input.keyDown(Key.Up) || input.keyDown(Key.W))
                {
                    movement.Z = -1;

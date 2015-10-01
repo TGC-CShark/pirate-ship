@@ -18,18 +18,21 @@ namespace AlumnoEjemplos.CShark
             Vector3 size;
             float movementSpeed=50;
             Vector3 movement;
-         
+            static TgcD3dInput input = GuiController.Instance.D3dInput;
+            const float ROTATION_SPEED = 1f;
 
-            public Ship(Vector3 pos)
+
+        public Ship(Vector3 pos)
             {
                 this.position = pos;
                 Vector3 size = new Vector3(15, 10, 30);
-                Color color = Color.Brown;
+                Color color = Color.Beige;
                 box = TgcBox.fromSize(position, size, color);
                 
             }
 
-            public void renderizar(){
+
+        public void renderizar(){
                 box.render();
             }
 
@@ -38,7 +41,15 @@ namespace AlumnoEjemplos.CShark
                movement = InputHandler.getMovement();
                movement *= movementSpeed * elapsedTime;
                box.move(movement);
-               position = box.BoundingBox.Position;
+                if (input.keyDown(Key.Left) || input.keyDown(Key.A))
+                {
+                    box.rotateY(ROTATION_SPEED * elapsedTime);
+                }
+                else if (input.keyDown(Key.Right) || input.keyDown(Key.D))
+                {
+                    box.rotateY(-ROTATION_SPEED * elapsedTime);
+                }
+            position = box.BoundingBox.Position;
            }
 
 
