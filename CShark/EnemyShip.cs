@@ -22,7 +22,10 @@ namespace AlumnoEjemplos.CShark
         public void actualizar(float elapsedTime)
         {
             //por el momento lo dejo vacio
-            
+            traslacion = Matrix.Translation(movX, 0, movZ);
+
+            mesh.Transform = traslacion;
+            //canion.meshCanion.Transform = traslacion;
         }
     }
 }

@@ -19,6 +19,10 @@ namespace AlumnoEjemplos.CShark
     {
         Ship ship;
         EnemyShip shipContrincante;
+
+        Vector3 POS_SHIP = new Vector3(0, 0, 0); //Constante
+        Vector3 POS_CONTRINCANTE = new Vector3(100, 0, 0); //Constante
+
         MainCamera mainCamera;
         TgcViewer.Utils.TgcSceneLoader.TgcMesh meshShip;
         TgcViewer.Utils.TgcSceneLoader.TgcMesh meshShipContrincante;
@@ -84,8 +88,8 @@ namespace AlumnoEjemplos.CShark
 
 
             //Creaciones
-            shipContrincante = new EnemyShip(new Vector3(70, 0, 50), meshShipContrincante, new Canion(new Vector3(70, 0, 50), meshCanion));
-            ship = new Ship(new Vector3(0, 0, 0), meshShip, new Canion(new Vector3(0, 0, 0), meshCanionContrincante));
+            shipContrincante = new EnemyShip(POS_CONTRINCANTE, meshShipContrincante, new Canion(new Vector3(70, 0, 50), meshCanion));
+            ship = new Ship(POS_SHIP, meshShip, new Canion(new Vector3(0, 0, 0), meshCanionContrincante));
                     
 
             mainCamera = new MainCamera(ship);

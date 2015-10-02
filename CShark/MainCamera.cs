@@ -11,6 +11,9 @@ namespace AlumnoEjemplos.CShark
     {
         Ship ship;
 
+        const float ALTURA = 200;
+        const float DISTANCIA = 400;
+
         public MainCamera(Ship newShip)
         {
             this.ship = newShip;
@@ -19,7 +22,7 @@ namespace AlumnoEjemplos.CShark
              GuiController.Instance.ThirdPersonCamera.Enable = true;
             
             //Configurar centro al que se mira y distancia desde la que se mira
-            GuiController.Instance.ThirdPersonCamera.setCamera(ship.mesh.Position, 200, 400);
+            GuiController.Instance.ThirdPersonCamera.setCamera(ship.mesh.Position, ALTURA, DISTANCIA);
             
 
         }

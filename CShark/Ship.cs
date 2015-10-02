@@ -25,11 +25,11 @@ namespace AlumnoEjemplos.CShark
         const float movementSpeed = 0.25f;
 
         float anguloRotacion = 0f;
-        float movX;// = 0f;
-        float movY;// = 0f;
+        public float movZ;// = 0f;
+        public float movX;// = 0f;
 
         Matrix rotacion = Matrix.Identity;
-        Matrix traslacion;// = Matrix.Identity;
+        public Matrix traslacion;// = Matrix.Identity;
 
         private Canion canion;
 
@@ -43,8 +43,8 @@ namespace AlumnoEjemplos.CShark
             this.mesh = mesh;
             this.mesh.Position = pos;
 
+            movZ = pos.Z;
             movX = pos.X;
-            movY = pos.Y;
             traslacion = Matrix.Translation(pos);
 
             this.mesh.AutoTransformEnable = false;
@@ -79,16 +79,16 @@ namespace AlumnoEjemplos.CShark
 
             if (input.keyDown(Key.Up) || input.keyDown(Key.W))
             {
-                movX -= Convert.ToSingle(movementSpeed * Math.Cos(anguloRotacion));
-                movY -= Convert.ToSingle(movementSpeed * Math.Sin(anguloRotacion));
-                traslacion = Matrix.Translation(movY, 0, movX);
+                movZ -= Convert.ToSingle(movementSpeed * Math.Cos(anguloRotacion));
+                movX -= Convert.ToSingle(movementSpeed * Math.Sin(anguloRotacion));
+                traslacion = Matrix.Translation(movX, 0, movZ);
             }
 
             else if (input.keyDown(Key.Down) || input.keyDown(Key.S))
             {
-                movX += Convert.ToSingle(movementSpeed * Math.Cos(anguloRotacion));
-                movY += Convert.ToSingle(movementSpeed * Math.Sin(anguloRotacion));
-                traslacion = Matrix.Translation(movY, 0, movX);
+                movZ += Convert.ToSingle(movementSpeed * Math.Cos(anguloRotacion));
+                movX += Convert.ToSingle(movementSpeed * Math.Sin(anguloRotacion));
+                traslacion = Matrix.Translation(movX, 0, movZ);
             }
 
             Matrix transformacion = rotacion * traslacion;
