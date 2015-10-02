@@ -17,7 +17,7 @@ namespace AlumnoEjemplos.CShark
     public class EjemploAlumno : TgcExample
     {
         Ship ship;
-        Ship shipContrincante;
+        EnemyShip shipContrincante;
         MainCamera mainCamera;
         TgcViewer.Utils.TgcSceneLoader.TgcMesh meshShip;
         TgcViewer.Utils.TgcSceneLoader.TgcMesh meshShipContrincante;
@@ -79,7 +79,7 @@ namespace AlumnoEjemplos.CShark
             Vector3 shipPos = new Vector3(0, 0, 0);
             ship = new Ship(shipPos, meshShip);
             Vector3 shipContrincantePos = new Vector3(70, 0, 0);
-            shipContrincante = new Ship(shipContrincantePos, meshShipContrincante);
+            shipContrincante = new EnemyShip(shipContrincantePos, meshShipContrincante);
 
             mainCamera = new MainCamera(ship);
 
@@ -108,7 +108,7 @@ namespace AlumnoEjemplos.CShark
         {
             ship.actualizar(elapsedTime);
             mainCamera.actualizar(elapsedTime);
-            //shipContrincante.actualizar(elapsedTime);
+            shipContrincante.actualizar(elapsedTime);
         }
 
         /// <summary>

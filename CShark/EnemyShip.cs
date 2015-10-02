@@ -14,19 +14,15 @@ namespace AlumnoEjemplos.CShark
 {
     class EnemyShip : Ship
     {
-        public EnemyShip(Vector3 pos, TgcMesh mesh)
+        public EnemyShip(Vector3 pos, TgcMesh mesh) : base(pos, mesh)
         {
-            this.position = pos;
-            Vector3 size = new Vector3(15, 10, 30);
-            this.mesh = mesh;
-            this.mesh.Position = pos;
-
-
+           
         }
 
         public void actualizar(float elapsedTime)
         {
             //por el momento lo dejo vacio
+            
         }
     }
 }
