@@ -120,7 +120,7 @@ namespace AlumnoEjemplos.CShark
         {
             ship.actualizar(elapsedTime);
             shipContrincante.actualizar(elapsedTime);
-            mainCamera.actualizar(ship.position);
+            mainCamera.actualizar(ship.getPosition());
         }
 
         /// <summary>

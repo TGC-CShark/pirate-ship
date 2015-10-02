@@ -16,7 +16,7 @@ namespace AlumnoEjemplos.CShark
     class Ship
     {
         public TgcViewer.Utils.TgcSceneLoader.TgcMesh mesh;
-        public Vector3 position { get; set; }
+        //public Vector3 position { get; set; }
         Vector3 size;
         Vector3 movement;
         static TgcD3dInput input = GuiController.Instance.D3dInput;
@@ -26,6 +26,7 @@ namespace AlumnoEjemplos.CShark
 
         float anguloRotacion = 0f;
         public float movZ;// = 0f;
+        public float movY;
         public float movX;// = 0f;
 
         Matrix rotacion = Matrix.Identity;
@@ -38,12 +39,13 @@ namespace AlumnoEjemplos.CShark
       
         public Ship(Vector3 pos, TgcMesh mesh, Canion canion)
         {
-            this.position = pos;
+            //this.position = pos;
             Vector3 size = new Vector3(15, 10, 30);
             this.mesh = mesh;
             this.mesh.Position = pos;
 
             movZ = pos.Z;
+            movY = pos.Y;
             movX = pos.X;
             traslacion = Matrix.Translation(pos);
 
@@ -51,6 +53,12 @@ namespace AlumnoEjemplos.CShark
 
             this.canion = canion;
             
+        }
+
+        public Vector3 getPosition()
+        {
+            Vector3 pos = new Vector3(movX, movY, movZ);
+            return pos;
         }
 
 
