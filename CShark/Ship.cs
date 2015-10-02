@@ -14,7 +14,6 @@ namespace AlumnoEjemplos.CShark
 {
     class Ship
     {
-            TgcBox box;
             public TgcViewer.Utils.TgcSceneLoader.TgcMesh mesh;
             public Vector3 position { get; set; }
             Vector3 size;
@@ -29,15 +28,14 @@ namespace AlumnoEjemplos.CShark
                 this.position = pos;
                 Vector3 size = new Vector3(15, 10, 30);
                 this.mesh = mesh;
-                /*Color color = Color.Beige;
-                box = TgcBox.fromSize(position, size, color);*/
+                this.mesh.Position = pos;
+
                
         }
 
 
         public void renderizar(){
-            //box.render();
-            mesh.render();
+               mesh.render();
             }
 
            public void actualizar(float elapsedTime){
@@ -46,20 +44,20 @@ namespace AlumnoEjemplos.CShark
             if (input.keyDown(Key.Left) || input.keyDown(Key.A))
                 {
                 mesh.rotateY(ROTATION_SPEED * elapsedTime);
-                //box.rotateY(ROTATION_SPEED * elapsedTime);
+              
             }
                 else if (input.keyDown(Key.Right) || input.keyDown(Key.D))
                 {
                 mesh.rotateY(-ROTATION_SPEED * elapsedTime);
-                //box.rotateY(-ROTATION_SPEED * elapsedTime);
+              
             }
             position = mesh.BoundingBox.Position;
-            //position = box.BoundingBox.Position;
+           
 
             movement = InputHandler.getMovement();
             movement *= movementSpeed * elapsedTime;
             mesh.move(movement);
-            //box.move(movement);
+           
 
         }
 
@@ -67,7 +65,7 @@ namespace AlumnoEjemplos.CShark
 
            internal void dispose()
            {
-            //box.dispose();
+            
             mesh.dispose();
            }
     }

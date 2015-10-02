@@ -17,9 +17,10 @@ namespace AlumnoEjemplos.CShark
     public class EjemploAlumno : TgcExample
     {
         Ship ship;
+        Ship shipContrincante;
         MainCamera mainCamera;
-        TgcBox boxRef;
         TgcViewer.Utils.TgcSceneLoader.TgcMesh meshShip;
+        TgcViewer.Utils.TgcSceneLoader.TgcMesh meshShipContrincante;
 
         /// <summary>
         /// Categoría a la que pertenece el ejemplo.
@@ -61,82 +62,26 @@ namespace AlumnoEjemplos.CShark
             //Carpeta de archivos Media del alumno
             string alumnoMediaFolder = GuiController.Instance.AlumnoEjemplosMediaDir;
 
+            //Cargar meshes
             TgcViewer.Utils.TgcSceneLoader.TgcSceneLoader loader = new TgcViewer.Utils.TgcSceneLoader.TgcSceneLoader();
             TgcViewer.Utils.TgcSceneLoader.TgcScene scene = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Vehiculos\\Canoa\\Canoa-TgcScene.xml");
 
             meshShip = scene.Meshes[0];
+            meshShip.setColor(Color.Chocolate);
 
-            ///////////////USER VARS//////////////////
+            scene = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Vehiculos\\Canoa\\Canoa-TgcScene.xml");
 
-            //Crear una UserVar
-            GuiController.Instance.UserVars.addVar("variablePrueba");
-
-            //Cargar valor en UserVar
-            GuiController.Instance.UserVars.setValue("variablePrueba", 5451);
+            meshShipContrincante = scene.Meshes[0];
+            meshShipContrincante.setColor(Color.BlueViolet);
 
 
-
-            ///////////////MODIFIERS//////////////////
-
-            //Crear un modifier para un valor FLOAT
-            GuiController.Instance.Modifiers.addFloat("valorFloat", -50f, 200f, 0f);
-
-            //Crear un modifier para un ComboBox con opciones
-            string[] opciones = new string[] { "opcion1", "opcion2", "opcion3" };
-            GuiController.Instance.Modifiers.addInterval("valorIntervalo", opciones, 0);
-
-            //Crear un modifier para modificar un vértice
-            GuiController.Instance.Modifiers.addVertex3f("valorVertice", new Vector3(-100, -100, -100), new Vector3(50, 50, 50), new Vector3(0, 0, 0));
-
-
-
-
-            /*
-            ///////////////CONFIGURAR CAMARA PRIMERA PERSONA//////////////////
-            //Camara en primera persona, tipo videojuego FPS
-            //Solo puede haber una camara habilitada a la vez. Al habilitar la camara FPS se deshabilita la camara rotacional
-            //Por default la camara FPS viene desactivada
-            GuiController.Instance.FpsCamera.Enable = true;
-            //Configurar posicion y hacia donde se mira
-            GuiController.Instance.FpsCamera.setCamera(new Vector3(0, 0, -20), new Vector3(0, 0, 0));
-            */
-
-
-
-            ///////////////LISTAS EN C#//////////////////
-            //crear
-            List<string> lista = new List<string>();
-
-            //agregar elementos
-            lista.Add("elemento1");
-            lista.Add("elemento2");
-
-            //obtener elementos
-            string elemento1 = lista[0];
-
-            //bucle foreach
-            foreach (string elemento in lista)
-            {
-                //Loggear por consola del Framework
-                GuiController.Instance.Logger.log(elemento);
-            }
-
-            //bucle for
-            for (int i = 0; i < lista.Count; i++)
-            {
-                string element = lista[i];
-            }
-
-            
+            //Creaciones
             Vector3 shipPos = new Vector3(0, 0, 0);
             ship = new Ship(shipPos, meshShip);
-            mainCamera = new MainCamera(ship);
+            Vector3 shipContrincantePos = new Vector3(70, 0, 0);
+            shipContrincante = new Ship(shipContrincantePos, meshShipContrincante);
 
-            //CAJA REFERENCIA DE PRUEBA
-            Vector3 positionRef = new Vector3(20, 0, 20);
-            Vector3 sizeRef = new Vector3(15, 40, 15);
-            Color colorRef = Color.Green;
-            boxRef = TgcBox.fromSize(positionRef, sizeRef, colorRef);
+            mainCamera = new MainCamera(ship);
 
         }
 
@@ -152,35 +97,10 @@ namespace AlumnoEjemplos.CShark
             //Device de DirectX para renderizar
             Device d3dDevice = GuiController.Instance.D3dDevice;
 
-
-            //Obtener valor de UserVar (hay que castear)
-            int valor = (int)GuiController.Instance.UserVars.getValue("variablePrueba");
-
-
-            //Obtener valores de Modifiers
-            float valorFloat = (float)GuiController.Instance.Modifiers["valorFloat"];
-            string opcionElegida = (string)GuiController.Instance.Modifiers["valorIntervalo"];
-            Vector3 valorVertice = (Vector3)GuiController.Instance.Modifiers["valorVertice"];
-
-
-            ///////////////INPUT//////////////////
-            //conviene deshabilitar ambas camaras para que no haya interferencia
-
-            //Capturar Input teclado 
-            if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.F))
-            {
-                //Tecla F apretada
-            }
-
-            //Capturar Input Mouse
-            if (GuiController.Instance.D3dInput.buttonPressed(TgcViewer.Utils.Input.TgcD3dInput.MouseButtons.BUTTON_LEFT))
-            {
-                //Boton izq apretado
-            }
-
             update(elapsedTime);
             ship.renderizar();
-            boxRef.render();
+            shipContrincante.renderizar();
+
 
         }
 
@@ -188,6 +108,7 @@ namespace AlumnoEjemplos.CShark
         {
             ship.actualizar(elapsedTime);
             mainCamera.actualizar(elapsedTime);
+            //shipContrincante.actualizar(elapsedTime);
         }
 
         /// <summary>
@@ -197,7 +118,8 @@ namespace AlumnoEjemplos.CShark
         public override void close()
         {
             ship.dispose();
-            boxRef.dispose();
+            shipContrincante.dispose();
+
         }
 
     }
