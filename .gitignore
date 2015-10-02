@@ -28,3 +28,6 @@
 *.exe
 *.out
 *.app
+
+*.csproj
+*.csproj.user
