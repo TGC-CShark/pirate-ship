@@ -101,7 +101,7 @@ namespace AlumnoEjemplos.CShark
             ship.renderizar();
             shipContrincante.renderizar();
 
-
+            d3dDevice.Transform.World = Matrix.Identity;
         }
 
         private void update(float elapsedTime)
