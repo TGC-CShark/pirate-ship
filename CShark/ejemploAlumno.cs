@@ -8,6 +8,7 @@ using System.Drawing;
 using Microsoft.DirectX;
 using TgcViewer.Utils.Modifiers;
 using TgcViewer.Utils.TgcGeometry;
+using TgcViewer.Utils.TgcSceneLoader;
 
 namespace AlumnoEjemplos.CShark
 {
@@ -21,6 +22,8 @@ namespace AlumnoEjemplos.CShark
         MainCamera mainCamera;
         TgcViewer.Utils.TgcSceneLoader.TgcMesh meshShip;
         TgcViewer.Utils.TgcSceneLoader.TgcMesh meshShipContrincante;
+        TgcViewer.Utils.TgcSceneLoader.TgcMesh meshCanion;
+        TgcViewer.Utils.TgcSceneLoader.TgcMesh meshCanionContrincante;
 
         /// <summary>
         /// Categoría a la que pertenece el ejemplo.
@@ -74,12 +77,16 @@ namespace AlumnoEjemplos.CShark
             meshShipContrincante = scene.Meshes[0];
             meshShipContrincante.setColor(Color.BlueViolet);
 
+            scene = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Armas\\Canon\\Canon.max-TgcScene.xml");
+
+            meshCanion =  scene.Meshes[0];
+            meshCanionContrincante = scene.Meshes[0];
+
 
             //Creaciones
-            Vector3 shipPos = new Vector3(0, 0, 0);
-            ship = new Ship(shipPos, meshShip);
-            Vector3 shipContrincantePos = new Vector3(70, 0, 0);
-            shipContrincante = new EnemyShip(shipContrincantePos, meshShipContrincante);
+            shipContrincante = new EnemyShip(new Vector3(70, 0, 50), meshShipContrincante, new Canion(new Vector3(0, 0, 0), meshCanion));
+            ship = new Ship(new Vector3(0, 0, 0), meshShip, new Canion(new Vector3(0, 0, 0), meshCanionContrincante));
+                    
 
             mainCamera = new MainCamera(ship);
 
@@ -98,17 +105,18 @@ namespace AlumnoEjemplos.CShark
             Device d3dDevice = GuiController.Instance.D3dDevice;
 
             update(elapsedTime);
-            ship.renderizar();
+             ship.renderizar();
             shipContrincante.renderizar();
 
+      
             d3dDevice.Transform.World = Matrix.Identity;
         }
 
         private void update(float elapsedTime)
         {
             ship.actualizar(elapsedTime);
-            mainCamera.actualizar(elapsedTime);
             shipContrincante.actualizar(elapsedTime);
+            mainCamera.actualizar(ship.position);
         }
 
         /// <summary>

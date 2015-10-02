@@ -14,10 +14,10 @@ namespace AlumnoEjemplos.CShark
 {
     class EnemyShip : Ship
     {
-        public EnemyShip(Vector3 pos, TgcMesh mesh) : base(pos, mesh)
-        {
-           
-        }
+        
+
+        public EnemyShip(Vector3 pos, TgcMesh mesh, Canion canion) : base(pos, mesh, canion) { nombre = "EnemyShip"; }
+
 
         public void actualizar(float elapsedTime)
         {
