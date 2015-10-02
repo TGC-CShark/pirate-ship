@@ -25,6 +25,8 @@ namespace AlumnoEjemplos.CShark
 
             }
             currentBullet = balas.First();
+
+            mesh.AutoTransformEnable = false;
         }
 
         public void render()

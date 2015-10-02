@@ -25,11 +25,11 @@ namespace AlumnoEjemplos.CShark
         const float movementSpeed = 0.25f;
 
         float anguloRotacion = 0f;
-        float movX = 0f;
-        float movY = 0f;
+        float movX;// = 0f;
+        float movY;// = 0f;
 
         Matrix rotacion = Matrix.Identity;
-        Matrix traslacion = Matrix.Identity;
+        Matrix traslacion;// = Matrix.Identity;
 
         private Canion canion;
 
@@ -45,6 +45,7 @@ namespace AlumnoEjemplos.CShark
 
             movX = pos.X;
             movY = pos.Y;
+            traslacion = Matrix.Translation(pos);
 
             this.mesh.AutoTransformEnable = false;
 
@@ -67,10 +68,8 @@ namespace AlumnoEjemplos.CShark
             {
                 anguloRotacion -= elapsedTime * ROTATION_SPEED;
                 rotacion = Matrix.RotationY(anguloRotacion);
-
-
-
             }
+
             else if (input.keyDown(Key.Right) || input.keyDown(Key.D))
             {
                 anguloRotacion += elapsedTime * ROTATION_SPEED;
@@ -84,19 +83,18 @@ namespace AlumnoEjemplos.CShark
                 movY -= Convert.ToSingle(movementSpeed * Math.Sin(anguloRotacion));
                 traslacion = Matrix.Translation(movY, 0, movX);
             }
+
             else if (input.keyDown(Key.Down) || input.keyDown(Key.S))
             {
                 movX += Convert.ToSingle(movementSpeed * Math.Cos(anguloRotacion));
                 movY += Convert.ToSingle(movementSpeed * Math.Sin(anguloRotacion));
                 traslacion = Matrix.Translation(movY, 0, movX);
-
             }
 
             Matrix transformacion = rotacion * traslacion;
 
             mesh.Transform = transformacion;
             canion.meshCanion.Transform = transformacion;
-
 
         }
 
@@ -105,7 +103,7 @@ namespace AlumnoEjemplos.CShark
         {
 
             mesh.dispose();
-           
+            canion.dispose();
         }
     }
 }

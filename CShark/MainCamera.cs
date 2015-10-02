@@ -19,7 +19,7 @@ namespace AlumnoEjemplos.CShark
              GuiController.Instance.ThirdPersonCamera.Enable = true;
             
             //Configurar centro al que se mira y distancia desde la que se mira
-            GuiController.Instance.ThirdPersonCamera.setCamera(ship.mesh.Position, 200, -400);
+            GuiController.Instance.ThirdPersonCamera.setCamera(ship.mesh.Position, 200, 400);
             
 
         }
@@ -27,8 +27,8 @@ namespace AlumnoEjemplos.CShark
         private void setShip(Ship newShip) {}
 
         public void actualizar(Vector3 pos){
-            GuiController.Instance.ThirdPersonCamera.updateCamera();
             GuiController.Instance.ThirdPersonCamera.Target = pos;
+            GuiController.Instance.ThirdPersonCamera.updateCamera();
    
         }
     }

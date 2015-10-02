@@ -84,7 +84,7 @@ namespace AlumnoEjemplos.CShark
 
 
             //Creaciones
-            shipContrincante = new EnemyShip(new Vector3(70, 0, 50), meshShipContrincante, new Canion(new Vector3(0, 0, 0), meshCanion));
+            shipContrincante = new EnemyShip(new Vector3(70, 0, 50), meshShipContrincante, new Canion(new Vector3(70, 0, 50), meshCanion));
             ship = new Ship(new Vector3(0, 0, 0), meshShip, new Canion(new Vector3(0, 0, 0), meshCanionContrincante));
                     
 

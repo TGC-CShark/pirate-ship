@@ -87,7 +87,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CShark\Bala.cs" />
+    <Compile Include="CShark\Canion.cs" />
     <Compile Include="CShark\EjemploAlumno.cs" />
+    <Compile Include="CShark\EnemyShip.cs" />
     <Compile Include="CShark\InputHandler.cs" />
     <Compile Include="CShark\MainCamera.cs" />
     <Compile Include="CShark\Ship.cs" />
