@@ -19,6 +19,7 @@ namespace AlumnoEjemplos.CShark
         Ship ship;
         MainCamera mainCamera;
         TgcBox boxRef;
+        TgcViewer.Utils.TgcSceneLoader.TgcMesh meshShip;
 
         /// <summary>
         /// Categoría a la que pertenece el ejemplo.
@@ -60,6 +61,10 @@ namespace AlumnoEjemplos.CShark
             //Carpeta de archivos Media del alumno
             string alumnoMediaFolder = GuiController.Instance.AlumnoEjemplosMediaDir;
 
+            TgcViewer.Utils.TgcSceneLoader.TgcSceneLoader loader = new TgcViewer.Utils.TgcSceneLoader.TgcSceneLoader();
+            TgcViewer.Utils.TgcSceneLoader.TgcScene scene = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Vehiculos\\Canoa\\Canoa-TgcScene.xml");
+
+            meshShip = scene.Meshes[0];
 
             ///////////////USER VARS//////////////////
 
@@ -77,15 +82,13 @@ namespace AlumnoEjemplos.CShark
             GuiController.Instance.Modifiers.addFloat("valorFloat", -50f, 200f, 0f);
 
             //Crear un modifier para un ComboBox con opciones
-            string[] opciones = new string[]{"opcion1", "opcion2", "opcion3"};
+            string[] opciones = new string[] { "opcion1", "opcion2", "opcion3" };
             GuiController.Instance.Modifiers.addInterval("valorIntervalo", opciones, 0);
 
             //Crear un modifier para modificar un vértice
             GuiController.Instance.Modifiers.addVertex3f("valorVertice", new Vector3(-100, -100, -100), new Vector3(50, 50, 50), new Vector3(0, 0, 0));
 
 
-
-            
 
 
             /*
@@ -126,7 +129,7 @@ namespace AlumnoEjemplos.CShark
 
             
             Vector3 shipPos = new Vector3(0, 0, 0);
-            ship = new Ship(shipPos);
+            ship = new Ship(shipPos, meshShip);
             mainCamera = new MainCamera(ship);
 
             //CAJA REFERENCIA DE PRUEBA

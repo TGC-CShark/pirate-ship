@@ -29,7 +29,8 @@ namespace AlumnoEjemplos.CShark
 
         private void apuntarCamara()
         {
-            GuiController.Instance.RotCamera.setCamera(ship.position, 100);
+            //GuiController.Instance.RotCamera.setCamera(ship.position, 100);
+            GuiController.Instance.RotCamera.targetObject(ship.mesh.BoundingBox);
         }
     }
 }
