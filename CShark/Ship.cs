@@ -22,8 +22,8 @@ namespace AlumnoEjemplos.CShark
         static TgcD3dInput input = GuiController.Instance.D3dInput;
 
         const float ROTATION_SPEED = 1f;
-        const float VEL_MAXIMA = 0.5f;
-        const float ESCALON_VEL = 0.0002f;
+        const float VEL_MAXIMA = 100f;
+        const float ESCALON_VEL = 0.4f;
         float movementSpeed;
 
         float anguloRotacion = 0f;
@@ -98,14 +98,16 @@ namespace AlumnoEjemplos.CShark
                 movementSpeed = Math.Max(movementSpeed - ESCALON_VEL, 0);
             }
 
-            movZ -= Convert.ToSingle(movementSpeed * Math.Cos(anguloRotacion));
-            movX -= Convert.ToSingle(movementSpeed * Math.Sin(anguloRotacion));
+            movZ -= Convert.ToSingle(movementSpeed * Math.Cos(anguloRotacion) * elapsedTime);
+            movX -= Convert.ToSingle(movementSpeed * Math.Sin(anguloRotacion) * elapsedTime);
             traslacion = Matrix.Translation(movX, 0, movZ);
 
             Matrix transformacion = rotacion * traslacion;
 
             mesh.Transform = transformacion;
             canion.meshCanion.Transform = transformacion;
+
+            canion.actualizar(anguloRotacion,elapsedTime, getPosition());
 
         }
 

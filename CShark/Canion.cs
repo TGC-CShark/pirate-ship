@@ -1,8 +1,11 @@
 ﻿using Microsoft.DirectX;
+using Microsoft.DirectX.DirectInput;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using TgcViewer;
+using TgcViewer.Utils.Input;
 using TgcViewer.Utils.TgcSceneLoader;
 
 namespace AlumnoEjemplos.CShark
@@ -12,13 +15,19 @@ namespace AlumnoEjemplos.CShark
         public TgcMesh meshCanion;
         private List<Bala> balas = new List<Bala>();
         private Bala currentBullet;
+        public int cantBalas = 50;
+        static TgcD3dInput input = GuiController.Instance.D3dInput;
+        public float anguloRotacion;
+
+        public Vector3 posicion;
 
         public Canion(Vector3 pos, TgcMesh mesh)
         {
             meshCanion = mesh;
             meshCanion.Position = pos;
+            posicion = pos;
 
-            for (int i = 0; i < 50; i++)
+            for (int i = 0; i < cantBalas; i++)
             {
                 Bala bullet = new Bala(pos);
                 this.balas.Add(bullet);
@@ -27,6 +36,16 @@ namespace AlumnoEjemplos.CShark
             currentBullet = balas.First();
 
             mesh.AutoTransformEnable = false;
+        }
+
+        public void shoot(float elapsedTime, float anguloRotacion)
+        {
+            currentBullet.bullet.Position = posicion;
+            currentBullet.posicion = posicion;
+            currentBullet.visible = true;
+            currentBullet.anguloRotacion = anguloRotacion;
+            
+            currentBullet = balas.ElementAt(balas.IndexOf(currentBullet)+1); 
         }
 
         public void render()
@@ -50,8 +69,23 @@ namespace AlumnoEjemplos.CShark
             }
         }
 
+        internal void actualizar(float anguloRotacion, float elapsedTime, Vector3 pos)
+        {
+            this.anguloRotacion = anguloRotacion;
+            posicion = pos;
 
+            if (input.keyPressed(Key.Space))
+            {
+                shoot(elapsedTime, anguloRotacion);
+            }
 
-
+            foreach (Bala bala in balas)
+            {
+                if (bala.visible)
+                {
+                    bala.dispararParabolico(elapsedTime);
+                }
+            }
+        }
     }
 }
