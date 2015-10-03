@@ -17,7 +17,9 @@ namespace AlumnoEjemplos.CShark
         private Bala currentBullet;
         public int cantBalas = 50;
         static TgcD3dInput input = GuiController.Instance.D3dInput;
+
         public float anguloRotacion;
+        public float anguloElevacion = 45;
 
         public Vector3 posicion;
 
@@ -44,6 +46,8 @@ namespace AlumnoEjemplos.CShark
             currentBullet.posicion = posicion;
             currentBullet.visible = true;
             currentBullet.anguloRotacion = anguloRotacion;
+            currentBullet.anguloElevacion = anguloElevacion;
+            currentBullet.verticalSpeed = currentBullet.verticalInitialSpeed;
             
             currentBullet = balas.ElementAt(balas.IndexOf(currentBullet)+1); 
         }

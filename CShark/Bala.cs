@@ -14,9 +14,11 @@ namespace AlumnoEjemplos.CShark
         public bool visible = false;
 
         const float linearSpeed = 400;
-        float verticalSpeed;
-        float verticalAcceleration;
+        public float verticalSpeed;
+        public float verticalInitialSpeed = 300;
+        float verticalAcceleration = 100f;
         public float anguloRotacion;
+        public float anguloElevacion;
 
         const float RADIO = 4f;
 
@@ -47,8 +49,11 @@ namespace AlumnoEjemplos.CShark
 
         internal void dispararParabolico(float elapsedTime)
         {
-            posicion.X -= Convert.ToSingle(linearSpeed * Math.Sin(anguloRotacion) * elapsedTime);
-            posicion.Z -= Convert.ToSingle(linearSpeed * Math.Cos(anguloRotacion) * elapsedTime);
+            posicion.X -= Convert.ToSingle(linearSpeed * Math.Sin(anguloRotacion) * Math.Cos(anguloElevacion) * elapsedTime);
+            posicion.Z -= Convert.ToSingle(linearSpeed * Math.Cos(anguloRotacion) * Math.Cos(anguloElevacion) * elapsedTime);
+
+            verticalSpeed -= verticalAcceleration * elapsedTime;
+            posicion.Y += Convert.ToSingle(verticalSpeed * Math.Sin(anguloElevacion) * elapsedTime);
 
             bullet.Transform = Matrix.Scaling(RADIO * 2, RADIO * 2, RADIO * 2) * Matrix.Translation(posicion);
             bullet.updateValues();
