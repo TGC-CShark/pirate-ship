@@ -22,15 +22,17 @@ namespace AlumnoEjemplos.CShark
         static TgcD3dInput input = GuiController.Instance.D3dInput;
 
         const float ROTATION_SPEED = 1f;
-        const float movementSpeed = 0.25f;
+        const float VEL_MAXIMA = 0.5f;
+        const float ESCALON_VEL = 0.0002f;
+        float movementSpeed;
 
         float anguloRotacion = 0f;
-        public float movZ;// = 0f;
+        public float movZ;
         public float movY;
-        public float movX;// = 0f;
+        public float movX;
 
         Matrix rotacion = Matrix.Identity;
-        public Matrix traslacion;// = Matrix.Identity;
+        public Matrix traslacion;
 
         private Canion canion;
 
@@ -39,7 +41,6 @@ namespace AlumnoEjemplos.CShark
       
         public Ship(Vector3 pos, TgcMesh mesh, Canion canion)
         {
-            //this.position = pos;
             Vector3 size = new Vector3(15, 10, 30);
             this.mesh = mesh;
             this.mesh.Position = pos;
@@ -48,6 +49,8 @@ namespace AlumnoEjemplos.CShark
             movY = pos.Y;
             movX = pos.X;
             traslacion = Matrix.Translation(pos);
+
+            movementSpeed = 0f;
 
             this.mesh.AutoTransformEnable = false;
 
@@ -87,17 +90,17 @@ namespace AlumnoEjemplos.CShark
 
             if (input.keyDown(Key.Up) || input.keyDown(Key.W))
             {
-                movZ -= Convert.ToSingle(movementSpeed * Math.Cos(anguloRotacion));
-                movX -= Convert.ToSingle(movementSpeed * Math.Sin(anguloRotacion));
-                traslacion = Matrix.Translation(movX, 0, movZ);
+                movementSpeed = Math.Min(movementSpeed + ESCALON_VEL, VEL_MAXIMA);   
             }
 
             else if (input.keyDown(Key.Down) || input.keyDown(Key.S))
             {
-                movZ += Convert.ToSingle(movementSpeed * Math.Cos(anguloRotacion));
-                movX += Convert.ToSingle(movementSpeed * Math.Sin(anguloRotacion));
-                traslacion = Matrix.Translation(movX, 0, movZ);
+                movementSpeed = Math.Max(movementSpeed - ESCALON_VEL, 0);
             }
+
+            movZ -= Convert.ToSingle(movementSpeed * Math.Cos(anguloRotacion));
+            movX -= Convert.ToSingle(movementSpeed * Math.Sin(anguloRotacion));
+            traslacion = Matrix.Translation(movX, 0, movZ);
 
             Matrix transformacion = rotacion * traslacion;
 
