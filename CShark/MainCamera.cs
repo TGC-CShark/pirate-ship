@@ -11,8 +11,8 @@ namespace AlumnoEjemplos.CShark
     {
         Ship ship;
 
-        const float ALTURA = 300;
-        const float DISTANCIA = 400;
+        const float ALTURA = 500;
+        const float DISTANCIA = 1000;
 
         public MainCamera(Ship newShip)
         {

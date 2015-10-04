@@ -22,7 +22,7 @@ namespace AlumnoEjemplos.CShark
         static TgcD3dInput input = GuiController.Instance.D3dInput;
 
         const float ROTATION_SPEED = 1f;
-        const float VEL_MAXIMA = 100f;
+        const float VEL_MAXIMA = 500f;
         const float ESCALON_VEL = 0.4f;
         float movementSpeed;
 
