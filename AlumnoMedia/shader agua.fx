@@ -25,6 +25,7 @@ sampler2D diffuseMap = sampler_state
 };
 
 float time = 0;
+float transparency = 0.7;
 
 
 /**************************************************************************************/
@@ -86,7 +87,9 @@ float4 ps_main( float2 Texcoord: TEXCOORD0, float4 Color:COLOR0) : COLOR0
 	float4 fvBaseColor = tex2D( diffuseMap, Texcoord );
 	// combino color y textura
 	// en este ejemplo combino un 80% el color de la textura y un 20%el del vertice
-	return (0.8*fvBaseColor + 0.2*Color) - (128,0,0,0);
+	float4 retorno = 0.8*fvBaseColor + 0.2*Color;
+	retorno.a = transparency;
+	return retorno;
 }
 
 
@@ -95,6 +98,9 @@ technique RenderScene
 {
    pass Pass_0
    {
+		AlphaBlendEnable = TRUE;
+        DestBlend = INVSRCALPHA;
+        SrcBlend = SRCALPHA;
 	  VertexShader = compile vs_2_0 vs_main();
 	  PixelShader = compile ps_2_0 ps_main();
    }

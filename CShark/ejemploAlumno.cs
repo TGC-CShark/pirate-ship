@@ -159,9 +159,6 @@ namespace AlumnoEjemplos.CShark
             //Device device = GuiController.Instance.D3dDevice;
             time += elapsedTime;
             d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.DarkSlateBlue, 1.0f, 0);
-            // Cargar variables de shader, por ejemplo el tiempo transcurrido.
-            effect.SetValue("time", time);
-            agua.render();
 
             update(elapsedTime);
             ship.renderizar();
@@ -170,6 +167,10 @@ namespace AlumnoEjemplos.CShark
             terrain.render();
 
             skyBox.render();
+
+            // Cargar variables de shader, por ejemplo el tiempo transcurrido.
+            effect.SetValue("time", time);
+            agua.render();
 
             d3dDevice.Transform.World = Matrix.Identity;
         }
