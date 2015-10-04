@@ -9,6 +9,7 @@ using Microsoft.DirectX;
 using TgcViewer.Utils.Modifiers;
 using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.TgcSceneLoader;
+using TgcViewer.Utils.Terrain;
 
 namespace AlumnoEjemplos.CShark
 {
@@ -28,6 +29,14 @@ namespace AlumnoEjemplos.CShark
         TgcViewer.Utils.TgcSceneLoader.TgcMesh meshShipContrincante;
         TgcViewer.Utils.TgcSceneLoader.TgcMesh meshCanion;
         TgcViewer.Utils.TgcSceneLoader.TgcMesh meshCanionContrincante;
+
+        //TERRENO
+        TgcSimpleTerrain terrain;
+        string currentHeightmap;
+        string currentTexture;
+        float currentScaleXZ = 20f;
+        float currentScaleY = 1.3f;
+        private TgcSkyBox skyBox;
 
         /// <summary>
         /// Categoría a la que pertenece el ejemplo.
@@ -68,6 +77,28 @@ namespace AlumnoEjemplos.CShark
 
             //Carpeta de archivos Media del alumno
             string alumnoMediaFolder = GuiController.Instance.AlumnoEjemplosMediaDir;
+
+            //TERRENO
+            currentHeightmap = GuiController.Instance.ExamplesMediaDir + "Heighmaps\\" + "Heightmap3.jpg";
+            currentTexture = GuiController.Instance.ExamplesMediaDir + "Heighmaps\\" + "TerrainTexture3.jpg";
+
+            terrain = new TgcSimpleTerrain();
+            terrain.loadHeightmap(currentHeightmap, currentScaleXZ, currentScaleY, new Vector3(0, -50, 0));
+            terrain.loadTexture(currentTexture);
+
+            // Crear SkyBox:
+            skyBox = new TgcSkyBox();
+            skyBox.Center = new Vector3(0, 0, 0);
+            skyBox.Size = new Vector3(8000, 8000, 8000);
+            string texturesPath = GuiController.Instance.ExamplesMediaDir + "Texturas\\Quake\\SkyBox1\\";
+            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Up, texturesPath + "phobos_up.jpg");
+            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Down, texturesPath + "phobos_dn.jpg");
+            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Left, texturesPath + "phobos_lf.jpg");
+            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Right, texturesPath + "phobos_rt.jpg");
+            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Front, texturesPath + "phobos_bk.jpg");
+            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Back, texturesPath + "phobos_ft.jpg");
+            skyBox.SkyEpsilon = 50f;
+            skyBox.updateValues();
 
             //Cargar meshes
             TgcViewer.Utils.TgcSceneLoader.TgcSceneLoader loader = new TgcViewer.Utils.TgcSceneLoader.TgcSceneLoader();
@@ -112,7 +143,9 @@ namespace AlumnoEjemplos.CShark
              ship.renderizar();
             shipContrincante.renderizar();
 
-      
+            terrain.render();
+            skyBox.render();
+
             d3dDevice.Transform.World = Matrix.Identity;
         }
 
@@ -131,7 +164,7 @@ namespace AlumnoEjemplos.CShark
         {
             ship.dispose();
             shipContrincante.dispose();
-
+            terrain.dispose();
         }
 
     }

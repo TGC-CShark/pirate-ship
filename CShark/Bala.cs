@@ -49,14 +49,17 @@ namespace AlumnoEjemplos.CShark
 
         internal void dispararParabolico(float elapsedTime)
         {
-            posicion.X -= Convert.ToSingle(linearSpeed * Math.Sin(anguloRotacion) * Math.Cos(anguloElevacion) * elapsedTime);
-            posicion.Z -= Convert.ToSingle(linearSpeed * Math.Cos(anguloRotacion) * Math.Cos(anguloElevacion) * elapsedTime);
+            if (posicion.Y >= -10)
+            {
+                posicion.X -= Convert.ToSingle(linearSpeed * Math.Sin(anguloRotacion) * Math.Cos(anguloElevacion) * elapsedTime);
+                posicion.Z -= Convert.ToSingle(linearSpeed * Math.Cos(anguloRotacion) * Math.Cos(anguloElevacion) * elapsedTime);
 
-            verticalSpeed -= verticalAcceleration * elapsedTime;
-            posicion.Y += Convert.ToSingle(verticalSpeed * Math.Sin(anguloElevacion) * elapsedTime);
+                verticalSpeed -= verticalAcceleration * elapsedTime;
+                posicion.Y += Convert.ToSingle(verticalSpeed * Math.Sin(anguloElevacion) * elapsedTime);
 
-            bullet.Transform = Matrix.Scaling(RADIO * 2, RADIO * 2, RADIO * 2) * Matrix.Translation(posicion);
-            bullet.updateValues();
+                bullet.Transform = Matrix.Scaling(RADIO * 2, RADIO * 2, RADIO * 2) * Matrix.Translation(posicion);
+                bullet.updateValues();
+            }
         }
     }
 }
