@@ -80,6 +80,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\WINDOWS\Microsoft.NET\Managed DirectX\v9.03.91\Microsoft.DirectX.DirectSound.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.VisualC" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -89,6 +90,7 @@
   <ItemGroup>
     <Compile Include="CShark\Bala.cs" />
     <Compile Include="CShark\Canion.cs" />
+    <Compile Include="CShark\TerrenoSimple.cs" />
     <Compile Include="CShark\EjemploAlumno.cs" />
     <Compile Include="CShark\EnemyShip.cs" />
     <Compile Include="CShark\InputHandler.cs" />

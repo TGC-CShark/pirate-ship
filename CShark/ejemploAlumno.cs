@@ -10,6 +10,7 @@ using TgcViewer.Utils.Modifiers;
 using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.TgcSceneLoader;
 using TgcViewer.Utils.Terrain;
+using TgcViewer.Utils.Shaders;
 
 namespace AlumnoEjemplos.CShark
 {
@@ -31,12 +32,17 @@ namespace AlumnoEjemplos.CShark
         TgcViewer.Utils.TgcSceneLoader.TgcMesh meshCanionContrincante;
 
         //TERRENO
-        TgcSimpleTerrain terrain;
+        TerrenoSimple terrain;
+        TerrenoSimple agua;
         string currentHeightmap;
         string currentTexture;
         float currentScaleXZ = 200f;
         float currentScaleY = 13f;
         private TgcSkyBox skyBox;
+
+        float time;
+
+        Effect effect;
 
         /// <summary>
         /// Categoría a la que pertenece el ejemplo.
@@ -82,9 +88,14 @@ namespace AlumnoEjemplos.CShark
             currentHeightmap = GuiController.Instance.ExamplesMediaDir + "Heighmaps\\" + "Heightmap3.jpg";
             currentTexture = GuiController.Instance.ExamplesMediaDir + "Heighmaps\\" + "TerrainTexture3.jpg";
 
-            terrain = new TgcSimpleTerrain();
+            terrain = new TerrenoSimple();
             terrain.loadHeightmap(currentHeightmap, currentScaleXZ, currentScaleY, new Vector3(0, -125, 0));
             terrain.loadTexture(currentTexture);
+
+            agua = new TerrenoSimple();
+            agua.loadHeightmap(GuiController.Instance.AlumnoEjemplosMediaDir + "18_vertex_texture_02.jpg", 50f, 0.5f, new Vector3(0,-125,0));
+            agua.loadTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "4141-diffuse.jpg");
+            agua.AlphaBlendEnable = true;
 
             // Crear SkyBox:
             skyBox = new TgcSkyBox();
@@ -117,6 +128,12 @@ namespace AlumnoEjemplos.CShark
             meshCanion =  scene.Meshes[0];
             meshCanionContrincante = scene.Meshes[0];
 
+            //Shader
+            effect = TgcShaders.loadEffect(GuiController.Instance.AlumnoEjemplosMediaDir + "shader agua.fx");
+            agua.Effect = effect;
+            agua.Technique = "RenderScene";
+            time = 0;
+            agua.AlphaBlendEnable = true;
 
             //Creaciones
             shipContrincante = new EnemyShip(POS_CONTRINCANTE, meshShipContrincante, new Canion(new Vector3(70, 0, 50), meshCanion));
@@ -139,11 +156,19 @@ namespace AlumnoEjemplos.CShark
             //Device de DirectX para renderizar
             Device d3dDevice = GuiController.Instance.D3dDevice;
 
+            //Device device = GuiController.Instance.D3dDevice;
+            time += elapsedTime;
+            d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.DarkSlateBlue, 1.0f, 0);
+            // Cargar variables de shader, por ejemplo el tiempo transcurrido.
+            effect.SetValue("time", time);
+            agua.render();
+
             update(elapsedTime);
-             ship.renderizar();
+            ship.renderizar();
             shipContrincante.renderizar();
 
             terrain.render();
+
             skyBox.render();
 
             d3dDevice.Transform.World = Matrix.Identity;
@@ -165,6 +190,9 @@ namespace AlumnoEjemplos.CShark
             ship.dispose();
             shipContrincante.dispose();
             terrain.dispose();
+            agua.dispose();
+            skyBox.dispose();
+            effect.Dispose();
         }
 
     }
