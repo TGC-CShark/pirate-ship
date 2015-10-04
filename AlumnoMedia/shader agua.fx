@@ -26,6 +26,7 @@ sampler2D diffuseMap = sampler_state
 
 float time = 0;
 float transparency = 0.7;
+float height = 40;
 
 
 /**************************************************************************************/
@@ -38,6 +39,7 @@ struct VS_INPUT
    float4 Position : POSITION0;
    float4 Color : COLOR0;
    float2 Texcoord : TEXCOORD0;
+   float3 Normal :   NORMAL0;
 };
 
 //Output del Vertex Shader
@@ -46,6 +48,8 @@ struct VS_OUTPUT
    float4 Position :        POSITION0;
    float2 Texcoord :        TEXCOORD0;
    float4 Color :			COLOR0;
+   float3 Norm :          TEXCOORD1;			// Normales
+   float3 Pos :   		TEXCOORD2;		// Posicion real 3d
 };
 
 
@@ -59,7 +63,8 @@ VS_OUTPUT vs_main( VS_INPUT Input )
    float Y = Input.Position.y;
    float Z = Input.Position.z;
    float X = Input.Position.x;
-   Input.Position.y = Y * sin(2*time);// - sin(time*Z) - sin(time*X);
+   //Input.Position.y = Y * sin(2*time);// - sin(time*Z) - sin(time*X);
+   Input.Position.y = height * cos(2*(X/5 - time))  +  sin(2*(Z/2-time));
    //Input.Position.z = Z * cos(time);// + Y * sin(time);
 
    //Proyectar posicion
@@ -70,6 +75,14 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 
    //Propago el color x vertice
    Output.Color = Input.Color;
+   
+   // Calculo la posicion real (en world space)
+   float4 pos_real = mul(Input.Position, matWorld);
+   // Y la propago usando las coordenadas de texturas
+   Output.Pos = float3(pos_real.x, pos_real.y, pos_real.z);
+   
+   // Transformo la normal y la normalizo
+   Output.Norm = normalize(mul(Input.Normal, matWorld));
 
    return( Output );
    
