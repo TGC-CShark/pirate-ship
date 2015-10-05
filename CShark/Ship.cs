@@ -26,6 +26,7 @@ namespace AlumnoEjemplos.CShark
         const float ESCALON_VEL = 0.4f;
         float movementSpeed;
         public Vector3 vDireccion;
+        public Vector3 vel;
 
         public float anguloRotacion = 0f;
         public float movZ;
@@ -38,6 +39,7 @@ namespace AlumnoEjemplos.CShark
         public Canion canion;
 
         private float LargoBote, AnchoBote, AltoBote;
+
 
         public string nombre = "ship";
 
@@ -54,6 +56,7 @@ namespace AlumnoEjemplos.CShark
             traslacion = Matrix.Translation(pos);
 
             movementSpeed = 0f;
+            vel = new Vector3(0f, 0f, 0f);
 
             this.mesh.AutoTransformEnable = false;
 
@@ -134,12 +137,18 @@ namespace AlumnoEjemplos.CShark
         {
             //Estaria cheto poner cosas de la velocidad cuando sube o baja una ola
 
+            float modificador = 1;
+            if (vel.Y < -0.1f)
+                modificador = 1.5f;
+            if (vel.Y > 0.1f)
+                modificador = (1f / 2f);
+
             vDireccion.Y = 0;
             vDireccion.Z = (float)Math.Cos(anguloRotacion) * elapsedTime;
             vDireccion.X = (float)Math.Sin(anguloRotacion) * elapsedTime;
             vDireccion.Normalize();
 
-            Vector3 vDesplazamiento = vDireccion * movementSpeed;
+            Vector3 vDesplazamiento = vDireccion * movementSpeed * modificador;
 
             var nuevaPosicion = vDesplazamiento + mesh.Position;
             nuevaPosicion = new Vector3(nuevaPosicion.X, agua.aplicarOlasA(nuevaPosicion, time).Y, nuevaPosicion.Z);
@@ -151,7 +160,7 @@ namespace AlumnoEjemplos.CShark
             barcoFrente = mesh.Position + vDireccion * (LargoBote / 2);
             barcoFrente.Y = agua.aplicarOlasA(barcoFrente, time).Y;
 
-            Vector3 vel = barcoFrente - mesh.Position;
+            vel = barcoFrente - mesh.Position;
             vel.Normalize();
 
             return CalcularMatriz(mesh.Position, mesh.Scale, vel);

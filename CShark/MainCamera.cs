@@ -30,9 +30,10 @@ namespace AlumnoEjemplos.CShark
         private void setShip(Ship newShip) {}
 
         public void actualizar(Vector3 pos){
-            GuiController.Instance.ThirdPersonCamera.Target = pos;
             GuiController.Instance.ThirdPersonCamera.updateCamera();
-   
+
+            GuiController.Instance.ThirdPersonCamera.Target = pos;
+            
         }
     }
 }
