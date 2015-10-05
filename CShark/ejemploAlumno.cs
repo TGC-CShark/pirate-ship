@@ -124,8 +124,9 @@ namespace AlumnoEjemplos.CShark
             meshShipContrincante.setColor(Color.BlueViolet);
 
             scene = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Armas\\Canon\\Canon.max-TgcScene.xml");
-
             meshCanion =  scene.Meshes[0];
+
+            scene = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Armas\\Canon\\Canon.max-TgcScene.xml");
             meshCanionContrincante = scene.Meshes[0];
 
             //Shader
@@ -136,8 +137,8 @@ namespace AlumnoEjemplos.CShark
             agua.AlphaBlendEnable = true;
 
             //Creaciones
-            shipContrincante = new EnemyShip(POS_CONTRINCANTE, meshShipContrincante, new Canion(POS_CONTRINCANTE, 5, meshCanion));
-            ship = new Ship(POS_SHIP, meshShip, new Canion(POS_SHIP, 5, meshCanionContrincante));
+            shipContrincante = new EnemyShip(POS_CONTRINCANTE, meshShipContrincante, new Canion(POS_CONTRINCANTE, 5, meshCanionContrincante));
+            ship = new Ship(POS_SHIP, meshShip, new Canion(POS_SHIP, 5, meshCanion));
                     
 
             mainCamera = new MainCamera(ship);

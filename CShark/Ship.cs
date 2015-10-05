@@ -47,6 +47,7 @@ namespace AlumnoEjemplos.CShark
         public Ship(Vector3 pos, TgcMesh mesh, Canion canion)
         {
             Vector3 size = new Vector3(15, 10, 30);
+           
             this.mesh = mesh;
             this.mesh.Position = pos;
 
@@ -59,6 +60,8 @@ namespace AlumnoEjemplos.CShark
             vel = new Vector3(0f, 0f, 0f);
 
             this.mesh.AutoTransformEnable = false;
+
+            
 
             // Calcular dimensiones
             Vector3 BoundingBoxSize = mesh.BoundingBox.calculateSize();
@@ -93,11 +96,11 @@ namespace AlumnoEjemplos.CShark
 
             Matrix transformacion = rotacion * traslacion;
 
-            canion.actualizar(anguloRotacion, elapsedTime, getPosition());
+            canion.actualizar(anguloRotacion, elapsedTime, mesh.Position);
 
-            mesh.Transform = transformacionAgua * transformacion;
+            mesh.Transform = transformacion * transformacionAgua;
         
-            canion.meshCanion.Transform = transformacionAgua * transformacion;
+            canion.meshCanion.Transform = transformacion * transformacionAgua;
             
 
 
