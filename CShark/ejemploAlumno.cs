@@ -160,7 +160,7 @@ namespace AlumnoEjemplos.CShark
             time += elapsedTime;
             d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.DarkSlateBlue, 1.0f, 0);
 
-            update(elapsedTime);
+            update(elapsedTime, time);
             ship.renderizar();
             shipContrincante.renderizar();
 
@@ -170,15 +170,16 @@ namespace AlumnoEjemplos.CShark
 
             // Cargar variables de shader, por ejemplo el tiempo transcurrido.
             effect.SetValue("time", time);
+            effect.SetValue("height", agua.heightOlas);
             agua.render();
 
             d3dDevice.Transform.World = Matrix.Identity;
         }
 
-        private void update(float elapsedTime)
+        private void update(float elapsedTime, float time)
         {
-            ship.actualizar(elapsedTime);
-            shipContrincante.actualizar(elapsedTime);
+            ship.actualizar(elapsedTime, agua, time);
+            shipContrincante.actualizar(elapsedTime, agua, time);
             mainCamera.actualizar(ship.getPosition());
         }
 

@@ -26,7 +26,7 @@ sampler2D diffuseMap = sampler_state
 
 float time = 0;
 float transparency = 0.7;
-float height = 40;
+float height;
 
 
 /**************************************************************************************/

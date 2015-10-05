@@ -25,16 +25,17 @@ namespace AlumnoEjemplos.CShark
         const float VEL_MAXIMA = 500f;
         const float ESCALON_VEL = 0.4f;
         float movementSpeed;
+        public Vector3 vDireccion;
 
         float anguloRotacion = 0f;
         public float movZ;
         public float movY;
         public float movX;
 
-        Matrix rotacion = Matrix.Identity;
+        public Matrix rotacion = Matrix.Identity;
         public Matrix traslacion;
 
-        private Canion canion;
+        public Canion canion;
 
         public string nombre = "ship";
 
@@ -72,9 +73,26 @@ namespace AlumnoEjemplos.CShark
                        
         }
 
-        public void actualizar(float elapsedTime)
+        public void actualizar(float elapsedTime, TerrenoSimple agua, float time)
         {
+            calcularTraslacionYRotacion(elapsedTime);
 
+            Matrix transformacion = rotacion * traslacion;
+
+            mesh.Transform = transformacion;
+            canion.meshCanion.Transform = transformacion;
+
+            Matrix transformacionAgua = calcularPosicionConRespectoAlAgua(agua, elapsedTime, time);
+
+            mesh.Transform = transformacionAgua;
+            canion.meshCanion.Transform = transformacionAgua;
+
+            canion.actualizar(anguloRotacion, elapsedTime, getPosition());
+
+        }
+
+        public void calcularTraslacionYRotacion(float elapsedTime)
+        {
             if (input.keyDown(Key.Left) || input.keyDown(Key.A))
             {
                 anguloRotacion -= elapsedTime * ROTATION_SPEED;
@@ -90,7 +108,7 @@ namespace AlumnoEjemplos.CShark
 
             if (input.keyDown(Key.Up) || input.keyDown(Key.W))
             {
-                movementSpeed = Math.Min(movementSpeed + ESCALON_VEL, VEL_MAXIMA);   
+                movementSpeed = Math.Min(movementSpeed + ESCALON_VEL, VEL_MAXIMA);
             }
 
             else if (input.keyDown(Key.Down) || input.keyDown(Key.S))
@@ -101,17 +119,64 @@ namespace AlumnoEjemplos.CShark
             movZ -= Convert.ToSingle(movementSpeed * Math.Cos(anguloRotacion) * elapsedTime);
             movX -= Convert.ToSingle(movementSpeed * Math.Sin(anguloRotacion) * elapsedTime);
             traslacion = Matrix.Translation(movX, 0, movZ);
+        }
 
-            Matrix transformacion = rotacion * traslacion;
+        private Matrix calcularPosicionConRespectoAlAgua(TerrenoSimple agua, float elapsedTime, float time)
+        {
+            //Estaria cheto poner cosas de la velocidad cuando sube o baja una ola
 
-            mesh.Transform = transformacion;
-            canion.meshCanion.Transform = transformacion;
+            vDireccion.Y = 0;
+            vDireccion.Z = (float)Math.Cos(anguloRotacion) * elapsedTime;
+            vDireccion.X = (float)Math.Sin(anguloRotacion) * elapsedTime;
+            vDireccion.Normalize();
 
-            canion.actualizar(anguloRotacion,elapsedTime, getPosition());
+            Vector3 vDesplazamiento = vDireccion * movementSpeed;
+
+            var nuevaPosicion = vDesplazamiento + mesh.Position;
+            nuevaPosicion = new Vector3(nuevaPosicion.X, agua.aplicarOlasA(nuevaPosicion, time).Y, nuevaPosicion.Z);
+            mesh.Position = nuevaPosicion;
+
+            return CalcularMatriz(mesh.Position, mesh.Scale, vDireccion);
 
         }
 
-        
+        // Helper tomado del ejemplo DemoShader
+        private Matrix CalcularMatriz(Vector3 position, Vector3 scale, Vector3 vDireccion)
+        {
+            Vector3 VUP = new Vector3(0, 1, 0);
+
+            Matrix matWorld = Matrix.Scaling(scale);
+            // determino la orientacion
+            Vector3 U = Vector3.Cross(VUP, vDireccion);
+            U.Normalize();
+            Vector3 V = Vector3.Cross(vDireccion, U);
+            Matrix Orientacion;
+            Orientacion.M11 = U.X;
+            Orientacion.M12 = U.Y;
+            Orientacion.M13 = U.Z;
+            Orientacion.M14 = 0;
+
+            Orientacion.M21 = V.X;
+            Orientacion.M22 = V.Y;
+            Orientacion.M23 = V.Z;
+            Orientacion.M24 = 0;
+
+            Orientacion.M31 = vDireccion.X;
+            Orientacion.M32 = vDireccion.Y;
+            Orientacion.M33 = vDireccion.Z;
+            Orientacion.M34 = 0;
+
+            Orientacion.M41 = 0;
+            Orientacion.M42 = 0;
+            Orientacion.M43 = 0;
+            Orientacion.M44 = 1;
+            matWorld = matWorld * Orientacion;
+
+            // traslado
+            matWorld = matWorld * Matrix.Translation(position);
+            return matWorld;
+        }
+
         internal void dispose()
         {
 

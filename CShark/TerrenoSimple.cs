@@ -16,6 +16,8 @@ namespace AlumnoEjemplos.CShark
     /// </summary>
     public class TerrenoSimple : IRenderObject
     {
+        public float heightOlas = 40f;
+
         VertexBuffer vbTerrain;
         public Texture terrainTexture;
         int totalVertices;
@@ -160,6 +162,19 @@ namespace AlumnoEjemplos.CShark
 
 
             vbTerrain.SetData(data, 0, LockFlags.None);
+        }
+
+        //Solo para el agua!
+        internal Vector3 aplicarOlasA(Vector3 posicion, float time)
+        {
+            float ola = heightOlas * (float)Math.Cos(2 * (posicion.X / 5 - time)) + (float)Math.Sin(2 * (posicion.Z / 2 - time));
+
+            Vector3 nuevaPosicion;
+            nuevaPosicion.X = posicion.X;
+            nuevaPosicion.Y = ola;
+            nuevaPosicion.Z = posicion.Z;
+
+            return nuevaPosicion;
         }
 
         /// <summary>
