@@ -27,7 +27,7 @@ namespace AlumnoEjemplos.CShark
             mesh.Transform = transformacionAgua;
             canion.meshCanion.Transform = transformacionAgua;
 
-            canion.actualizar(anguloRotacion, elapsedTime, getPosition());
+
         }
     }
 }

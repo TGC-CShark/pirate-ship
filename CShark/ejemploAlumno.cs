@@ -136,8 +136,8 @@ namespace AlumnoEjemplos.CShark
             agua.AlphaBlendEnable = true;
 
             //Creaciones
-            shipContrincante = new EnemyShip(POS_CONTRINCANTE, meshShipContrincante, new Canion(new Vector3(70, 0, 50), meshCanion));
-            ship = new Ship(POS_SHIP, meshShip, new Canion(new Vector3(0, 0, 0), meshCanionContrincante));
+            shipContrincante = new EnemyShip(POS_CONTRINCANTE, meshShipContrincante, new Canion(POS_CONTRINCANTE, 5, meshCanion));
+            ship = new Ship(POS_SHIP, meshShip, new Canion(POS_SHIP, 5, meshCanionContrincante));
                     
 
             mainCamera = new MainCamera(ship);

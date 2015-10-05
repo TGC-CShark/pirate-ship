@@ -23,11 +23,11 @@ namespace AlumnoEjemplos.CShark
 
         public Vector3 posicion;
 
-        public Canion(Vector3 pos, TgcMesh mesh)
+        public Canion(Vector3 pos, float offsetShip, TgcMesh mesh)
         {
             meshCanion = mesh;
-            meshCanion.Position = pos;
-            posicion = pos;
+            meshCanion.Position = new Vector3(0, offsetShip, 0) + pos;
+            posicion = new Vector3(0, offsetShip, 0) + pos;
 
             for (int i = 0; i < cantBalas; i++)
             {
