@@ -27,7 +27,7 @@ namespace AlumnoEjemplos.CShark
         float movementSpeed;
         public Vector3 vDireccion;
 
-        float anguloRotacion = 0f;
+        public float anguloRotacion = 0f;
         public float movZ;
         public float movY;
         public float movX;
@@ -36,6 +36,8 @@ namespace AlumnoEjemplos.CShark
         public Matrix traslacion;
 
         public Canion canion;
+
+        private float LargoBote, AnchoBote, AltoBote;
 
         public string nombre = "ship";
 
@@ -54,6 +56,13 @@ namespace AlumnoEjemplos.CShark
             movementSpeed = 0f;
 
             this.mesh.AutoTransformEnable = false;
+
+            // Calcular dimensiones
+            Vector3 BoundingBoxSize = mesh.BoundingBox.calculateSize();
+
+            LargoBote = Math.Abs(BoundingBoxSize.Z);
+            AnchoBote = Math.Abs(BoundingBoxSize.X);
+            AltoBote = Math.Abs(BoundingBoxSize.Y);
 
             this.canion = canion;
             
@@ -75,19 +84,19 @@ namespace AlumnoEjemplos.CShark
 
         public void actualizar(float elapsedTime, TerrenoSimple agua, float time)
         {
+            Matrix transformacionAgua = calcularPosicionConRespectoAlAgua(agua, elapsedTime, time);
+            
             calcularTraslacionYRotacion(elapsedTime);
 
             Matrix transformacion = rotacion * traslacion;
 
-            mesh.Transform = transformacion;
-            canion.meshCanion.Transform = transformacion;
-
-            Matrix transformacionAgua = calcularPosicionConRespectoAlAgua(agua, elapsedTime, time);
-
-            mesh.Transform = transformacionAgua;
-            canion.meshCanion.Transform = transformacionAgua;
-
             canion.actualizar(anguloRotacion, elapsedTime, getPosition());
+
+            mesh.Transform = transformacionAgua * transformacion;
+        
+            canion.meshCanion.Transform = transformacionAgua * transformacion;
+            
+
 
         }
 
@@ -121,7 +130,7 @@ namespace AlumnoEjemplos.CShark
             traslacion = Matrix.Translation(movX, 0, movZ);
         }
 
-        private Matrix calcularPosicionConRespectoAlAgua(TerrenoSimple agua, float elapsedTime, float time)
+        public Matrix calcularPosicionConRespectoAlAgua(TerrenoSimple agua, float elapsedTime, float time)
         {
             //Estaria cheto poner cosas de la velocidad cuando sube o baja una ola
 
@@ -136,7 +145,16 @@ namespace AlumnoEjemplos.CShark
             nuevaPosicion = new Vector3(nuevaPosicion.X, agua.aplicarOlasA(nuevaPosicion, time).Y, nuevaPosicion.Z);
             mesh.Position = nuevaPosicion;
 
-            return CalcularMatriz(mesh.Position, mesh.Scale, vDireccion);
+
+            //Busco la nueva posicion del frente del bote
+            var barcoFrente = mesh.Position;
+            barcoFrente = mesh.Position + vDireccion * (LargoBote / 2);
+            barcoFrente.Y = agua.aplicarOlasA(barcoFrente, time).Y;
+
+            Vector3 vel = barcoFrente - mesh.Position;
+            vel.Normalize();
+
+            return CalcularMatriz(mesh.Position, mesh.Scale, vel);
 
         }
 
@@ -174,6 +192,7 @@ namespace AlumnoEjemplos.CShark
 
             // traslado
             matWorld = matWorld * Matrix.Translation(position);
+
             return matWorld;
         }
 

@@ -21,20 +21,13 @@ namespace AlumnoEjemplos.CShark
 
         public void actualizar(float elapsedTime, TerrenoSimple agua, float time)
         {
-            
-            //por el momento lo dejo vacio
-            traslacion = Matrix.Translation(movX, 0, movZ);
+          
+            Matrix transformacionAgua = calcularPosicionConRespectoAlAgua(agua, elapsedTime, time);
 
-            mesh.Transform = traslacion;
-            //canion.meshCanion.Transform = traslacion;
-            
+            mesh.Transform = transformacionAgua;
+            canion.meshCanion.Transform = transformacionAgua;
 
-            /*calcularTraslacionYRotacion(elapsedTime);
-
-            Matrix transformacion = rotacion * traslacion;
-
-            mesh.Transform = transformacion;
-            canion.meshCanion.Transform = transformacion;*/
+            canion.actualizar(anguloRotacion, elapsedTime, getPosition());
         }
     }
 }
