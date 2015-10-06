@@ -16,9 +16,6 @@ namespace AlumnoEjemplos.CShark
     class Ship
     {
         public TgcViewer.Utils.TgcSceneLoader.TgcMesh mesh;
-        //public Vector3 position { get; set; }
-        Vector3 size;
-        Vector3 movement;
         static TgcD3dInput input = GuiController.Instance.D3dInput;
 
         const float ROTATION_SPEED = 1f;
@@ -34,7 +31,7 @@ namespace AlumnoEjemplos.CShark
         public float movX;
 
         public Matrix rotacion = Matrix.Identity;
-        public Matrix traslacion;
+        public Matrix traslacion = Matrix.Identity;
 
         public Canion canion;
 
@@ -43,7 +40,8 @@ namespace AlumnoEjemplos.CShark
 
         public string nombre = "ship";
 
-      
+        public float AnguloRotacion { get { return anguloRotacion; } }
+
         public Ship(Vector3 pos, TgcMesh mesh, Canion canion)
         {
             Vector3 size = new Vector3(15, 10, 30);
@@ -84,29 +82,28 @@ namespace AlumnoEjemplos.CShark
         public void renderizar()
         {
             mesh.render();
-            canion.render();
-                       
+            canion.render();                
         }
 
-        public void actualizar(float elapsedTime, TerrenoSimple agua, float time)
+        public virtual void actualizar(float elapsedTime, TerrenoSimple agua, float time)
         {
-            Matrix transformacionAgua = calcularPosicionConRespectoAlAgua(agua, elapsedTime, time);
-            
             calcularTraslacionYRotacion(elapsedTime);
 
+            Matrix transformacionAgua = Matrix.Identity;// calcularPosicionConRespectoAlAgua(agua, elapsedTime, time);  
             Matrix transformacion = rotacion * traslacion;
+            Matrix transformacionFinal = transformacion * transformacionAgua;
 
-            canion.actualizar(anguloRotacion, elapsedTime, mesh.Position);
-
-            mesh.Transform = transformacion * transformacionAgua;
-        
-            canion.meshCanion.Transform = transformacion * transformacionAgua;
-            
-
-
+            actualizarCanion(anguloRotacion, elapsedTime, mesh.Position);
+            mesh.Transform = transformacionFinal;
+            canion.meshCanion.Transform = transformacionFinal;
         }
 
-        public void calcularTraslacionYRotacion(float elapsedTime)
+        public virtual void actualizarCanion(float rotacion, float elapsedTime, Vector3 newPosition)
+        {
+            canion.actualizar(anguloRotacion, elapsedTime, mesh.Position);
+        }
+
+        public virtual void calcularTraslacionYRotacion(float elapsedTime)
         {
             if (input.keyDown(Key.Left) || input.keyDown(Key.A))
             {
@@ -134,6 +131,9 @@ namespace AlumnoEjemplos.CShark
             movZ -= Convert.ToSingle(movementSpeed * Math.Cos(anguloRotacion) * elapsedTime);
             movX -= Convert.ToSingle(movementSpeed * Math.Sin(anguloRotacion) * elapsedTime);
             traslacion = Matrix.Translation(movX, 0, movZ);
+
+            //Cargar valor en UserVar
+            GuiController.Instance.UserVars.setValue("angulo player", anguloRotacion);
         }
 
         public Matrix calcularPosicionConRespectoAlAgua(TerrenoSimple agua, float elapsedTime, float time)
@@ -210,7 +210,6 @@ namespace AlumnoEjemplos.CShark
 
         internal void dispose()
         {
-
             mesh.dispose();
             canion.dispose();
         }

@@ -14,20 +14,40 @@ namespace AlumnoEjemplos.CShark
 {
     class EnemyShip : Ship
     {
-        
 
-        public EnemyShip(Vector3 pos, TgcMesh mesh, Canion canion) : base(pos, mesh, canion) { nombre = "EnemyShip"; }
+        Ship player;
 
+        const float ROTATION_SPEED = 1f;
+        const float VEL_MAXIMA = 500f;
+        const float ESCALON_VEL = 0.4f;
 
-        public void actualizar(float elapsedTime, TerrenoSimple agua, float time)
+        public EnemyShip(Ship player, Vector3 pos, TgcMesh mesh, Canion canion) : base(pos, mesh, canion) 
+        { 
+            nombre = "EnemyShip";
+            this.player = player;
+            anguloRotacion = FastMath.PI;
+        }
+
+        public override void calcularTraslacionYRotacion(float elapsedTime)
         {
-          
-            Matrix transformacionAgua = calcularPosicionConRespectoAlAgua(agua, elapsedTime, time);
+            float delta = player.AnguloRotacion - this.AnguloRotacion;
 
-            mesh.Transform = transformacionAgua;
-            canion.meshCanion.Transform = transformacionAgua;
+            if (FastMath.Abs(delta) > FastMath.PI / 2)
+            {
+                float correcionGiro = elapsedTime * ROTATION_SPEED;
+                anguloRotacion = delta < 0 ? anguloRotacion - correcionGiro : anguloRotacion + correcionGiro;
+                    
+                rotacion = Matrix.RotationY(anguloRotacion);
+            }
 
+            //Cargar valor en UserVar
+            GuiController.Instance.UserVars.setValue("angulo IA", anguloRotacion);
+        }
+
+        public override void actualizarCanion(float rotacion, float elapsedTime, Vector3 newPosition)
+        {
 
         }
+
     }
 }

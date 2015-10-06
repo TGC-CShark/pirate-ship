@@ -137,11 +137,14 @@ namespace AlumnoEjemplos.CShark
             agua.AlphaBlendEnable = true;
 
             //Creaciones
-            shipContrincante = new EnemyShip(POS_CONTRINCANTE, meshShipContrincante, new Canion(POS_CONTRINCANTE, 5, meshCanionContrincante));
             ship = new Ship(POS_SHIP, meshShip, new Canion(POS_SHIP, 5, meshCanion));
-                    
+            shipContrincante = new EnemyShip(ship, POS_CONTRINCANTE, meshShipContrincante, new Canion(POS_CONTRINCANTE, 5, meshCanionContrincante));                    
 
             mainCamera = new MainCamera(ship);
+
+            //Crear una UserVar
+            GuiController.Instance.UserVars.addVar("angulo player");
+            GuiController.Instance.UserVars.addVar("angulo IA");     
 
         }
 
