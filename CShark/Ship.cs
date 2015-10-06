@@ -40,7 +40,7 @@ namespace AlumnoEjemplos.CShark
 
         private float LargoBote, AnchoBote, AltoBote;
 
-        int vida = 1;
+        int vida = 5;
 
         public string nombre = "ship";
 
@@ -84,9 +84,13 @@ namespace AlumnoEjemplos.CShark
 
         public void renderizar()
         {
-            mesh.render();
-            canion.render();
-                       
+          
+            if (tieneVida())
+            {
+                mesh.render();
+                canion.render();
+            }
+
         }
 
         public void actualizar(float elapsedTime, TerrenoSimple agua, float time)
@@ -103,10 +107,7 @@ namespace AlumnoEjemplos.CShark
         
             canion.meshCanion.Transform = transformacion * transformacionAgua;
 
-            if (!tieneVida())
-            {
-                this.dispose();
-            }
+           
 
         }
 
