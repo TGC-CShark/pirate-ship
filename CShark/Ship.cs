@@ -13,7 +13,7 @@ using TgcViewer.Utils.TgcSceneLoader;
 
 namespace AlumnoEjemplos.CShark
 {
-    class Ship
+    public class Ship
     {
         public TgcViewer.Utils.TgcSceneLoader.TgcMesh mesh;
         //public Vector3 position { get; set; }
@@ -40,6 +40,7 @@ namespace AlumnoEjemplos.CShark
 
         private float LargoBote, AnchoBote, AltoBote;
 
+        int vida = 1;
 
         public string nombre = "ship";
 
@@ -101,9 +102,17 @@ namespace AlumnoEjemplos.CShark
             mesh.Transform = transformacion * transformacionAgua;
         
             canion.meshCanion.Transform = transformacion * transformacionAgua;
-            
 
+            if (!tieneVida())
+            {
+                this.dispose();
+            }
 
+        }
+
+        private bool tieneVida()
+        {
+            return vida > 0;
         }
 
         public void calcularTraslacionYRotacion(float elapsedTime)
@@ -206,6 +215,23 @@ namespace AlumnoEjemplos.CShark
             matWorld = matWorld * Matrix.Translation(position);
 
             return matWorld;
+        }
+
+        public void verificarDisparo(Bala bala)
+        {
+            if(TgcCollisionUtils.testSphereAABB(bala.bullet.BoundingSphere, mesh.BoundingBox))
+            {
+                GuiController.Instance.Logger.log("LE DI!");
+                reducirVida();
+                bala.visible = false;
+                bala.dispose();
+            }
+        }
+
+        private void reducirVida()
+        {
+            vida -= 1;
+            GuiController.Instance.Logger.log("Vida contrincante: " + vida.ToString());
         }
 
         internal void dispose()

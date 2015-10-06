@@ -4,11 +4,12 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using TgcViewer;
 using TgcViewer.Utils.TgcGeometry;
 
 namespace AlumnoEjemplos.CShark
 {
-    class Bala
+    public class Bala
     {
         public TgcSphere bullet;
         public bool visible = false;
@@ -44,6 +45,8 @@ namespace AlumnoEjemplos.CShark
 
         public void dispose()
         {
+            GuiController.Instance.Logger.log(posicion.ToString());
+            GuiController.Instance.Logger.log("bounding: " + bullet.BoundingSphere.Position.ToString());
             bullet.dispose();
         }
 
@@ -58,7 +61,12 @@ namespace AlumnoEjemplos.CShark
                 posicion.Y += Convert.ToSingle(verticalSpeed * Math.Sin(anguloElevacion) * elapsedTime);
 
                 bullet.Transform = Matrix.Scaling(RADIO * 2, RADIO * 2, RADIO * 2) * Matrix.Translation(posicion);
+
+                bullet.BoundingSphere.moveCenter(posicion - bullet.BoundingSphere.Position);
+
                 bullet.updateValues();
+
+                EjemploAlumno.Instance.shipContrincante.verificarDisparo(this);
             }
             else
             {

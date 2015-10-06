@@ -19,11 +19,13 @@ namespace AlumnoEjemplos.CShark
     /// </summary>
     public class EjemploAlumno : TgcExample
     {
+        public static EjemploAlumno Instance { get; set; }
+
         Ship ship;
-        EnemyShip shipContrincante;
+        public EnemyShip shipContrincante;
 
         Vector3 POS_SHIP = new Vector3(0, 0, 0); //Constante
-        Vector3 POS_CONTRINCANTE = new Vector3(100, 0, 0); //Constante
+        Vector3 POS_CONTRINCANTE = new Vector3(0, 0, -1269.477f);//new Vector3(100, 0, 0); //Constante
 
         MainCamera mainCamera;
         TgcViewer.Utils.TgcSceneLoader.TgcMesh meshShip;
@@ -76,6 +78,8 @@ namespace AlumnoEjemplos.CShark
         /// </summary>
         public override void init()
         {
+            EjemploAlumno.Instance = this;
+
             //GuiController.Instance: acceso principal a todas las herramientas del Framework
 
             //Device de DirectX para crear primitivas

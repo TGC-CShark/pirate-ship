@@ -12,7 +12,7 @@ using TgcViewer.Utils.TgcSceneLoader;
 
 namespace AlumnoEjemplos.CShark
 {
-    class EnemyShip : Ship
+    public class EnemyShip : Ship
     {
         
 
