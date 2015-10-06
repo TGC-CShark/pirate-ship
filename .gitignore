@@ -29,5 +29,11 @@
 *.out
 *.app
 
+#TGC Files
+Ionic.Zip.dll
+AlumnoEjemplos.dll
+TgcViewer.exe
+
 *.csproj.user
 *.xml
+*.pdb
