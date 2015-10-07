@@ -89,6 +89,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CShark\Bala.cs" />
+    <Compile Include="CShark\BarraVida.cs" />
     <Compile Include="CShark\Canion.cs" />
     <Compile Include="CShark\Menu.cs" />
     <Compile Include="CShark\TerrenoSimple.cs" />

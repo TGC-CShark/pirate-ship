@@ -40,11 +40,12 @@ namespace AlumnoEjemplos.CShark
 
         private float LargoBote, AnchoBote, AltoBote;
 
-        int vida = 5;
+        public float vida;
 
-        public string nombre = "ship";
+        public string nombre = "YO";
+        public BarraVida barraDeVida;
+        private float VIDA_MAX = 5;
 
-      
         public Ship(Vector3 pos, TgcMesh mesh, Canion canion)
         {
             Vector3 size = new Vector3(15, 10, 30);
@@ -62,6 +63,7 @@ namespace AlumnoEjemplos.CShark
 
             this.mesh.AutoTransformEnable = false;
 
+            vida = VIDA_MAX;
             
 
             // Calcular dimensiones
@@ -72,6 +74,8 @@ namespace AlumnoEjemplos.CShark
             AltoBote = Math.Abs(BoundingBoxSize.Y);
 
             this.canion = canion;
+
+            iniciarBarra();
             
         }
 
@@ -89,6 +93,7 @@ namespace AlumnoEjemplos.CShark
             {
                 mesh.render();
                 canion.render();
+                barraDeVida.render();
             }
 
         }
@@ -111,7 +116,7 @@ namespace AlumnoEjemplos.CShark
 
         }
 
-        private bool tieneVida()
+        public bool tieneVida()
         {
             return vida > 0;
         }
@@ -229,10 +234,21 @@ namespace AlumnoEjemplos.CShark
             }
         }
 
+        public void iniciarBarra()
+        {
+            barraDeVida = new BarraVida(new Vector2(0, 0), nombre);
+        }
+
         private void reducirVida()
         {
-            vida -= 1;
+            //vida -= 1;
+            barraDeVida.escalar(porcentajeDeVida());
             GuiController.Instance.Logger.log("Vida contrincante: " + vida.ToString());
+        }
+
+        public float porcentajeDeVida()
+        {
+            return (float)vida / (float)VIDA_MAX;
         }
 
         internal void dispose()
@@ -240,6 +256,7 @@ namespace AlumnoEjemplos.CShark
 
             mesh.dispose();
             canion.dispose();
+            barraDeVida.dispose();
         }
     }
 }
