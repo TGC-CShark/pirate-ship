@@ -11,9 +11,20 @@ using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.TgcSceneLoader;
 using TgcViewer.Utils.Terrain;
 using TgcViewer.Utils.Shaders;
+using TgcViewer.Utils.Sound;
 
 namespace AlumnoEjemplos.CShark
 {
+
+    public enum EstadoDelJuego
+    {
+        Jugando,
+        Pausa,
+        Ganado,
+        Perdido,
+        SinEmpezar
+    }
+
     /// <summary>
     /// Ejemplo del alumno
     /// </summary>
@@ -27,13 +38,14 @@ namespace AlumnoEjemplos.CShark
         Vector3 POS_SHIP = new Vector3(0, 0, 0); //Constante
         Vector3 POS_CONTRINCANTE = new Vector3(0, 0, -1269.477f);//new Vector3(100, 0, 0); //Constante
 
+        //Meshes
         MainCamera mainCamera;
         TgcViewer.Utils.TgcSceneLoader.TgcMesh meshShip;
         TgcViewer.Utils.TgcSceneLoader.TgcMesh meshShipContrincante;
         TgcViewer.Utils.TgcSceneLoader.TgcMesh meshCanion;
         TgcViewer.Utils.TgcSceneLoader.TgcMesh meshCanionContrincante;
 
-        //TERRENO
+        //Terreno
         TerrenoSimple terrain;
         TerrenoSimple agua;
         string currentHeightmap;
@@ -43,8 +55,14 @@ namespace AlumnoEjemplos.CShark
         private TgcSkyBox skyBox;
 
         float time;
+        float heightOlas;
+
+        public EstadoDelJuego estado;
+        Menu menu;
 
         Effect effect;
+
+        public TgcMp3Player reproductor;
 
         /// <summary>
         /// Categoría a la que pertenece el ejemplo.
@@ -68,7 +86,7 @@ namespace AlumnoEjemplos.CShark
         /// </summary>
         public override string getDescription()
         {
-            return "barquitos lalalal";
+            return "Dispararle al barco enemigo [SPACE] hasta hundirlo. Con las flechitas RIGHT y LEFT vira el barco. Con UP se acelera y DOWN desacelera.";
         }
 
         /// <summary>
@@ -88,7 +106,8 @@ namespace AlumnoEjemplos.CShark
             //Carpeta de archivos Media del alumno
             string alumnoMediaFolder = GuiController.Instance.AlumnoEjemplosMediaDir;
 
-            //TERRENO
+            
+            //Terreno
             currentHeightmap = GuiController.Instance.ExamplesMediaDir + "Heighmaps\\" + "Heightmap3.jpg";
             currentTexture = GuiController.Instance.ExamplesMediaDir + "Heighmaps\\" + "TerrainTexture3.jpg";
 
@@ -96,10 +115,23 @@ namespace AlumnoEjemplos.CShark
             terrain.loadHeightmap(currentHeightmap, currentScaleXZ, currentScaleY, new Vector3(0, -125, 0));
             terrain.loadTexture(currentTexture);
 
+            //Agua
             agua = new TerrenoSimple();
             agua.loadHeightmap(GuiController.Instance.AlumnoEjemplosMediaDir + "18_vertex_texture_02.jpg", 50f, 0.5f, new Vector3(0,-125,0));
             agua.loadTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "4141-diffuse.jpg");
             agua.AlphaBlendEnable = true;
+            //heightOlas = agua.heightOlas;
+
+            //Modifier
+            GuiController.Instance.Modifiers.addFloat("heightOlas", 10, 50, 40);
+
+            //Estado
+            estado = EstadoDelJuego.SinEmpezar;
+            menu = new Menu(estado);
+
+            //Menu
+
+            
 
             // Crear SkyBox:
             skyBox = new TgcSkyBox();
@@ -114,7 +146,7 @@ namespace AlumnoEjemplos.CShark
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Back, texturesPath + "lostatseaday_ft.jpg");
             skyBox.SkyEpsilon = 50f;
             skyBox.updateValues();
-
+            
             //Cargar meshes
             TgcViewer.Utils.TgcSceneLoader.TgcSceneLoader loader = new TgcViewer.Utils.TgcSceneLoader.TgcSceneLoader();
             TgcViewer.Utils.TgcSceneLoader.TgcScene scene = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Vehiculos\\Canoa\\Canoa-TgcScene.xml");
@@ -134,7 +166,7 @@ namespace AlumnoEjemplos.CShark
             meshCanionContrincante = scene.Meshes[0];
 
             //Shader
-            effect = TgcShaders.loadEffect(GuiController.Instance.AlumnoEjemplosMediaDir + "shader agua.fx");
+            effect = TgcShaders.loadEffect(alumnoMediaFolder + "shader agua.fx");
             agua.Effect = effect;
             agua.Technique = "RenderScene";
             time = 0;
@@ -144,7 +176,6 @@ namespace AlumnoEjemplos.CShark
             shipContrincante = new EnemyShip(POS_CONTRINCANTE, meshShipContrincante, new Canion(POS_CONTRINCANTE, 5, meshCanionContrincante));
             ship = new Ship(POS_SHIP, meshShip, new Canion(POS_SHIP, 5, meshCanion));
                     
-
             mainCamera = new MainCamera(ship);
 
         }
@@ -161,6 +192,15 @@ namespace AlumnoEjemplos.CShark
             //Device de DirectX para renderizar
             Device d3dDevice = GuiController.Instance.D3dDevice;
 
+            if(estado == EstadoDelJuego.SinEmpezar)
+            {
+                menu.render(this);
+            }
+
+            else { 
+            //Obtener valor modifier
+            heightOlas = (float)GuiController.Instance.Modifiers["heightOlas"];
+
             //Device device = GuiController.Instance.D3dDevice;
             time += elapsedTime;
             d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.DarkSlateBlue, 1.0f, 0);
@@ -175,10 +215,11 @@ namespace AlumnoEjemplos.CShark
 
             // Cargar variables de shader, por ejemplo el tiempo transcurrido.
             effect.SetValue("time", time);
-            effect.SetValue("height", agua.heightOlas);
+            effect.SetValue("height", heightOlas);
             agua.render();
 
             d3dDevice.Transform.World = Matrix.Identity;
+           }
         }
 
         private void update(float elapsedTime, float time)
