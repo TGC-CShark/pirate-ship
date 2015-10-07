@@ -10,7 +10,7 @@ using TgcViewer.Utils.TgcSceneLoader;
 
 namespace AlumnoEjemplos.CShark
 {
-    class Canion
+    public class Canion
     {
         public TgcMesh meshCanion;
         private List<Bala> balas = new List<Bala>();

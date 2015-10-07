@@ -13,7 +13,7 @@ using TgcViewer.Utils.TgcSceneLoader;
 
 namespace AlumnoEjemplos.CShark
 {
-    class Ship
+    public class Ship
     {
         public TgcViewer.Utils.TgcSceneLoader.TgcMesh mesh;
         static TgcD3dInput input = GuiController.Instance.D3dInput;
@@ -37,10 +37,11 @@ namespace AlumnoEjemplos.CShark
 
         private float LargoBote, AnchoBote, AltoBote;
 
+        public float vida;
 
-        public string nombre = "ship";
-
-        public float AnguloRotacion { get { return anguloRotacion; } }
+        public string nombre = "YO";
+        public BarraVida barraDeVida;
+        private float VIDA_MAX = 5;
 
         public Ship(Vector3 pos, TgcMesh mesh, Canion canion)
         {
@@ -59,8 +60,8 @@ namespace AlumnoEjemplos.CShark
 
             this.mesh.AutoTransformEnable = false;
 
+            vida = VIDA_MAX;
             
-
             // Calcular dimensiones
             Vector3 BoundingBoxSize = mesh.BoundingBox.calculateSize();
 
@@ -69,7 +70,8 @@ namespace AlumnoEjemplos.CShark
             AltoBote = Math.Abs(BoundingBoxSize.Y);
 
             this.canion = canion;
-            
+
+            iniciarBarra();           
         }
 
         public Vector3 getPosition()
@@ -78,11 +80,14 @@ namespace AlumnoEjemplos.CShark
             return pos;
         }
 
-
-        public void renderizar()
-        {
-            mesh.render();
-            canion.render();                
+        public virtual void renderizar()
+        {          
+            if (tieneVida())
+            {
+                mesh.render();
+                canion.render();
+                barraDeVida.render();
+            }
         }
 
         public virtual void actualizar(float elapsedTime, TerrenoSimple agua, float time)
@@ -101,6 +106,11 @@ namespace AlumnoEjemplos.CShark
         public virtual void actualizarCanion(float rotacion, float elapsedTime, Vector3 newPosition)
         {
             canion.actualizar(anguloRotacion, elapsedTime, mesh.Position);
+        }
+
+        public bool tieneVida()
+        {
+            return vida > 0;
         }
 
         public virtual void calcularTraslacionYRotacion(float elapsedTime)
@@ -164,7 +174,6 @@ namespace AlumnoEjemplos.CShark
             vel.Normalize();
 
             return CalcularMatriz(mesh.Position, mesh.Scale, vel);
-
         }  
 
         public Vector3 vectorDireccion()
@@ -219,10 +228,39 @@ namespace AlumnoEjemplos.CShark
             return matWorld;
         }
 
-        internal void dispose()
+        public void verificarDisparo(Bala bala)
+        {
+            if(TgcCollisionUtils.testSphereAABB(bala.bullet.BoundingSphere, mesh.BoundingBox))
+            {
+                GuiController.Instance.Logger.log("LE DI!");
+                reducirVida();
+                bala.visible = false;
+                bala.dispose();
+            }
+        }
+
+        public virtual void iniciarBarra()
+        {
+            barraDeVida = new BarraVida(new Vector2(0, 0), nombre);
+        }
+
+        private void reducirVida()
+        {
+            //vida -= 1;
+            barraDeVida.escalar(porcentajeDeVida());
+            GuiController.Instance.Logger.log("Vida contrincante: " + vida.ToString());
+        }
+
+        public float porcentajeDeVida()
+        {
+            return (float)vida / (float)VIDA_MAX;
+        }
+
+        public virtual void dispose()
         {
             mesh.dispose();
             canion.dispose();
+            barraDeVida.dispose();
         }
     }
 }

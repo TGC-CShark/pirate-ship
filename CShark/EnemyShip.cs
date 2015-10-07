@@ -6,24 +6,28 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using TgcViewer;
+using TgcViewer.Utils._2D;
 using TgcViewer.Utils.Input;
 using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.TgcSceneLoader;
 
 namespace AlumnoEjemplos.CShark
 {
-    class EnemyShip : Ship
+    public class EnemyShip : Ship
     {
-        Ship player;
-
         const float ROTATION_SPEED = 1f;
         const float VEL_MAXIMA = 500f;
         const float ESCALON_VEL = 0.6f;
 
-        public EnemyShip(Ship player, Vector3 pos, TgcMesh mesh, Canion canion) : base(pos, mesh, canion) 
-        { 
-            nombre = "EnemyShip";
+        Ship player;
+        BarraVidaEnemigo barraDeVidaEnemigo;       
+
+        public EnemyShip(Ship player, Vector3 pos, TgcMesh mesh, Canion canion) : base(pos, mesh, canion) {
+            nombre = "ENEMIGO";
             this.player = player;
+            anguloRotacion = FastMath.PI;
+            iniciarBarra();
+            //barraDeVida.nombre.Align = TgcText2d.TextAlign.RIGHT;
         }
 
         public override void calcularTraslacionYRotacion(float elapsedTime)
@@ -83,5 +87,34 @@ namespace AlumnoEjemplos.CShark
 
         }
 
+        public override void iniciarBarra()
+        {
+            barraDeVidaEnemigo = new BarraVidaEnemigo(new Vector2(0, 0), nombre);
+        }
+
+        public override void dispose()
+        {
+            mesh.dispose();
+            canion.dispose();
+            barraDeVidaEnemigo.dispose();
+        }
+
+        public override void renderizar()
+        {
+            if (tieneVida())
+            {
+                mesh.render();
+                canion.render();
+                barraDeVidaEnemigo.render();
+            }
+
+        }
+
+        private void reducirVida()
+        {
+            //vida -= 1;
+            barraDeVidaEnemigo.escalar(porcentajeDeVida());
+            GuiController.Instance.Logger.log("Vida contrincante: " + vida.ToString());
+        }
     }
 }
