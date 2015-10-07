@@ -143,9 +143,17 @@ namespace AlumnoEjemplos.CShark
             mainCamera = new MainCamera(ship);
 
             //Crear una UserVar
-            GuiController.Instance.UserVars.addVar("angulo player");
-            GuiController.Instance.UserVars.addVar("angulo IA");     
-
+            GuiController.Instance.UserVars.addVar("dir_p");
+            GuiController.Instance.UserVars.addVar("dir_ia");
+            GuiController.Instance.UserVars.addVar("pos_p");
+            GuiController.Instance.UserVars.addVar("pos_ia");
+            GuiController.Instance.UserVars.addVar("popa_p");
+            GuiController.Instance.UserVars.addVar("popa_ia");
+            GuiController.Instance.UserVars.addVar("distancia");
+            GuiController.Instance.UserVars.addVar("dist_normalizada");
+            GuiController.Instance.UserVars.addVar("angulo_rotacion");
+            GuiController.Instance.UserVars.addVar("cross_product");
+            GuiController.Instance.UserVars.addVar("cross_product_length");
         }
 
 

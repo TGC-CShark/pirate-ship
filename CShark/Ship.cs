@@ -21,7 +21,7 @@ namespace AlumnoEjemplos.CShark
         const float ROTATION_SPEED = 1f;
         const float VEL_MAXIMA = 500f;
         const float ESCALON_VEL = 0.4f;
-        float movementSpeed;
+        public  float movementSpeed;
         public Vector3 vDireccion;
         public Vector3 vel;
 
@@ -131,9 +131,6 @@ namespace AlumnoEjemplos.CShark
             movZ -= Convert.ToSingle(movementSpeed * Math.Cos(anguloRotacion) * elapsedTime);
             movX -= Convert.ToSingle(movementSpeed * Math.Sin(anguloRotacion) * elapsedTime);
             traslacion = Matrix.Translation(movX, 0, movZ);
-
-            //Cargar valor en UserVar
-            GuiController.Instance.UserVars.setValue("angulo player", anguloRotacion);
         }
 
         public Matrix calcularPosicionConRespectoAlAgua(TerrenoSimple agua, float elapsedTime, float time)
@@ -168,6 +165,20 @@ namespace AlumnoEjemplos.CShark
 
             return CalcularMatriz(mesh.Position, mesh.Scale, vel);
 
+        }  
+
+        public Vector3 vectorDireccion()
+        {
+            return new Vector3(- FastMath.Sin(anguloRotacion), 0, - FastMath.Cos(anguloRotacion));
+        }
+
+        public Vector3 popa()
+        {
+            Vector3 offsetPopa = new Vector3(FastMath.Sin(anguloRotacion), 0, FastMath.Cos(anguloRotacion));
+            Vector3 popa = getPosition() + offsetPopa * (LargoBote / 2);
+            popa.Y = 0;
+
+            return popa;
         }
 
         // Helper tomado del ejemplo DemoShader
