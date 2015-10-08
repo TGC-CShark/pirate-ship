@@ -124,7 +124,7 @@ namespace AlumnoEjemplos.CShark
         {
            
             float aux = anguloElevacion;
-            anguloElevacion = Math.Min(ELEVACION_MIN, aux-1);
+            anguloElevacion = Math.Max(ELEVACION_MIN, aux-1);
             
             texto_elevacion.Text = anguloElevacion.ToString() + "º";
         }
@@ -133,7 +133,7 @@ namespace AlumnoEjemplos.CShark
         {
             
             float aux = anguloElevacion;
-            anguloElevacion = Math.Max(ELEVACION_MAX, aux + 1);
+            anguloElevacion = Math.Min(ELEVACION_MAX, aux + 1);
             
             texto_elevacion.Text = anguloElevacion.ToString() + "º";
         }
