@@ -40,7 +40,7 @@ namespace AlumnoEjemplos.CShark
         public float vida;
 
         public string nombre = "YO";
-        public BarraVida barraDeVida;
+        private BarraVida barraDeVida;
         private float VIDA_MAX = 5;
 
         public Ship(Vector3 pos, TgcMesh mesh, Canion canion)
@@ -265,7 +265,7 @@ namespace AlumnoEjemplos.CShark
         {
             mesh.dispose();
             canion.dispose();
-            barraDeVida.dispose();
+            //barraDeVida.dispose();
         }
     }
 }

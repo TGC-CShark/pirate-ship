@@ -26,7 +26,7 @@ namespace AlumnoEjemplos.CShark
             escalar(1);
         }
 
-        private void crearSprite()
+        public void crearSprite()
         {
             this.sprite = new TgcSprite();
             this.sprite.Texture = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "barra.jpg");
@@ -34,7 +34,7 @@ namespace AlumnoEjemplos.CShark
 
         public void posicionar(Vector2 position)
         {
-            sprite.Position = position + new Vector2(0, 20);
+            sprite.Position = position + new Vector2(0, 30);
             nombre.Position = new Point((int)position.X, (int)position.Y);
         }
 
@@ -73,14 +73,23 @@ namespace AlumnoEjemplos.CShark
         }
     }
 
+    /*************************** BARRA ENEMIGO *********************************/
+
     public class BarraVidaEnemigo : BarraVida { 
         public BarraVidaEnemigo(Vector2 position, string nombre) : base(position, nombre)
         {
+            
+            this.nombre = new TgcText2d();
+            this.nombre.Text = nombre;
             this.nombre.Align = TgcText2d.TextAlign.RIGHT;
+            this.nombre.changeFont(new System.Drawing.Font("Tahoma", 17));
+            crearSprite();
+            posicionar(position);
+            escalar(1);
         }
         public void posicionar(Vector2 position)
         {
-            sprite.Position = position + new Vector2(500, 20);
+            sprite.Position = position + new Vector2(1045, 30);
             nombre.Position = new Point((int)position.X, (int)position.Y);
         }
     }

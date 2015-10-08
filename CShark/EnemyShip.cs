@@ -27,7 +27,7 @@ namespace AlumnoEjemplos.CShark
             this.player = player;
             anguloRotacion = FastMath.PI;
             iniciarBarra();
-            //barraDeVida.nombre.Align = TgcText2d.TextAlign.RIGHT;
+
         }
 
         public override void calcularTraslacionYRotacion(float elapsedTime, TerrenoSimple agua, float time)
@@ -105,7 +105,7 @@ namespace AlumnoEjemplos.CShark
             {
                 mesh.render();
                 canion.render();
-                barraDeVidaEnemigo.render();
+                //barraDeVidaEnemigo.render();
             }
 
         }
