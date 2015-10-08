@@ -30,7 +30,7 @@ namespace AlumnoEjemplos.CShark
             //barraDeVida.nombre.Align = TgcText2d.TextAlign.RIGHT;
         }
 
-        public override void calcularTraslacionYRotacion(float elapsedTime)
+        public override void calcularTraslacionYRotacion(float elapsedTime, TerrenoSimple agua, float time)
         {
             Vector3 distance = player.popa() - this.getPosition();
             Vector3 iaDirectionVersor = this.vectorDireccion();

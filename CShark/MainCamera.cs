@@ -62,7 +62,7 @@ namespace AlumnoEjemplos.CShark
 
             if (input.WheelPos != wheelPos)
             {
-                zoom = input.WheelPos - wheelPos > 0 ? 20f : -20F;
+                zoom = input.WheelPos - wheelPos < 0 ? 20f : -20F;
                 camera.OffsetHeight += zoom;
                 camera.OffsetForward += zoom;
             }
