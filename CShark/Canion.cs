@@ -13,11 +13,10 @@ namespace AlumnoEjemplos.CShark
     public class Canion
     {
         public TgcMesh meshCanion;
-        private List<Bala> balas = new List<Bala>();
-        private Bala currentBullet;
-        public int cantBalas = 50;
-        static TgcD3dInput input = GuiController.Instance.D3dInput;
 
+        public int balasRestantes= 50;
+        static TgcD3dInput input = GuiController.Instance.D3dInput;
+        public List<Bala> balasEnElAire = new List<Bala>();
         public float anguloRotacion;
         public float anguloElevacion = 45;
 
@@ -29,67 +28,66 @@ namespace AlumnoEjemplos.CShark
             meshCanion.Position = new Vector3(0, offsetShip, 0) + pos;
             posicion = new Vector3(0, offsetShip, 0) + pos;
 
-            for (int i = 0; i < cantBalas; i++)
-            {
-                Bala bullet = new Bala(pos);
-                this.balas.Add(bullet);
-
-            }
-            currentBullet = balas.First();
-
             mesh.AutoTransformEnable = false;
         }
 
         public void shoot(float elapsedTime, float anguloRotacion)
         {
-            currentBullet.bullet.Position = posicion;
-            currentBullet.posicion = posicion;
-            currentBullet.visible = true;
-            currentBullet.anguloRotacion = anguloRotacion;
-            currentBullet.anguloElevacion = anguloElevacion;
-            currentBullet.verticalSpeed = currentBullet.verticalInitialSpeed;
+            new Bala(posicion, anguloRotacion, anguloElevacion, this);
+            balasRestantes--;
             
-            currentBullet = balas.ElementAt(balas.IndexOf(currentBullet)+1); 
         }
 
         public void render()
         {
             meshCanion.render();
 
-            foreach (Bala bala in balas)
-            {
-               bala.render();
-               
-            }
+            
+
         }
 
         internal void dispose()
         {
 
             meshCanion.dispose();
-            foreach (Bala bala in balas)
-            {
-                bala.dispose();
-            }
         }
 
-        internal void actualizar(float anguloRotacion, float elapsedTime, Vector3 pos)
+        internal void actualizar(float anguloRotacion, float elapsedTime, Matrix transformacion)
         {
             this.anguloRotacion = anguloRotacion;
-            posicion = pos;
+            meshCanion.Transform = transformacion;
+            posicion = new Vector3(meshCanion.Transform.M41,meshCanion.Transform.M42,meshCanion.Transform.M43);
+
+            
+
+
+        }
+
+        public void actualizarSiEsJugador(float anguloRotacion, float elapsedTime, Matrix transformacion)
+        {
 
             if (input.keyPressed(Key.Space))
             {
                 shoot(elapsedTime, anguloRotacion);
             }
 
-            foreach (Bala bala in balas)
+            //foreach (Bala bala in balasEnElAire)
+            for (int i = 0; i < balasEnElAire.Count; i++)
             {
-                if (bala.visible)
-                {
-                    bala.dispararParabolico(elapsedTime);
-                }
+                Bala bala = balasEnElAire[i];
+                bala.actualizar(elapsedTime);
+                bala.render();
             }
+        }
+
+        public void agregarBalaEnElAire(Bala bala)
+        {
+            this.balasEnElAire.Add(bala);
+        }
+
+        public void eliminarBalaEnElAire(Bala bala)
+        {
+            this.balasEnElAire.Remove(bala);
         }
     }
 }

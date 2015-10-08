@@ -12,34 +12,41 @@ namespace AlumnoEjemplos.CShark
     public class Bala
     {
         public TgcSphere bullet;
-        public bool visible = false;
+        
 
         const float linearSpeed = 400;
-        public float verticalSpeed;
+        public float verticalSpeed = 300;
         public float verticalInitialSpeed = 300;
         float verticalAcceleration = 100f;
         public float anguloRotacion;
         public float anguloElevacion;
+        private Canion canion;
 
         const float RADIO = 4f;
 
         public Vector3 posicion;
 
-        public Bala(Vector3 pos)
-        {
-
+        public Bala(Vector3 pos, float anguloRotacion, float anguloElevacion, Canion canion)
+        { 
             bullet = new TgcSphere();
             bullet.setColor(Color.Black);
             bullet.Radius = RADIO;
             bullet.Position = pos;
+            posicion = pos;
             bullet.LevelOfDetail = 1;
+            this.anguloRotacion = anguloRotacion;
+            this.anguloElevacion = anguloElevacion;
             bullet.updateValues();
             bullet.AutoTransformEnable = false;
+            this.canion = canion;
+            canion.agregarBalaEnElAire(this);
+
+            
         }
 
         public void render()
         {
-            if (visible) { bullet.render(); }
+            bullet.render();
             
         }
 
@@ -47,6 +54,7 @@ namespace AlumnoEjemplos.CShark
         {
             GuiController.Instance.Logger.log(posicion.ToString());
             GuiController.Instance.Logger.log("bounding: " + bullet.BoundingSphere.Position.ToString());
+            canion.eliminarBalaEnElAire(this);
             bullet.dispose();
         }
 
@@ -70,9 +78,14 @@ namespace AlumnoEjemplos.CShark
             }
             else
             {
-                this.visible = false;
+                
                 this.dispose();
             }
+        }
+
+        public void actualizar(float elapsedTime)
+        {
+            dispararParabolico(elapsedTime);
         }
     }
 }

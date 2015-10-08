@@ -82,9 +82,9 @@ namespace AlumnoEjemplos.CShark
             GuiController.Instance.UserVars.setValue("cross_product_length", Vector3.Cross(lookAtPopaVersor, iaDirectionVersor).Length());
         }
 
-        public override void actualizarCanion(float rotacion, float elapsedTime, Vector3 newPosition)
+        public override void actualizarCanion(float rotacion, float elapsedTime, Matrix transf)
         {
-
+            canion.actualizar(anguloRotacion, elapsedTime, transf);
         }
 
         public override void iniciarBarra()

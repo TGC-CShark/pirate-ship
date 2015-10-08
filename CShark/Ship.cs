@@ -98,14 +98,19 @@ namespace AlumnoEjemplos.CShark
             Matrix transformacion = rotacion * traslacion;
             Matrix transformacionFinal = transformacion * transformacionAgua;
 
-            actualizarCanion(anguloRotacion, elapsedTime, mesh.Position);
             mesh.Transform = transformacionFinal;
-            canion.meshCanion.Transform = transformacionFinal;
+            
+            
+            actualizarCanion(anguloRotacion, elapsedTime, transformacionFinal);
+
+            
+            
         }
 
-        public virtual void actualizarCanion(float rotacion, float elapsedTime, Vector3 newPosition)
+        public virtual void actualizarCanion(float rotacion, float elapsedTime, Matrix transf)
         {
-            canion.actualizar(anguloRotacion, elapsedTime, mesh.Position);
+            canion.actualizar(anguloRotacion, elapsedTime, transf);
+            canion.actualizarSiEsJugador(anguloRotacion, elapsedTime, transf);
         }
 
         public bool tieneVida()
@@ -234,7 +239,6 @@ namespace AlumnoEjemplos.CShark
             {
                 GuiController.Instance.Logger.log("LE DI!");
                 reducirVida();
-                bala.visible = false;
                 bala.dispose();
             }
         }
