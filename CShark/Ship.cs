@@ -41,7 +41,7 @@ namespace AlumnoEjemplos.CShark
 
         public string nombre = "YO";
         private BarraVida barraDeVida;
-        private float VIDA_MAX = 5;
+        private float VIDA_MAX = 1;
 
         public Ship(Vector3 pos, TgcMesh mesh, Canion canion)
         {
@@ -87,6 +87,9 @@ namespace AlumnoEjemplos.CShark
                 mesh.render();
                 canion.render();
                 barraDeVida.render();
+            } else
+            {
+                EjemploAlumno.Instance.estado = EstadoDelJuego.Perdido;
             }
         }
 

@@ -105,7 +105,10 @@ namespace AlumnoEjemplos.CShark
             {
                 mesh.render();
                 canion.render();
-                //barraDeVidaEnemigo.render();
+                barraDeVidaEnemigo.render();
+            } else
+            {
+                EjemploAlumno.Instance.estado = EstadoDelJuego.Ganado;
             }
 
         }
