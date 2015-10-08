@@ -68,7 +68,15 @@ namespace AlumnoEjemplos.CShark
 
             if (input.keyPressed(Key.Space))
             {
-                shoot(elapsedTime, anguloRotacion);
+                if (balasRestantes >= 0)
+                {
+                    shoot(elapsedTime, anguloRotacion);
+                }
+                else
+                {
+                    //hacer algo :P
+                }
+                
             }
 
             //foreach (Bala bala in balasEnElAire)
