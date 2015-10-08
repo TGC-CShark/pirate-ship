@@ -92,7 +92,7 @@ namespace AlumnoEjemplos.CShark
 
         public virtual void actualizar(float elapsedTime, TerrenoSimple agua, float time)
         {
-            calcularTraslacionYRotacion(elapsedTime);
+            calcularTraslacionYRotacion(elapsedTime, agua, time);
 
             Matrix transformacionAgua = Matrix.Identity;// calcularPosicionConRespectoAlAgua(agua, elapsedTime, time);  
             Matrix transformacion = rotacion * traslacion;
@@ -118,7 +118,7 @@ namespace AlumnoEjemplos.CShark
             return vida > 0;
         }
 
-        public virtual void calcularTraslacionYRotacion(float elapsedTime)
+        public virtual void calcularTraslacionYRotacion(float elapsedTime, TerrenoSimple agua, float time)
         {
             if (input.keyDown(Key.Left) || input.keyDown(Key.A))
             {
@@ -145,7 +145,8 @@ namespace AlumnoEjemplos.CShark
 
             movZ -= Convert.ToSingle(movementSpeed * Math.Cos(anguloRotacion) * elapsedTime);
             movX -= Convert.ToSingle(movementSpeed * Math.Sin(anguloRotacion) * elapsedTime);
-            traslacion = Matrix.Translation(movX, 0, movZ);
+            movY = agua.aplicarOlasA(mesh.Position, time).Y + AltoBote/2;
+            traslacion = Matrix.Translation(movX, movY, movZ);
         }
 
         public Matrix calcularPosicionConRespectoAlAgua(TerrenoSimple agua, float elapsedTime, float time)
