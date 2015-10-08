@@ -41,7 +41,7 @@ namespace AlumnoEjemplos.CShark
 
         public string nombre = "YO";
         private BarraVida barraDeVida;
-        private float VIDA_MAX = 1;
+        private float VIDA_MAX = 5;
 
         public Ship(Vector3 pos, TgcMesh mesh, Canion canion)
         {
@@ -123,25 +123,25 @@ namespace AlumnoEjemplos.CShark
 
         public virtual void calcularTraslacionYRotacion(float elapsedTime, TerrenoSimple agua, float time)
         {
-            if (input.keyDown(Key.Left) || input.keyDown(Key.A))
+            if (input.keyDown(Key.Left))
             {
                 anguloRotacion -= elapsedTime * ROTATION_SPEED;
                 rotacion = Matrix.RotationY(anguloRotacion);
             }
 
-            else if (input.keyDown(Key.Right) || input.keyDown(Key.D))
+            else if (input.keyDown(Key.Right) )
             {
                 anguloRotacion += elapsedTime * ROTATION_SPEED;
                 rotacion = Matrix.RotationY(anguloRotacion);
 
             }
 
-            if (input.keyDown(Key.Up) || input.keyDown(Key.W))
+            if (input.keyDown(Key.Up))
             {
                 movementSpeed = Math.Min(movementSpeed + ESCALON_VEL, VEL_MAXIMA);
             }
 
-            else if (input.keyDown(Key.Down) || input.keyDown(Key.S))
+            else if (input.keyDown(Key.Down))
             {
                 movementSpeed = Math.Max(movementSpeed - ESCALON_VEL, 0);
             }

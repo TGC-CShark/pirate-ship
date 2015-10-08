@@ -85,7 +85,8 @@ namespace AlumnoEjemplos.CShark
         /// </summary>
         public override string getDescription()
         {
-            return "Dispararle al barco enemigo [SPACE] hasta hundirlo. Con las flechitas RIGHT y LEFT vira el barco. Con UP se acelera y DOWN desacelera.";
+            return "Dispararle al barco enemigo [SPACE] hasta hundirlo. Con las flechitas RIGHT y LEFT vira el barco. Con UP se acelera y DOWN desacelera." + 
+                "Con A se activa la visibilidad del ángulo de elevación del disparo, y con W y S se incrementa o decrementa dicho ángulo.";
         }
 
         /// <summary>
