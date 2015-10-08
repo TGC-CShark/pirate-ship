@@ -14,15 +14,15 @@ namespace AlumnoEjemplos.CShark
 {
     public class Canion
     {
-        public TgcMesh meshCanion;
+        const float ELEVACION_MAX = 90f;
+        const float ELEVACION_MIN = 0f;
 
+        public TgcMesh meshCanion;
         public int balasRestantes = 50;
         static TgcD3dInput input = GuiController.Instance.D3dInput;
         public List<Bala> balasEnElAire = new List<Bala>();
         public float anguloRotacion;
         public float anguloElevacion = 45f;
-        const float ELEVACION_MAX = 90f;
-        const float ELEVACION_MIN = 0f;
         public bool elevacion_visible = false;
         public TgcText2d texto_elevacion;
 
@@ -75,10 +75,6 @@ namespace AlumnoEjemplos.CShark
             this.anguloRotacion = anguloRotacion;
             meshCanion.Transform = transformacion;
             posicion = new Vector3(meshCanion.Transform.M41,meshCanion.Transform.M42,meshCanion.Transform.M43);
-
-            
-
-
         }
 
         public void actualizarSiEsJugador(float anguloRotacion, float elapsedTime, Matrix transformacion)

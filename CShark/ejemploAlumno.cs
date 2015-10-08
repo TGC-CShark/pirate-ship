@@ -129,10 +129,6 @@ namespace AlumnoEjemplos.CShark
             EjemploAlumno.Instance.estado = EstadoDelJuego.SinEmpezar;
             menu = new Menu();
 
-            //Menu
-
-            
-
             // Crear SkyBox:
             skyBox = new TgcSkyBox();
             skyBox.Center = new Vector3(0, 0, 0);
@@ -179,7 +175,7 @@ namespace AlumnoEjemplos.CShark
             mainCamera = new MainCamera(ship);
 
             //Crear una UserVar
-            GuiController.Instance.UserVars.addVar("dir_p");
+/*            GuiController.Instance.UserVars.addVar("dir_p");
             GuiController.Instance.UserVars.addVar("dir_ia");
             GuiController.Instance.UserVars.addVar("pos_p");
             GuiController.Instance.UserVars.addVar("pos_ia");
@@ -190,6 +186,7 @@ namespace AlumnoEjemplos.CShark
             GuiController.Instance.UserVars.addVar("angulo_rotacion");
             GuiController.Instance.UserVars.addVar("cross_product");
             GuiController.Instance.UserVars.addVar("cross_product_length");
+*/
         }
 
 
