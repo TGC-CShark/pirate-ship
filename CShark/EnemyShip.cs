@@ -16,8 +16,8 @@ namespace AlumnoEjemplos.CShark
     public class EnemyShip : Ship
     {
         const float ROTATION_SPEED = 1f;
-        const float VEL_MAXIMA = 500f;
-        const float ESCALON_VEL = 0.6f;
+        const float VEL_MAXIMA = 400f;
+        const float ESCALON_VEL = 0.4f;
 
         Ship player;
         BarraVidaEnemigo barraDeVidaEnemigo;       

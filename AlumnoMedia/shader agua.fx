@@ -64,14 +64,14 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	float X = Input.Position.x;
 
 	float length = 10;
-	float3 k = 6.2831853 / length; //2pi
+	float k = 6.2831853 / length; //2pi
 	float3 K = (0.7854, 0, 0.7854);
 	float w = sqrt(9.8 * k);
 	height = height * 2;
 
 	Input.Position.x = X - K * height * (sin(0.25 * (K * k * X - w * time)) + cos(0.5 * (X - w * time)));
 	Input.Position.z = Z - K * height * (sin((K * k * Z - w * time)) + (cos(Z - w * time)));
-	Input.Position.y = height * (cos(0.25   * (K * k * X - w * time)) + sin(0.5   * (X - w * time)));
+	Input.Position.y += height * (cos(0.25   * (K * k * X - w * time)) + sin(0.5   * (X - w * time)));
 
 	   //Proyectar posicion
 	   Output.Position = mul( Input.Position, matWorldViewProj);
