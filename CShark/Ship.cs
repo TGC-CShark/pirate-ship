@@ -248,9 +248,9 @@ namespace AlumnoEjemplos.CShark
             barraDeVida = new BarraVida(new Vector2(0, 0), nombre);
         }
 
-        private void reducirVida()
+        public virtual void reducirVida()
         {
-            //vida -= 1;
+            vida -= 1;
             barraDeVida.escalar(porcentajeDeVida());
             GuiController.Instance.Logger.log("Vida contrincante: " + vida.ToString());
         }

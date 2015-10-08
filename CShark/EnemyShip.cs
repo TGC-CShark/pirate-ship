@@ -66,7 +66,7 @@ namespace AlumnoEjemplos.CShark
 
             movZ -= movementSpeed * FastMath.Cos(anguloRotacion) * elapsedTime;
             movX -= movementSpeed * FastMath.Sin(anguloRotacion) * elapsedTime;
-            traslacion = Matrix.Translation(movX, 0, movZ);
+//            traslacion = Matrix.Translation(movX, 0, movZ);
 
             //Cargar valor en UserVar
             GuiController.Instance.UserVars.setValue("dir_p", player.vectorDireccion());
@@ -110,9 +110,9 @@ namespace AlumnoEjemplos.CShark
 
         }
 
-        private void reducirVida()
+        public override void reducirVida()
         {
-            //vida -= 1;
+            vida -= 1;
             barraDeVidaEnemigo.escalar(porcentajeDeVida());
             GuiController.Instance.Logger.log("Vida contrincante: " + vida.ToString());
         }
