@@ -18,10 +18,10 @@ namespace AlumnoEjemplos.CShark
         TgcText2d titulo;
         TgcText2d sombra;
 
-        TgcText2d textoComenzar;
+        TgcText2d textoComplementario;
 
 
-        public Menu(EstadoDelJuego estado)
+        public Menu()
         {
             fondo.Texture = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "Barco-Pirata-Menu.jpg");
             fondo.Position = new Vector2(0, 0);
@@ -46,13 +46,13 @@ namespace AlumnoEjemplos.CShark
             sombra.Size = new Size(800, 300);
             sombra.changeFont(new System.Drawing.Font("BlackoakStd", 35, FontStyle.Bold | FontStyle.Italic));
 
-            textoComenzar = new TgcText2d();
-            textoComenzar.Text = "Haga clic para comenzar a jugar";
-            textoComenzar.Color = Color.Gold;
-            textoComenzar.Align = TgcText2d.TextAlign.CENTER;
-            textoComenzar.Position = new Point(450, 250);
-            textoComenzar.Size = new Size(300, 100);
-            textoComenzar.changeFont(new System.Drawing.Font("BlackoakStd", 18, FontStyle.Bold | FontStyle.Italic));
+            textoComplementario = new TgcText2d();
+            textoComplementario.Text = "Hacé clic para comenzar a jugar";
+            textoComplementario.Color = Color.Gold;
+            textoComplementario.Align = TgcText2d.TextAlign.CENTER;
+            textoComplementario.Position = new Point(450, 250);
+            textoComplementario.Size = new Size(300, 100);
+            textoComplementario.changeFont(new System.Drawing.Font("BlackoakStd", 18, FontStyle.Bold | FontStyle.Italic));
 
 
 
@@ -62,19 +62,62 @@ namespace AlumnoEjemplos.CShark
         {
             GuiController.Instance.Drawer2D.beginDrawSprite();
             fondo.render();
-            
+
             GuiController.Instance.Drawer2D.endDrawSprite();
 
             sombra.render();
             titulo.render();
-            textoComenzar.render();
+        }
+
+        public void renderSinEmpezar(EjemploAlumno juego)
+        {
+            render(juego);
+            textoComplementario.render();
+
+
+            jugar(juego);
+
+        }
+
+        public void renderGanado(EjemploAlumno juego)
+        {
+            titulo.Text = "¡GANASTE!";
+            sombra.Text = "¡GANASTE!";
             
 
+            //textoComplementario.Text = "Hacé clic para volver a jugar";
+
+            render(juego);
+           // textoComplementario.render();
+
+
+            //jugar(juego);
+            
+        }
+
+        public void renderPerdido(EjemploAlumno juego)
+        {
+            titulo.Text = "¡PERDISTE!";
+            sombra.Text = "¡PERDISTE!";
+            
+
+            //textoComplementario.Text = "Hacé clic para volver a jugar";
+
+            render(juego);
+            //textoComplementario.render();
+
+            //jugar(juego);
+            
+        }
+
+        private void jugar(EjemploAlumno juego)
+        {
             if (input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
             {
                 juego.estado = EstadoDelJuego.Jugando;
             }
-
         }
+
+
     }
 }

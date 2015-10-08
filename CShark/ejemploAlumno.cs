@@ -62,7 +62,6 @@ namespace AlumnoEjemplos.CShark
 
         Effect effect;
 
-        public TgcMp3Player reproductor;
 
         /// <summary>
         /// Categoría a la que pertenece el ejemplo.
@@ -126,8 +125,8 @@ namespace AlumnoEjemplos.CShark
             GuiController.Instance.Modifiers.addFloat("heightOlas", 10, 50, 40);
 
             //Estado
-            estado = EstadoDelJuego.SinEmpezar;
-            menu = new Menu(estado);
+            EjemploAlumno.Instance.estado = EstadoDelJuego.SinEmpezar;
+            menu = new Menu();
 
             //Menu
 
@@ -204,12 +203,32 @@ namespace AlumnoEjemplos.CShark
             //Device de DirectX para renderizar
             Device d3dDevice = GuiController.Instance.D3dDevice;
 
-            if(estado == EstadoDelJuego.SinEmpezar)
+            
+
+            if (EjemploAlumno.Instance.estado == EstadoDelJuego.SinEmpezar)
             {
-                menu.render(this);
+                menu.renderSinEmpezar(this);
+            }
+                        
+            if (EjemploAlumno.Instance.estado == EstadoDelJuego.Ganado)
+            {
+                menu.renderGanado(this);
             }
 
-            else { 
+            if (EjemploAlumno.Instance.estado == EstadoDelJuego.Perdido)
+            {
+                menu.renderPerdido(this);
+            }
+
+            if (EjemploAlumno.Instance.estado == EstadoDelJuego.Jugando)
+            {
+                renderJuego(elapsedTime, d3dDevice);
+            }
+
+        }
+
+        private void renderJuego(float elapsedTime, Device d3dDevice)
+        {
             //Obtener valor modifier
             heightOlas = (float)GuiController.Instance.Modifiers["heightOlas"];
 
@@ -231,7 +250,6 @@ namespace AlumnoEjemplos.CShark
             agua.render();
 
             d3dDevice.Transform.World = Matrix.Identity;
-           }
         }
 
         private void update(float elapsedTime, float time)
