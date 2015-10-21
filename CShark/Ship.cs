@@ -15,33 +15,28 @@ namespace AlumnoEjemplos.CShark
 {
     public class Ship
     {
-        public TgcViewer.Utils.TgcSceneLoader.TgcMesh mesh;
-        static TgcD3dInput input = GuiController.Instance.D3dInput;
-
         const float ROTATION_SPEED = 1f;
         const float VEL_MAXIMA = 500f;
         const float ESCALON_VEL = 0.4f;
-        public  float movementSpeed;
-        public Vector3 vDireccion;
-        public Vector3 vel;
+        const float VIDA_MAX = 5;
 
-        public float anguloRotacion = 0f;
         public float movZ;
         public float movY;
         public float movX;
+        public  float movementSpeed;
+        public float anguloRotacion = 0f;
 
         public Matrix rotacion = Matrix.Identity;
         public Matrix traslacion = Matrix.Identity;
 
+        public float vida;
+        public string nombre = "YO";
         public Canion canion;
-
+        private BarraVida barraDeVida;      
         private float LargoBote, AnchoBote, AltoBote;
 
-        public float vida;
-
-        public string nombre = "YO";
-        private BarraVida barraDeVida;
-        private float VIDA_MAX = 1;
+        public TgcViewer.Utils.TgcSceneLoader.TgcMesh mesh;
+        static TgcD3dInput input = GuiController.Instance.D3dInput;       
 
         public Ship(Vector3 pos, TgcMesh mesh, Canion canion)
         {
@@ -56,7 +51,6 @@ namespace AlumnoEjemplos.CShark
             traslacion = Matrix.Translation(pos);
 
             movementSpeed = 0f;
-            vel = new Vector3(0f, 0f, 0f);
 
             this.mesh.AutoTransformEnable = false;
 
@@ -97,17 +91,10 @@ namespace AlumnoEjemplos.CShark
         {
             calcularTraslacionYRotacion(elapsedTime, agua, time);
 
-            Matrix transformacionAgua = Matrix.Identity;// calcularPosicionConRespectoAlAgua(agua, elapsedTime, time);  
             Matrix transformacion = rotacion * traslacion;
-            Matrix transformacionFinal = transformacion * transformacionAgua;
 
-            mesh.Transform = transformacionFinal;
-            
-            
-            actualizarCanion(anguloRotacion, elapsedTime, transformacionFinal);
-
-            
-            
+            mesh.Transform = transformacion;
+            actualizarCanion(anguloRotacion, elapsedTime, transformacion);           
         }
 
         public virtual void actualizarCanion(float rotacion, float elapsedTime, Matrix transf)
@@ -123,67 +110,35 @@ namespace AlumnoEjemplos.CShark
 
         public virtual void calcularTraslacionYRotacion(float elapsedTime, TerrenoSimple agua, float time)
         {
-            if (input.keyDown(Key.Left) || input.keyDown(Key.A))
+            if (input.keyDown(Key.Left))
             {
                 anguloRotacion -= elapsedTime * ROTATION_SPEED;
                 rotacion = Matrix.RotationY(anguloRotacion);
             }
 
-            else if (input.keyDown(Key.Right) || input.keyDown(Key.D))
+            else if (input.keyDown(Key.Right) )
             {
                 anguloRotacion += elapsedTime * ROTATION_SPEED;
                 rotacion = Matrix.RotationY(anguloRotacion);
 
             }
 
-            if (input.keyDown(Key.Up) || input.keyDown(Key.W))
+            if (input.keyDown(Key.Up))
             {
                 movementSpeed = Math.Min(movementSpeed + ESCALON_VEL, VEL_MAXIMA);
             }
 
-            else if (input.keyDown(Key.Down) || input.keyDown(Key.S))
+            else if (input.keyDown(Key.Down))
             {
                 movementSpeed = Math.Max(movementSpeed - ESCALON_VEL, 0);
             }
 
             movZ -= Convert.ToSingle(movementSpeed * Math.Cos(anguloRotacion) * elapsedTime);
             movX -= Convert.ToSingle(movementSpeed * Math.Sin(anguloRotacion) * elapsedTime);
-            movY = agua.aplicarOlasA(mesh.Position, time).Y + AltoBote/2;
-            traslacion = Matrix.Translation(movX, movY, movZ);
-        }
+            //movY = agua.aplicarOlasA(mesh.Position, time).Y + AltoBote/2;
 
-        public Matrix calcularPosicionConRespectoAlAgua(TerrenoSimple agua, float elapsedTime, float time)
-        {
-            //Estaria cheto poner cosas de la velocidad cuando sube o baja una ola
-
-            float modificador = 1;
-            if (vel.Y < -0.1f)
-                modificador = 1.5f;
-            if (vel.Y > 0.1f)
-                modificador = (1f / 2f);
-
-            vDireccion.Y = 0;
-            vDireccion.Z = (float)Math.Cos(anguloRotacion) * elapsedTime;
-            vDireccion.X = (float)Math.Sin(anguloRotacion) * elapsedTime;
-            vDireccion.Normalize();
-
-            Vector3 vDesplazamiento = vDireccion * movementSpeed * modificador;
-
-            var nuevaPosicion = vDesplazamiento + mesh.Position;
-            nuevaPosicion = new Vector3(nuevaPosicion.X, agua.aplicarOlasA(nuevaPosicion, time).Y, nuevaPosicion.Z);
-            mesh.Position = nuevaPosicion;
-
-
-            //Busco la nueva posicion del frente del bote
-            var barcoFrente = mesh.Position;
-            barcoFrente = mesh.Position + vDireccion * (LargoBote / 2);
-            barcoFrente.Y = agua.aplicarOlasA(barcoFrente, time).Y;
-
-            vel = barcoFrente - mesh.Position;
-            vel.Normalize();
-
-            return CalcularMatriz(mesh.Position, mesh.Scale, vel);
-        }  
+            traslacion = Matrix.Translation(movX, 0, movZ);
+        } 
 
         public Vector3 vectorDireccion()
         {
@@ -197,44 +152,6 @@ namespace AlumnoEjemplos.CShark
             popa.Y = 0;
 
             return popa;
-        }
-
-        // Helper tomado del ejemplo DemoShader
-        private Matrix CalcularMatriz(Vector3 position, Vector3 scale, Vector3 vDireccion)
-        {
-            Vector3 VUP = new Vector3(0, 1, 0);
-
-            Matrix matWorld = Matrix.Scaling(scale);
-            // determino la orientacion
-            Vector3 U = Vector3.Cross(VUP, vDireccion);
-            U.Normalize();
-            Vector3 V = Vector3.Cross(vDireccion, U);
-            Matrix Orientacion;
-            Orientacion.M11 = U.X;
-            Orientacion.M12 = U.Y;
-            Orientacion.M13 = U.Z;
-            Orientacion.M14 = 0;
-
-            Orientacion.M21 = V.X;
-            Orientacion.M22 = V.Y;
-            Orientacion.M23 = V.Z;
-            Orientacion.M24 = 0;
-
-            Orientacion.M31 = vDireccion.X;
-            Orientacion.M32 = vDireccion.Y;
-            Orientacion.M33 = vDireccion.Z;
-            Orientacion.M34 = 0;
-
-            Orientacion.M41 = 0;
-            Orientacion.M42 = 0;
-            Orientacion.M43 = 0;
-            Orientacion.M44 = 1;
-            matWorld = matWorld * Orientacion;
-
-            // traslado
-            matWorld = matWorld * Matrix.Translation(position);
-
-            return matWorld;
         }
 
         public void verificarDisparo(Bala bala)

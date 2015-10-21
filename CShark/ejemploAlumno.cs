@@ -85,7 +85,8 @@ namespace AlumnoEjemplos.CShark
         /// </summary>
         public override string getDescription()
         {
-            return "Dispararle al barco enemigo [SPACE] hasta hundirlo. Con las flechitas RIGHT y LEFT vira el barco. Con UP se acelera y DOWN desacelera.";
+            return "Dispararle al barco enemigo [SPACE] hasta hundirlo. Con las flechitas RIGHT y LEFT vira el barco. Con UP se acelera y DOWN desacelera." + 
+                "Con A se activa la visibilidad del ángulo de elevación del disparo, y con W y S se incrementa o decrementa dicho ángulo.";
         }
 
         /// <summary>
@@ -127,10 +128,6 @@ namespace AlumnoEjemplos.CShark
             //Estado
             EjemploAlumno.Instance.estado = EstadoDelJuego.SinEmpezar;
             menu = new Menu();
-
-            //Menu
-
-            
 
             // Crear SkyBox:
             skyBox = new TgcSkyBox();
@@ -178,7 +175,7 @@ namespace AlumnoEjemplos.CShark
             mainCamera = new MainCamera(ship);
 
             //Crear una UserVar
-            GuiController.Instance.UserVars.addVar("dir_p");
+/*            GuiController.Instance.UserVars.addVar("dir_p");
             GuiController.Instance.UserVars.addVar("dir_ia");
             GuiController.Instance.UserVars.addVar("pos_p");
             GuiController.Instance.UserVars.addVar("pos_ia");
@@ -189,6 +186,7 @@ namespace AlumnoEjemplos.CShark
             GuiController.Instance.UserVars.addVar("angulo_rotacion");
             GuiController.Instance.UserVars.addVar("cross_product");
             GuiController.Instance.UserVars.addVar("cross_product_length");
+*/
         }
 
 
