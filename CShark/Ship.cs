@@ -70,7 +70,7 @@ namespace AlumnoEjemplos.CShark
 
         public Vector3 getPosition()
         {
-            Vector3 pos = new Vector3(movX, movY, movZ);
+            Vector3 pos = new Vector3(mesh.Transform.M41, mesh.Transform.M42, mesh.Transform.M43);
             return pos;
         }
 
@@ -135,9 +135,9 @@ namespace AlumnoEjemplos.CShark
 
             movZ -= Convert.ToSingle(movementSpeed * Math.Cos(anguloRotacion) * elapsedTime);
             movX -= Convert.ToSingle(movementSpeed * Math.Sin(anguloRotacion) * elapsedTime);
-            //movY = agua.aplicarOlasA(mesh.Position, time).Y + AltoBote/2;
+            movY = agua.aplicarOlasA(getPosition(), time).Y + AltoBote/2;
 
-            traslacion = Matrix.Translation(movX, 0, movZ);
+            traslacion = Matrix.Translation(movX, movY, movZ);
         } 
 
         public Vector3 vectorDireccion()

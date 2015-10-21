@@ -167,7 +167,7 @@ namespace AlumnoEjemplos.CShark
         //Solo para el agua!
         internal Vector3 aplicarOlasA(Vector3 posicion, float time)
         {
-            float ola = heightOlas * (float)Math.Cos(2 * (posicion.X / 5 - time)) + (float)Math.Sin(2 * (posicion.Z / 2 - time));
+            float ola = heightOlas*2 *((float)Math.Cos(0.005*posicion.X-time) + (float)Math.Sin(0.005*posicion.Z  - time)) ;
 
             Vector3 nuevaPosicion;
             nuevaPosicion.X = posicion.X;

@@ -25,7 +25,7 @@ sampler2D diffuseMap = sampler_state
 };
 
 float time = 0;
-float transparency = 0.7;
+float transparency = 0.9;
 float height;
 
 
@@ -69,9 +69,9 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	float w = sqrt(9.8 * k);
 	height = height * 2;
 
-	Input.Position.x = X - K * height * (sin(0.25 * (K * k * X - w * time)) + cos(0.5 * (X - w * time)));
-	Input.Position.z = Z - K * height * (sin((K * k * Z - w * time)) + (cos(Z - w * time)));
-	Input.Position.y += height * (cos(0.25   * (K * k * X - w * time)) + sin(0.5   * (X - w * time)));
+	Input.Position.x = X;
+	Input.Position.z = Z;
+	Input.Position.y = height * (cos(0.005*X-time) + sin(0.005*Z-time));
 
 	   //Proyectar posicion
 	   Output.Position = mul( Input.Position, matWorldViewProj);
