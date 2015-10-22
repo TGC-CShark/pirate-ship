@@ -33,7 +33,7 @@ namespace AlumnoEjemplos.CShark
         public string nombre = "YO";
         public Canion canion;
         private BarraVida barraDeVida;      
-        private float LargoBote, AnchoBote, AltoBote;
+        public float LargoBote, AnchoBote, AltoBote;
 
         public TgcViewer.Utils.TgcSceneLoader.TgcMesh mesh;
         static TgcD3dInput input = GuiController.Instance.D3dInput;       
@@ -138,6 +138,8 @@ namespace AlumnoEjemplos.CShark
             movY = agua.aplicarOlasA(getPosition(), time).Y + AltoBote/2;
 
             traslacion = Matrix.Translation(movX, movY, movZ);
+
+
         } 
 
         public Vector3 vectorDireccion()

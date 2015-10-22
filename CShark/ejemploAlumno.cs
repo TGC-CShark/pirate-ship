@@ -245,6 +245,7 @@ namespace AlumnoEjemplos.CShark
             // Cargar variables de shader, por ejemplo el tiempo transcurrido.
             effect.SetValue("time", time);
             effect.SetValue("height", heightOlas);
+            agua.heightOlas = heightOlas;
             agua.render();
 
             d3dDevice.Transform.World = Matrix.Identity;

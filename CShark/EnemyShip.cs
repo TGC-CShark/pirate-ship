@@ -66,7 +66,10 @@ namespace AlumnoEjemplos.CShark
 
             movZ -= movementSpeed * FastMath.Cos(anguloRotacion) * elapsedTime;
             movX -= movementSpeed * FastMath.Sin(anguloRotacion) * elapsedTime;
-            traslacion = Matrix.Translation(movX, 0, movZ);
+            movY = agua.aplicarOlasA(getPosition(), time).Y + AltoBote / 2;
+
+            traslacion = Matrix.Translation(movX, movY, movZ);
+            
 
             //Cargar valor en UserVar
 /*            GuiController.Instance.UserVars.setValue("dir_p", player.vectorDireccion());

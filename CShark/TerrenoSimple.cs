@@ -16,7 +16,7 @@ namespace AlumnoEjemplos.CShark
     /// </summary>
     public class TerrenoSimple : IRenderObject
     {
-        public float heightOlas = 40f;
+        public float heightOlas;
 
         VertexBuffer vbTerrain;
         public Texture terrainTexture;
