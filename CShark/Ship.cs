@@ -23,7 +23,7 @@ namespace AlumnoEjemplos.CShark
         public float movZ;
         public float movY;
         public float movX;
-        public  float movementSpeed;
+        public float movementSpeed;
         public float anguloRotacion = 0f;
 
         public Matrix rotacion = Matrix.Identity;
@@ -32,16 +32,16 @@ namespace AlumnoEjemplos.CShark
         public float vida;
         public string nombre = "YO";
         public Canion canion;
-        private BarraVida barraDeVida;      
+        private BarraVida barraDeVida;
         public float LargoBote, AnchoBote, AltoBote;
 
         public TgcViewer.Utils.TgcSceneLoader.TgcMesh mesh;
-        static TgcD3dInput input = GuiController.Instance.D3dInput;       
+        static TgcD3dInput input = GuiController.Instance.D3dInput;
 
         public Ship(Vector3 pos, TgcMesh mesh, Canion canion)
         {
             Vector3 size = new Vector3(15, 10, 30);
-           
+
             this.mesh = mesh;
             this.mesh.Position = pos;
 
@@ -55,7 +55,7 @@ namespace AlumnoEjemplos.CShark
             this.mesh.AutoTransformEnable = false;
 
             vida = VIDA_MAX;
-            
+
             // Calcular dimensiones
             Vector3 BoundingBoxSize = mesh.BoundingBox.calculateSize();
 
@@ -65,7 +65,7 @@ namespace AlumnoEjemplos.CShark
 
             this.canion = canion;
 
-            iniciarBarra();           
+            iniciarBarra();
         }
 
         public Vector3 getPosition()
@@ -75,7 +75,7 @@ namespace AlumnoEjemplos.CShark
         }
 
         public virtual void renderizar()
-        {          
+        {
             if (tieneVida())
             {
                 mesh.render();
@@ -94,7 +94,8 @@ namespace AlumnoEjemplos.CShark
             Matrix transformacion = rotacion * traslacion;
 
             mesh.Transform = transformacion;
-            actualizarCanion(anguloRotacion, elapsedTime, transformacion);           
+            mesh.BoundingBox.transform(transformacion);
+            actualizarCanion(anguloRotacion, elapsedTime, transformacion);
         }
 
         public virtual void actualizarCanion(float rotacion, float elapsedTime, Matrix transf)
@@ -110,13 +111,15 @@ namespace AlumnoEjemplos.CShark
 
         public virtual void calcularTraslacionYRotacion(float elapsedTime, TerrenoSimple agua, float time)
         {
+            Vector3 lastPosition = getPosition();
+
             if (input.keyDown(Key.Left))
             {
                 anguloRotacion -= elapsedTime * ROTATION_SPEED;
                 rotacion = Matrix.RotationY(anguloRotacion);
             }
 
-            else if (input.keyDown(Key.Right) )
+            else if (input.keyDown(Key.Right))
             {
                 anguloRotacion += elapsedTime * ROTATION_SPEED;
                 rotacion = Matrix.RotationY(anguloRotacion);
@@ -135,12 +138,40 @@ namespace AlumnoEjemplos.CShark
 
             movZ -= Convert.ToSingle(movementSpeed * Math.Cos(anguloRotacion) * elapsedTime);
             movX -= Convert.ToSingle(movementSpeed * Math.Sin(anguloRotacion) * elapsedTime);
-            movY = agua.aplicarOlasA(getPosition(), time).Y + AltoBote/2;
+            movY = agua.aplicarOlasA(getPosition(), time).Y + AltoBote / 2;
 
-            traslacion = Matrix.Translation(movX, movY, movZ);
+      
+            administrarColisiones(lastPosition, new Vector3(movX, movY, movZ));
+        }
+
+        public void administrarColisiones(Vector3 lastPosition, Vector3 newPosition)
+        {
+
+            bool collide = false;
+
+            TgcCollisionUtils.BoxBoxResult result = TgcCollisionUtils.classifyBoxBox(mesh.BoundingBox, EjemploAlumno.Instance.skyBoundingBox.BoundingBox);
 
 
-        } 
+            if (result == TgcCollisionUtils.BoxBoxResult.Afuera || result == TgcCollisionUtils.BoxBoxResult.Atravesando)
+            {
+                collide = true;
+            
+            }
+            
+            if (collide)
+            {
+              
+                movementSpeed = 0;
+                traslacion = Matrix.Translation(lastPosition.X, lastPosition.Y, lastPosition.Z);
+
+            } else
+            {
+                traslacion = Matrix.Translation(newPosition.X, newPosition.Y, newPosition.Z);
+            }
+
+            
+
+        }
 
         public Vector3 vectorDireccion()
         {

@@ -41,6 +41,8 @@ namespace AlumnoEjemplos.CShark
             float rotationAngle = FastMath.Acos(Vector3.Dot(iaDirectionVersor, lookAtPopaVersor));
             Vector3 cross = Vector3.Cross(lookAtPopaVersor, iaDirectionVersor);
 
+            Vector3 lastPosition = getPosition();
+
             if (cross.Length() > 0.1)
             {
                 if (cross.Y > 0.1)
@@ -68,7 +70,8 @@ namespace AlumnoEjemplos.CShark
             movX -= movementSpeed * FastMath.Sin(anguloRotacion) * elapsedTime;
             movY = agua.aplicarOlasA(getPosition(), time).Y + AltoBote / 2;
 
-            traslacion = Matrix.Translation(movX, movY, movZ);
+
+            administrarColisiones(lastPosition, new Vector3(movX, movY, movZ));
             
 
             //Cargar valor en UserVar
@@ -88,6 +91,7 @@ namespace AlumnoEjemplos.CShark
 
         public override void actualizarCanion(float rotacion, float elapsedTime, Matrix transf)
         {
+            mesh.BoundingBox.transform(transf);
             canion.actualizar(anguloRotacion, elapsedTime, transf);
         }
 

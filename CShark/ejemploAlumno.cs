@@ -52,7 +52,8 @@ namespace AlumnoEjemplos.CShark
         string currentTexture;
         float currentScaleXZ = 200f;
         float currentScaleY = 13f;
-        private TgcSkyBox skyBox;
+        public TgcSkyBox skyBox;
+        public TgcBox skyBoundingBox;
 
         float time;
         float heightOlas;
@@ -142,6 +143,12 @@ namespace AlumnoEjemplos.CShark
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Back, texturesPath + "lostatseaday_ft.jpg");
             skyBox.SkyEpsilon = 50f;
             skyBox.updateValues();
+
+            skyBoundingBox = new TgcBox();
+            skyBoundingBox.Size = skyBox.Size;
+            skyBoundingBox.Position = skyBox.Center;
+            skyBoundingBox.AlphaBlendEnable = true;
+            skyBoundingBox.updateValues();
             
             //Cargar meshes
             TgcViewer.Utils.TgcSceneLoader.TgcSceneLoader loader = new TgcViewer.Utils.TgcSceneLoader.TgcSceneLoader();
@@ -241,6 +248,7 @@ namespace AlumnoEjemplos.CShark
             terrain.render();
 
             skyBox.render();
+            //skyBoundingBox.render();
 
             // Cargar variables de shader, por ejemplo el tiempo transcurrido.
             effect.SetValue("time", time);
@@ -269,6 +277,7 @@ namespace AlumnoEjemplos.CShark
             terrain.dispose();
             agua.dispose();
             skyBox.dispose();
+            skyBoundingBox.dispose();
             effect.Dispose();
         }
 
