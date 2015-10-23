@@ -87,7 +87,16 @@ namespace AlumnoEjemplos.CShark
             GuiController.Instance.UserVars.setValue("cross_product", Vector3.Cross(lookAtPopaVersor, iaDirectionVersor));
             GuiController.Instance.UserVars.setValue("cross_product_length", Vector3.Cross(lookAtPopaVersor, iaDirectionVersor).Length());
 */
-        }   
+        }
+
+        public void administrarColisiones(Vector3 lastPosition, Vector3 newPosition) //Le saco la colision con enemigo. Una superclase para ship y enemyship vendria bien, pero paja...
+        {
+
+            bool collide = false;
+            collide = colisionSkyBox(collide);
+            adaptarMovimientoPorColision(lastPosition, newPosition, collide);
+
+        }
 
         public override void actualizarCanion(float rotacion, float elapsedTime, Matrix transf)
         {

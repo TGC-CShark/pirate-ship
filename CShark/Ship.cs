@@ -112,6 +112,7 @@ namespace AlumnoEjemplos.CShark
         public virtual void calcularTraslacionYRotacion(float elapsedTime, TerrenoSimple agua, float time)
         {
             Vector3 lastPosition = getPosition();
+            Vector3 lastPositionEnemy = EjemploAlumno.Instance.shipContrincante.getPosition();
 
             if (input.keyDown(Key.Left))
             {
@@ -141,36 +142,62 @@ namespace AlumnoEjemplos.CShark
             movY = agua.aplicarOlasA(getPosition(), time).Y + AltoBote / 2;
 
       
-            administrarColisiones(lastPosition, new Vector3(movX, movY, movZ));
+            administrarColisiones(lastPosition, new Vector3(movX, movY, movZ), lastPositionEnemy);
         }
 
-        public void administrarColisiones(Vector3 lastPosition, Vector3 newPosition)
+        public void administrarColisiones(Vector3 lastPosition, Vector3 newPosition, Vector3 lastPositionEnemy)
         {
 
             bool collide = false;
+            collide = colisionSkyBox(collide);
+            collide = colisionEnemigo(collide, lastPositionEnemy);
+            adaptarMovimientoPorColision(lastPosition, newPosition, collide);
 
+        }
+
+        public bool colisionEnemigo(bool collide, Vector3 lastPositionEnemy)
+        {
+            TgcCollisionUtils.BoxBoxResult result = TgcCollisionUtils.classifyBoxBox(mesh.BoundingBox, EjemploAlumno.Instance.shipContrincante.mesh.BoundingBox);
+
+           
+
+            if (result == TgcCollisionUtils.BoxBoxResult.Atravesando || result == TgcCollisionUtils.BoxBoxResult.Adentro)
+            {
+                collide = true;
+                EjemploAlumno.Instance.shipContrincante.traslacion = Matrix.Translation(lastPositionEnemy.X, lastPositionEnemy.Y, lastPositionEnemy.Z);
+
+            }
+
+            return collide;
+        }
+
+        public void adaptarMovimientoPorColision(Vector3 lastPosition, Vector3 newPosition, bool collide)
+        {
+            if (collide)
+            {
+
+                movementSpeed = 0;
+                traslacion = Matrix.Translation(lastPosition.X, lastPosition.Y, lastPosition.Z);
+
+            }
+            else
+            {
+                traslacion = Matrix.Translation(newPosition.X, newPosition.Y, newPosition.Z);
+            }
+        }
+
+        public bool colisionSkyBox(bool collide)
+        {
             TgcCollisionUtils.BoxBoxResult result = TgcCollisionUtils.classifyBoxBox(mesh.BoundingBox, EjemploAlumno.Instance.skyBoundingBox.BoundingBox);
 
 
             if (result == TgcCollisionUtils.BoxBoxResult.Afuera || result == TgcCollisionUtils.BoxBoxResult.Atravesando)
             {
                 collide = true;
-            
-            }
-            
-            if (collide)
-            {
-              
-                movementSpeed = 0;
-                traslacion = Matrix.Translation(lastPosition.X, lastPosition.Y, lastPosition.Z);
 
-            } else
-            {
-                traslacion = Matrix.Translation(newPosition.X, newPosition.Y, newPosition.Z);
             }
 
-            
-
+            return collide;
         }
 
         public Vector3 vectorDireccion()
