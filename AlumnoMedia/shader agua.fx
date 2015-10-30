@@ -28,6 +28,9 @@ float time = 0;
 float transparency = 0.9;
 float height;
 
+float radioBala;
+float posBalaX;
+float posBalaZ;
 
 /**************************************************************************************/
 /* RenderScene */
@@ -71,7 +74,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 
 	Input.Position.x = X;
 	Input.Position.z = Z;
-	Input.Position.y = height * (cos(0.005*X-time) + sin(0.005*Z-time));
+	Input.Position.y += height * (cos(0.005*X-time) + sin(0.005*Z-time));
 
 	   //Proyectar posicion
 	   Output.Position = mul( Input.Position, matWorldViewProj);
@@ -107,6 +110,20 @@ float4 ps_main( float2 Texcoord: TEXCOORD0, float4 Color:COLOR0) : COLOR0
 	// combino color y textura
 	// en este ejemplo combino un 80% el color de la textura y un 20%el del vertice
 	float4 retorno = 0.8*fvBaseColor + 0.2*Color;
+	
+	//if ((pow(Texcoord.x - posBalaX, 2) + pow(Texcoord.y - posBalaZ, 2)) < pow(radioBala,2)){
+	//if ((abs(Texcoord.x - posBalaX) < radioBala) && (abs(Texcoord.y - posBalaZ) < radioBala)){
+		//retorno = float4(0,0,0,0);
+	//} 
+	
+	retorno.a = transparency;
+	return retorno;
+}
+
+//Pixel Shader para la sombra de la bala
+float4 ps_sombra( float2 Texcoord: TEXCOORD0, float4 Color:COLOR0) : COLOR0
+{      
+	float4 retorno = float4(0,0,0,0);	
 	retorno.a = transparency;
 	return retorno;
 }
@@ -124,4 +141,14 @@ technique RenderScene
 	  PixelShader = compile ps_2_0 ps_main();
    }
 
+}
+
+technique SombraBala{
+	pass Pass_0{
+		AlphaBlendEnable = TRUE;
+        DestBlend = INVSRCALPHA;
+        SrcBlend = SRCALPHA;
+	  VertexShader = compile vs_2_0 vs_main();
+	  PixelShader = compile ps_2_0 ps_sombra();
+	}
 }

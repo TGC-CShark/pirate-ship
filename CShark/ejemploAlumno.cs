@@ -61,7 +61,8 @@ namespace AlumnoEjemplos.CShark
         public EstadoDelJuego estado;
         Menu menu;
 
-        Effect effect;
+        public Effect effect;
+        public Effect efectoSombra;
 
 
         /// <summary>
@@ -175,6 +176,9 @@ namespace AlumnoEjemplos.CShark
             time = 0;
             agua.AlphaBlendEnable = true;
 
+            efectoSombra = TgcShaders.loadEffect(alumnoMediaFolder + "shader agua.fx");
+
+
             //Creaciones
             ship = new Ship(POS_SHIP, meshShip, new Canion(POS_SHIP, 5, meshCanion));
             shipContrincante = new EnemyShip(ship, POS_CONTRINCANTE, meshShipContrincante, new Canion(POS_CONTRINCANTE, 5, meshCanionContrincante));                    
@@ -242,6 +246,10 @@ namespace AlumnoEjemplos.CShark
             d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.DarkSlateBlue, 1.0f, 0);
 
             update(elapsedTime, time);
+
+            efectoSombra.SetValue("time", time);
+            efectoSombra.SetValue("height", heightOlas);
+
             ship.renderizar();
             shipContrincante.renderizar();
 

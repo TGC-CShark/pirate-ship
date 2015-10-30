@@ -6,12 +6,14 @@ using System.Linq;
 using System.Text;
 using TgcViewer;
 using TgcViewer.Utils.TgcGeometry;
+using Microsoft.DirectX.Direct3D;
 
 namespace AlumnoEjemplos.CShark
 {
     public class Bala
     {
         public TgcSphere bullet;
+        public TgcSphere sombra;
         
 
         const float linearSpeed = 400;
@@ -41,13 +43,22 @@ namespace AlumnoEjemplos.CShark
             this.canion = canion;
             canion.agregarBalaEnElAire(this);
 
+            sombra = new TgcSphere(RADIO, Color.Black, pos);
+            sombra.updateValues();
+            sombra.AutoTransformEnable = false;
+            sombra.Effect = EjemploAlumno.Instance.efectoSombra;
+            sombra.Technique = "SombraBala";
             
         }
 
         public void render()
         {
             bullet.render();
-            
+
+            sombra.Effect.SetValue("radioBala", bullet.Radius);
+            sombra.Effect.SetValue("posBalaX", posicion.X);
+            sombra.Effect.SetValue("posBalaZ", posicion.Z);
+            sombra.render();
         }
 
         public void dispose()
@@ -55,7 +66,7 @@ namespace AlumnoEjemplos.CShark
             GuiController.Instance.Logger.log(posicion.ToString());
             GuiController.Instance.Logger.log("bounding: " + bullet.BoundingSphere.Position.ToString());
             canion.eliminarBalaEnElAire(this);
-            bullet.dispose();
+           // bullet.dispose();
         }
 
         internal void dispararParabolico(float elapsedTime)
@@ -68,11 +79,15 @@ namespace AlumnoEjemplos.CShark
                 verticalSpeed -= verticalAcceleration * elapsedTime;
                 posicion.Y += Convert.ToSingle(verticalSpeed * Math.Sin(anguloElevacion) * elapsedTime);
 
-                bullet.Transform = Matrix.Scaling(RADIO * 2, RADIO * 2, RADIO * 2) * Matrix.Translation(posicion);
+                Matrix transf = Matrix.Translation(posicion);
+                bullet.Transform = Matrix.Scaling(RADIO * 2, RADIO * 2, RADIO * 2) * transf;
+                transf.M42 = 0;
+                sombra.Transform = Matrix.Scaling(RADIO*2, 1, RADIO*2) * transf;
 
                 bullet.BoundingSphere.moveCenter(posicion - bullet.BoundingSphere.Position);
 
                 bullet.updateValues();
+                sombra.updateValues();
 
                 EjemploAlumno.Instance.shipContrincante.verificarDisparo(this);
             }
