@@ -74,7 +74,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 
 	Input.Position.x = X;
 	Input.Position.z = Z;
-	Input.Position.y += height * (cos(0.005*X-time) + sin(0.005*Z-time));
+	Input.Position.y = height * (cos(0.005*X-time) + sin(0.005*Z-time));
 
 	   //Proyectar posicion
 	   Output.Position = mul( Input.Position, matWorldViewProj);

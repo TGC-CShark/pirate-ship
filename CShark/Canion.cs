@@ -46,9 +46,9 @@ namespace AlumnoEjemplos.CShark
 
         }
 
-        public void shoot(float elapsedTime, float anguloRotacion)
+        public void shoot(float elapsedTime, float anguloRotacion, float velBarco)
         {
-            new Bala(posicion, anguloRotacion, anguloElevacion, this);
+            new Bala(posicion, anguloRotacion, anguloElevacion, this, velBarco);
             balasRestantes--;
             
         }
@@ -77,7 +77,7 @@ namespace AlumnoEjemplos.CShark
             posicion = new Vector3(meshCanion.Transform.M41,meshCanion.Transform.M42,meshCanion.Transform.M43);
         }
 
-        public void actualizarSiEsJugador(float anguloRotacion, float elapsedTime, Matrix transformacion)
+        public void actualizarSiEsJugador(float anguloRotacion, float elapsedTime, Matrix transformacion, float velBarco)
         {
 
             if (input.keyPressed(Key.A))
@@ -95,7 +95,7 @@ namespace AlumnoEjemplos.CShark
             {
                 if (balasRestantes >= 0)
                 {
-                    shoot(elapsedTime, anguloRotacion);
+                    shoot(elapsedTime, anguloRotacion, velBarco);
                 }
                 else
                 {

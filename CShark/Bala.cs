@@ -16,7 +16,8 @@ namespace AlumnoEjemplos.CShark
         public TgcSphere sombra;
         
 
-        const float linearSpeed = 400;
+        const float linearDefaultSpeed = 400f;
+        public float velInicialBarco;
         public float verticalSpeed = 300;
         public float verticalInitialSpeed = 300;
         float verticalAcceleration = 100f;
@@ -28,7 +29,7 @@ namespace AlumnoEjemplos.CShark
 
         public Vector3 posicion;
 
-        public Bala(Vector3 pos, float anguloRotacion, float anguloElevacion, Canion canion)
+        public Bala(Vector3 pos, float anguloRotacion, float anguloElevacion, Canion canion, float velBarco)
         { 
             bullet = new TgcSphere();
             bullet.setColor(Color.Black);
@@ -38,6 +39,7 @@ namespace AlumnoEjemplos.CShark
             bullet.LevelOfDetail = 1;
             this.anguloRotacion = anguloRotacion;
             this.anguloElevacion = anguloElevacion;
+            this.velInicialBarco = velBarco;
             bullet.updateValues();
             bullet.AutoTransformEnable = false;
             this.canion = canion;
@@ -73,6 +75,8 @@ namespace AlumnoEjemplos.CShark
         {
             if (posicion.Y >= -50)
             {
+                float linearSpeed = linearDefaultSpeed + velInicialBarco;
+
                 posicion.X -= Convert.ToSingle(linearSpeed * Math.Sin(anguloRotacion) * Math.Cos(anguloElevacion) * elapsedTime);
                 posicion.Z -= Convert.ToSingle(linearSpeed * Math.Cos(anguloRotacion) * Math.Cos(anguloElevacion) * elapsedTime);
 

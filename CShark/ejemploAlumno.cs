@@ -64,6 +64,9 @@ namespace AlumnoEjemplos.CShark
         public Effect effect;
         public Effect efectoSombra;
 
+        TgcBox lightMesh;
+
+        List<TgcMesh> meshes = new List<TgcMesh>();
 
         /// <summary>
         /// Categoría a la que pertenece el ejemplo.
@@ -160,14 +163,19 @@ namespace AlumnoEjemplos.CShark
 
             scene = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Vehiculos\\Canoa\\Canoa-TgcScene.xml");
 
+            meshes.Add(meshShip);
+
             meshShipContrincante = scene.Meshes[0];
             meshShipContrincante.setColor(Color.BlueViolet);
+            meshes.Add(meshShipContrincante);
 
             scene = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Armas\\Canon\\Canon.max-TgcScene.xml");
             meshCanion =  scene.Meshes[0];
+            meshes.Add(meshCanion);
 
             scene = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Armas\\Canon\\Canon.max-TgcScene.xml");
             meshCanionContrincante = scene.Meshes[0];
+            meshes.Add(meshCanionContrincante);
 
             //Shader
             effect = TgcShaders.loadEffect(alumnoMediaFolder + "shader agua.fx");
@@ -184,6 +192,9 @@ namespace AlumnoEjemplos.CShark
             shipContrincante = new EnemyShip(ship, POS_CONTRINCANTE, meshShipContrincante, new Canion(POS_CONTRINCANTE, 5, meshCanionContrincante));                    
 
             mainCamera = new MainCamera(ship);
+
+            //Crear caja para indicar ubicacion de la luz
+            lightMesh = TgcBox.fromSize(new Vector3(20, 20, 20), Color.Yellow);
 
             //Crear una UserVar
 /*            GuiController.Instance.UserVars.addVar("dir_p");
@@ -236,8 +247,31 @@ namespace AlumnoEjemplos.CShark
 
         }
 
+        private void cargarLuces(Vector3 posLuz){
+            Effect pointShader = TgcShaders.loadEffect(GuiController.Instance.ExamplesDir + "Shaders\\WorkshopShaders\\Shaders\\PhongShading.fx");
+                        
+            foreach (TgcMesh mesh in meshes){
+                mesh.Effect = pointShader;
+                mesh.Technique = "DefaultTechnique";//GuiController.Instance.Shaders.getTgcMeshTechnique(mesh.RenderType);
+
+                pointShader.SetValue("fvLightPosition", TgcParserUtils.vector3ToFloat3Array(posLuz));
+                pointShader.SetValue("fvEyePosition", TgcParserUtils.vector3ToFloat3Array(GuiController.Instance.ThirdPersonCamera.getPosition()));
+                pointShader.SetValue("k_la", 0.55f);
+                pointShader.SetValue("k_ld", 1);
+                pointShader.SetValue("k_ls", 0.35f);
+                pointShader.SetValue("fSpecularPower", 10);
+            }
+        }
+
         private void renderJuego(float elapsedTime, Device d3dDevice)
         {
+            Vector3 posLuz = new Vector3(POS_SHIP.X, POS_SHIP.Y + 500, POS_SHIP.Z);
+            lightMesh.Position = posLuz;
+
+            this.cargarLuces(posLuz);
+
+            lightMesh.render();
+
             //Obtener valor modifier
             heightOlas = (float)GuiController.Instance.Modifiers["heightOlas"];
 
@@ -287,6 +321,7 @@ namespace AlumnoEjemplos.CShark
             skyBox.dispose();
             skyBoundingBox.dispose();
             effect.Dispose();
+            lightMesh.dispose();
         }
 
     }

@@ -16,7 +16,7 @@ namespace AlumnoEjemplos.CShark
     public class Ship
     {
         const float ROTATION_SPEED = 1f;
-        const float VEL_MAXIMA = 500f;
+        const float VEL_MAXIMA = 100f;
         const float ESCALON_VEL = 0.4f;
         const float VIDA_MAX = 5;
 
@@ -101,7 +101,7 @@ namespace AlumnoEjemplos.CShark
         public virtual void actualizarCanion(float rotacion, float elapsedTime, Matrix transf)
         {
             canion.actualizar(anguloRotacion, elapsedTime, transf);
-            canion.actualizarSiEsJugador(anguloRotacion, elapsedTime, transf);
+            canion.actualizarSiEsJugador(anguloRotacion, elapsedTime, transf, movementSpeed);
         }
 
         public bool tieneVida()
