@@ -81,7 +81,8 @@ namespace AlumnoEjemplos.CShark
                 mesh.render();
                 canion.render();
                 barraDeVida.render();
-            } else
+            }
+            else
             {
                 EjemploAlumno.Instance.estado = EstadoDelJuego.Perdido;
             }
@@ -141,7 +142,7 @@ namespace AlumnoEjemplos.CShark
             movX -= Convert.ToSingle(movementSpeed * Math.Sin(anguloRotacion) * elapsedTime);
             movY = agua.aplicarOlasA(getPosition(), time).Y + AltoBote / 2;
 
-      
+
             administrarColisiones(lastPosition, new Vector3(movX, movY, movZ), lastPositionEnemy);
         }
 
@@ -151,6 +152,7 @@ namespace AlumnoEjemplos.CShark
             bool collide = false;
             collide = colisionSkyBox(collide);
             collide = colisionEnemigo(collide, lastPositionEnemy);
+            collide = colisionTerreno(collide);
             adaptarMovimientoPorColision(lastPosition, newPosition, collide);
 
         }
@@ -159,7 +161,7 @@ namespace AlumnoEjemplos.CShark
         {
             TgcCollisionUtils.BoxBoxResult result = TgcCollisionUtils.classifyBoxBox(mesh.BoundingBox, EjemploAlumno.Instance.shipContrincante.mesh.BoundingBox);
 
-           
+
 
             if (result == TgcCollisionUtils.BoxBoxResult.Atravesando || result == TgcCollisionUtils.BoxBoxResult.Adentro)
             {
@@ -200,9 +202,71 @@ namespace AlumnoEjemplos.CShark
             return collide;
         }
 
+        public float CalcularAltura(float x, float z)
+        {
+
+            float currentScaleXZ = EjemploAlumno.Instance.currentScaleXZ;
+            float currentScaleY = EjemploAlumno.Instance.currentScaleY;
+            TerrenoSimple terrain = EjemploAlumno.Instance.terrain;
+
+            float largo = currentScaleXZ * 64;
+            float pos_i = 64f * (0.5f + x / largo);
+            float pos_j = 64f * (0.5f + z / largo);
+
+            int pi = (int)pos_i;
+            float fracc_i = pos_i - pi;
+            int pj = (int)pos_j;
+            float fracc_j = pos_j - pj;
+
+            if (pi < 0)
+                pi = 0;
+            else
+                if (pi > 63)
+                    pi = 63;
+
+            if (pj < 0)
+                pj = 0;
+            else
+                if (pj > 63)
+                    pj = 63;
+
+            int pi1 = pi + 1;
+            int pj1 = pj + 1;
+            if (pi1 > 63)
+                pi1 = 63;
+            if (pj1 > 63)
+                pj1 = 63;
+
+            // 2x2 percent closest filtering usual: 
+            float H0 = terrain.HeightmapData[pi, pj] * currentScaleY;
+            float H1 = terrain.HeightmapData[pi1, pj] * currentScaleY;
+            float H2 = terrain.HeightmapData[pi, pj1] * currentScaleY;
+            float H3 = terrain.HeightmapData[pi1, pj1] * currentScaleY;
+            float H = (H0 * (1 - fracc_i) + H1 * fracc_i) * (1 - fracc_j) +
+                      (H2 * (1 - fracc_i) + H3 * fracc_i) * fracc_j;
+
+            return H;
+        }
+
+
+        public bool colisionTerreno(bool collide)
+        {
+            TerrenoSimple terreno = EjemploAlumno.Instance.terrain;
+            float Y = CalcularAltura(popa().X, popa().Z);
+
+            //GuiController.Instance.Logger.log("Y Height:" + Y.ToString() + " Y mesh:" + this.getPosition().Y.ToString());
+
+            if (Math.Abs(getPosition().Y - Y) > 0.005f)
+            {
+                collide = true;
+            }
+
+            return collide;
+        }
+
         public Vector3 vectorDireccion()
         {
-            return new Vector3(- FastMath.Sin(anguloRotacion), 0, - FastMath.Cos(anguloRotacion));
+            return new Vector3(-FastMath.Sin(anguloRotacion), 0, -FastMath.Cos(anguloRotacion));
         }
 
         public Vector3 popa()
@@ -216,7 +280,7 @@ namespace AlumnoEjemplos.CShark
 
         public void verificarDisparo(Bala bala)
         {
-            if(TgcCollisionUtils.testSphereAABB(bala.bullet.BoundingSphere, mesh.BoundingBox))
+            if (TgcCollisionUtils.testSphereAABB(bala.bullet.BoundingSphere, mesh.BoundingBox))
             {
                 GuiController.Instance.Logger.log("LE DI!");
                 reducirVida();

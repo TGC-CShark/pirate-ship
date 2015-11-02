@@ -46,12 +46,12 @@ namespace AlumnoEjemplos.CShark
         TgcViewer.Utils.TgcSceneLoader.TgcMesh meshCanionContrincante;
 
         //Terreno
-        TerrenoSimple terrain;
+        public TerrenoSimple terrain;
         TerrenoSimple agua;
         string currentHeightmap;
         string currentTexture;
-        float currentScaleXZ = 200f;
-        float currentScaleY = 13f;
+        public float currentScaleXZ = 200f;
+        public float currentScaleY = 13f;
         public TgcSkyBox skyBox;
         public TgcBox skyBoundingBox;
 
