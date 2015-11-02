@@ -265,7 +265,8 @@ namespace AlumnoEjemplos.CShark
 
         private void renderJuego(float elapsedTime, Device d3dDevice)
         {
-            Vector3 posLuz = new Vector3(POS_SHIP.X, POS_SHIP.Y + 500, POS_SHIP.Z);
+            //Poner luz a los meshes
+            Vector3 posLuz = new Vector3(POS_SHIP.X, POS_SHIP.Y + 500, POS_SHIP.Z - 2000);
             lightMesh.Position = posLuz;
 
             this.cargarLuces(posLuz);
@@ -295,6 +296,12 @@ namespace AlumnoEjemplos.CShark
             // Cargar variables de shader, por ejemplo el tiempo transcurrido.
             effect.SetValue("time", time);
             effect.SetValue("height", heightOlas);
+            effect.SetValue("fvLightPosition", TgcParserUtils.vector3ToFloat3Array(posLuz));
+            effect.SetValue("fvEyePosition", TgcParserUtils.vector3ToFloat3Array(GuiController.Instance.ThirdPersonCamera.getPosition()));
+            effect.SetValue("k_la", 4f);
+            effect.SetValue("k_ld", 5f);
+            effect.SetValue("k_ls", 4.5f);
+            effect.SetValue("fSpecularPower", 40);
             agua.heightOlas = heightOlas;
             agua.render();
 
