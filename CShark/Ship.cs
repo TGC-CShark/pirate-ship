@@ -152,7 +152,7 @@ namespace AlumnoEjemplos.CShark
             bool collide = false;
             collide = colisionSkyBox(collide);
             collide = colisionEnemigo(collide, lastPositionEnemy);
-            collide = colisionTerreno(collide);
+            //collide = colisionTerreno(collide);
             adaptarMovimientoPorColision(lastPosition, newPosition, collide);
 
         }
@@ -256,7 +256,7 @@ namespace AlumnoEjemplos.CShark
 
             //GuiController.Instance.Logger.log("Y Height:" + Y.ToString() + " Y mesh:" + this.getPosition().Y.ToString());
 
-            if (Math.Abs(getPosition().Y - Y) > 0.005f)
+            if (Math.Abs(getPosition().Y - Y) > 0.5f)
             {
                 collide = true;
             }
