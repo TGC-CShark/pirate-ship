@@ -24,12 +24,13 @@ namespace AlumnoEjemplos.CShark
         public float anguloRotacion;
         public float anguloElevacion;
         private Canion canion;
+        private bool soyPlayer;
 
         const float RADIO = 4f;
 
         public Vector3 posicion;
 
-        public Bala(Vector3 pos, float anguloRotacion, float anguloElevacion, Canion canion, float velBarco)
+        public Bala(Vector3 pos, float anguloRotacion, float anguloElevacion, Canion canion, float velBarco, bool soyPlayer)
         { 
             bullet = new TgcSphere();
             bullet.setColor(Color.Black);
@@ -50,7 +51,8 @@ namespace AlumnoEjemplos.CShark
             sombra.AutoTransformEnable = false;
             sombra.Effect = EjemploAlumno.Instance.efectoSombra;
             sombra.Technique = "SombraBala";
-            
+
+            this.soyPlayer = soyPlayer;
         }
 
         public void render()
@@ -93,7 +95,15 @@ namespace AlumnoEjemplos.CShark
                 bullet.updateValues();
                 sombra.updateValues();
 
-                EjemploAlumno.Instance.shipContrincante.verificarDisparo(this);
+                if (soyPlayer)
+                {
+                    EjemploAlumno.Instance.shipContrincante.verificarDisparo(this);
+                }
+                else
+                {
+                    EjemploAlumno.Instance.ship.verificarDisparo(this);
+                }
+                
             }
             else
             {

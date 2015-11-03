@@ -169,6 +169,7 @@ namespace AlumnoEjemplos.CShark
         {
             float ola = heightOlas*2 *((float)Math.Cos(0.005*posicion.X-time) + (float)Math.Sin(0.005*posicion.Z  - time)) ;
 
+            
             Vector3 nuevaPosicion;
             nuevaPosicion.X = posicion.X;
             nuevaPosicion.Y = ola;

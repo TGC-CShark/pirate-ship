@@ -102,7 +102,7 @@ namespace AlumnoEjemplos.CShark
         public virtual void actualizarCanion(float rotacion, float elapsedTime, Matrix transf)
         {
             canion.actualizar(anguloRotacion, elapsedTime, transf);
-            canion.actualizarSiEsJugador(anguloRotacion, elapsedTime, transf, movementSpeed);
+            canion.actualizarSiEsJugador(anguloRotacion, elapsedTime, movementSpeed);
         }
 
 
@@ -183,7 +183,6 @@ namespace AlumnoEjemplos.CShark
             movZ -= Convert.ToSingle(movementSpeed * Math.Cos(anguloRotacion) * elapsedTime);
             movX -= Convert.ToSingle(movementSpeed * Math.Sin(anguloRotacion) * elapsedTime);
             movY = agua.aplicarOlasA(getPosition(), time).Y + AltoBote / 2;
-
 
             administrarColisiones(lastPosition, new Vector3(movX, movY, movZ), lastPositionEnemy);
         }

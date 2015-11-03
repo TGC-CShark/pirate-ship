@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Timers;
 using TgcViewer;
 using TgcViewer.Utils._2D;
 using TgcViewer.Utils.Input;
@@ -16,6 +17,7 @@ namespace AlumnoEjemplos.CShark
     {
         const float ELEVACION_MAX = (float)Math.PI / 2;
         const float ELEVACION_MIN = 0f;
+        const float FRECUENCIA_TIRO = 0.5f;
 
         public TgcMesh meshCanion;
         public int balasRestantes = 50;
@@ -25,10 +27,13 @@ namespace AlumnoEjemplos.CShark
         public float anguloElevacion = (float)Math.PI/4;
         public bool elevacion_visible = false;
         public TgcText2d texto_elevacion;
+        bool soyPlayer;
 
         public Vector3 posicion;
 
-        public Canion(Vector3 pos, float offsetShip, TgcMesh mesh)
+        Timer timer;
+
+        public Canion(Vector3 pos, float offsetShip, TgcMesh mesh, bool soyPlayer)
         {
             meshCanion = mesh;
             meshCanion.Position = new Vector3(0, offsetShip, 0) + pos;
@@ -44,13 +49,16 @@ namespace AlumnoEjemplos.CShark
             texto_elevacion.Size = new Size(800, 300);
             texto_elevacion.changeFont(new System.Drawing.Font("BlackoakStd", 35, FontStyle.Bold | FontStyle.Italic));
 
+            timer = new Timer(FRECUENCIA_TIRO);
+
+            this.soyPlayer = soyPlayer;
         }
 
         public void shoot(float elapsedTime, float anguloRotacion, float velBarco)
         {
-            new Bala(posicion, anguloRotacion, anguloElevacion, this, velBarco);
+            new Bala(posicion, anguloRotacion, anguloElevacion, this, velBarco, soyPlayer);
             balasRestantes--;
-            
+
         }
 
         public void render()
@@ -66,7 +74,7 @@ namespace AlumnoEjemplos.CShark
 
         internal void dispose()
         {
-
+            
             meshCanion.dispose();
         }
 
@@ -77,7 +85,20 @@ namespace AlumnoEjemplos.CShark
             posicion = new Vector3(meshCanion.Transform.M41,meshCanion.Transform.M42,meshCanion.Transform.M43);
         }
 
-        public void actualizarSiEsJugador(float anguloRotacion, float elapsedTime, Matrix transformacion, float velBarco)
+        public void actualizarSiEsEnemigo(float anguloRotacion, float elapsedTime, float velBarco)
+        {
+            timer.doWhenItsTimeTo(() => this.shoot(elapsedTime, anguloRotacion, velBarco), elapsedTime);
+
+            for (int i = 0; i < balasEnElAire.Count; i++)
+            {
+                Bala bala = balasEnElAire[i];
+                bala.actualizar(elapsedTime);
+                bala.render();
+            }
+            
+        }
+
+        public void actualizarSiEsJugador(float anguloRotacion, float elapsedTime, float velBarco)
         {
 
             if (input.keyPressed(Key.A))
@@ -169,4 +190,43 @@ namespace AlumnoEjemplos.CShark
             this.balasEnElAire.Remove(bala);
         }
     }
+
+    /**************************** Timer ****************************************/
+
+    public class Timer
+    {
+        private float time;
+        private float frequency;
+        private bool itsTime = false;
+
+        public Timer(float frequency)
+        {
+            this.frequency = frequency;
+        }
+
+        public void doWhenItsTimeTo(System.Action whatToDo, float elapsedTime)
+        {
+
+            if (itsTime)
+            {
+                whatToDo();
+                itsTime = false;
+                GuiController.Instance.Logger.log("dispara enemigo");
+            }
+            spendTime(elapsedTime);
+        }
+
+        private void spendTime(float elapsedTime)
+        {
+            if (time < Math.PI * 2)
+                time += elapsedTime * (float)Math.PI * frequency;
+            else
+            {
+                itsTime = true;
+                this.time = 0;
+            }
+        }
+
+    }
+
 }

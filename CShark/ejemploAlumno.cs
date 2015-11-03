@@ -33,7 +33,7 @@ namespace AlumnoEjemplos.CShark
     {
         public static EjemploAlumno Instance { get; set; }
 
-        Ship ship;
+        public Ship ship;
         public EnemyShip shipContrincante;
 
         Vector3 POS_SHIP = new Vector3(0, 0, 0); //Constante
@@ -189,8 +189,8 @@ namespace AlumnoEjemplos.CShark
 
 
             //Creaciones
-            ship = new Ship(POS_SHIP, meshShip, new Canion(POS_SHIP, 5, meshCanion));
-            shipContrincante = new EnemyShip(ship, POS_CONTRINCANTE, meshShipContrincante, new Canion(POS_CONTRINCANTE, 5, meshCanionContrincante));                    
+            ship = new Ship(POS_SHIP, meshShip, new Canion(POS_SHIP, 5, meshCanion, true));
+            shipContrincante = new EnemyShip(ship, POS_CONTRINCANTE, meshShipContrincante, new Canion(POS_CONTRINCANTE, 5, meshCanionContrincante, false));                    
 
             mainCamera = new MainCamera(ship);
 

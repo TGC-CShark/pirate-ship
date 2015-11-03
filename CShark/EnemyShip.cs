@@ -110,6 +110,7 @@ namespace AlumnoEjemplos.CShark
         {
             mesh.BoundingBox.transform(transf);
             canion.actualizar(anguloRotacion, elapsedTime, transf);
+            canion.actualizarSiEsEnemigo(anguloRotacion, elapsedTime, this.movementSpeed);
         }
 
         public override void iniciarBarra()
