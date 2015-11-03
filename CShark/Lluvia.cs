@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using TgcViewer;
 using TgcViewer.Utils._2D;
+using TgcViewer.Utils.Terrain;
 using TgcViewer.Utils.TgcSceneLoader;
 
 namespace AlumnoEjemplos.CShark
@@ -26,10 +27,17 @@ namespace AlumnoEjemplos.CShark
             if (EjemploAlumno.Instance.lloviendo)
             {
 
+
+                EjemploAlumno.Instance.skyboxTormentoso(EjemploAlumno.Instance.skyBox);
+
                  
                 GuiController.Instance.Drawer2D.beginDrawSprite();
                 updateAndRender();
                 GuiController.Instance.Drawer2D.endDrawSprite();
+            }
+            else
+            {
+                EjemploAlumno.Instance.skyboxSoleado(EjemploAlumno.Instance.skyBox);
             }
         }
             

@@ -144,15 +144,7 @@ namespace AlumnoEjemplos.CShark
             skyBox = new TgcSkyBox();
             skyBox.Center = new Vector3(0, 0, 0);
             skyBox.Size = new Vector3(12000, 12000, 12000);
-            string texturesPath = GuiController.Instance.ExamplesMediaDir + "Texturas\\Quake\\SkyBox LostAtSeaDay\\";
-            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Up, texturesPath + "lostatseaday_up.jpg");
-            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Down, texturesPath + "lostatseaday_dn.jpg");
-            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Left, texturesPath + "lostatseaday_lf.jpg");
-            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Right, texturesPath + "lostatseaday_rt.jpg");
-            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Front, texturesPath + "lostatseaday_bk.jpg");
-            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Back, texturesPath + "lostatseaday_ft.jpg");
-            skyBox.SkyEpsilon = 50f;
-            skyBox.updateValues();
+            skyboxSoleado(skyBox);
 
             skyBoundingBox = new TgcBox();
             skyBoundingBox.Size = skyBox.Size;
@@ -219,6 +211,31 @@ namespace AlumnoEjemplos.CShark
 */
         }
 
+        public void skyboxSoleado(TgcSkyBox skyBox)
+        {
+            string texturesPath = GuiController.Instance.AlumnoEjemplosMediaDir + "blue sky\\";
+            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Up, texturesPath + "bluesky_top.jpg");
+            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Down, texturesPath + "bluesky_top.jpg");
+            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Left, texturesPath + "bluesky_left.jpg");
+            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Right, texturesPath + "bluesky_right.jpg");
+            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Front, texturesPath + "bluesky_front.jpg");
+            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Back, texturesPath + "bluesky_back.jpg");
+            skyBox.SkyEpsilon = 50f;
+            skyBox.updateValues();
+        }
+
+        public void skyboxTormentoso(TgcSkyBox skyBox)
+        {
+            string texturesPath = GuiController.Instance.AlumnoEjemplosMediaDir + "grave\\";
+            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Up, texturesPath + "grave_top.jpg");
+            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Down, texturesPath + "grave_top.jpg");
+            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Left, texturesPath + "grave_left.jpg");
+            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Right, texturesPath + "grave_right.jpg");
+            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Front, texturesPath + "grave_front.jpg");
+            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Back, texturesPath + "grave_back.jpg");
+            skyBox.SkyEpsilon = 50f;
+            skyBox.updateValues();
+        }
 
         /// <summary>
         /// Método que se llama cada vez que hay que refrescar la pantalla.
