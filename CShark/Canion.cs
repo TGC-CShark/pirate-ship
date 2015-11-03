@@ -14,7 +14,7 @@ namespace AlumnoEjemplos.CShark
 {
     public class Canion
     {
-        const float ELEVACION_MAX = 90f;
+        const float ELEVACION_MAX = (float)Math.PI / 2;
         const float ELEVACION_MIN = 0f;
 
         public TgcMesh meshCanion;
@@ -22,7 +22,7 @@ namespace AlumnoEjemplos.CShark
         static TgcD3dInput input = GuiController.Instance.D3dInput;
         public List<Bala> balasEnElAire = new List<Bala>();
         public float anguloRotacion;
-        public float anguloElevacion = 45f;
+        public float anguloElevacion = (float)Math.PI/4;
         public bool elevacion_visible = false;
         public TgcText2d texto_elevacion;
 
@@ -37,7 +37,7 @@ namespace AlumnoEjemplos.CShark
             mesh.AutoTransformEnable = false;
 
             texto_elevacion = new TgcText2d();
-            texto_elevacion.Text = anguloElevacion.ToString() + "º";
+            texto_elevacion.Text = toDegrees(anguloElevacion).ToString() + "º";
             texto_elevacion.Color = Color.Gold;
             texto_elevacion.Align = TgcText2d.TextAlign.CENTER;
             texto_elevacion.Position = new Point(200, 100);
@@ -99,7 +99,11 @@ namespace AlumnoEjemplos.CShark
                 }
                 else
                 {
-                    //hacer algo :P
+                    
+                    if (EjemploAlumno.Instance.shipContrincante.tieneVida())
+                    {
+                        EjemploAlumno.Instance.estado = EstadoDelJuego.Perdido;
+                    }
                 }
                 
             }
@@ -124,22 +128,35 @@ namespace AlumnoEjemplos.CShark
             }
         }
 
+        private float toRadians(float grados)
+        {
+            return grados * (float)Math.PI / 180;
+        }
+
+        private float toDegrees(float radianes)
+        {
+            return radianes * 180 / (float)Math.PI;
+        }
+
+
         private void decrementarAnguloElevacion(float elapsedTime)
         {
            
             float aux = anguloElevacion;
-            anguloElevacion = Math.Max(ELEVACION_MIN, aux-1);
+            anguloElevacion = Math.Max(ELEVACION_MIN, aux-toRadians(1));
             
-            texto_elevacion.Text = anguloElevacion.ToString() + "º";
+            texto_elevacion.Text = Convert.ToInt32(toDegrees(anguloElevacion)).ToString() + "º";
         }
+
+        
 
         private void incrementarAnguloElevacion(float elapsedTime)
         {
             
             float aux = anguloElevacion;
-            anguloElevacion = Math.Min(ELEVACION_MAX, aux + 1);
+            anguloElevacion = Math.Min(ELEVACION_MAX, aux + toRadians(1));
             
-            texto_elevacion.Text = anguloElevacion.ToString() + "º";
+            texto_elevacion.Text = Convert.ToInt32(toDegrees(anguloElevacion)).ToString() + "º";
         }
 
         public void agregarBalaEnElAire(Bala bala)
