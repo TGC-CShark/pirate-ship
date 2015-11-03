@@ -13,7 +13,8 @@ namespace AlumnoEjemplos.CShark
     class Lluvia : TgcAnimatedSprite
     {
 
-        public Lluvia() : base(GuiController.Instance.AlumnoEjemplosMediaDir + "LLUVIA1.png", new Size(128, 128),32768,20)
+        public Lluvia()
+            : base(GuiController.Instance.AlumnoEjemplosMediaDir + "drops-rain-rainy-wet-weather-climate.png", new Size(128, 128), 32768, 20)
         {
             Position = new Vector2(-10, 0);
             Scaling = new Vector2(12, 8);

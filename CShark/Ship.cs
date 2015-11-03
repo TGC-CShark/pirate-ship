@@ -209,7 +209,6 @@ namespace AlumnoEjemplos.CShark
             float currentScaleY = EjemploAlumno.Instance.currentScaleY;
             TerrenoSimple terrain = EjemploAlumno.Instance.terrain;
 
-            //return terrain.HeightmapData[(int)x, (int)z] * currentScaleY;
             float largo = currentScaleXZ * 64;
             float pos_i = 64f * (0.5f + x / largo);
             float pos_j = 64f * (0.5f + z / largo);
@@ -256,12 +255,9 @@ namespace AlumnoEjemplos.CShark
             float YProa = CalcularAltura(proa().X, proa().Z);
             float YPopa = CalcularAltura(popa().X, popa().Z);
             float currentScaleY = EjemploAlumno.Instance.currentScaleY;
+            float offset = terreno.Center.Y * currentScaleY;
 
-            float aux = (getPosition().Y) + 1625;
-            float aux2 = YProa;
-            GuiController.Instance.Logger.log("Y Height:" + aux2.ToString() + " Y mesh:" + aux.ToString());
-
-            if ((Math.Abs(getPosition().Y + 1625 - YProa) < 10f) && (YPopa - getPosition().Y - 1625 < 20))
+            if ((Math.Abs(getPosition().Y - offset - YProa) < 1f) && (YPopa - getPosition().Y + offset < 1))
             {
                 collide = true;
             }
