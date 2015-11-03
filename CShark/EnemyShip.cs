@@ -57,13 +57,21 @@ namespace AlumnoEjemplos.CShark
                 rotacion = Matrix.RotationY(anguloRotacion);
             }
 
-            if (FastMath.Abs(distance.Length()) > 200)
+            if (FastMath.Abs(distance.Length()) > 1000)
             {
                 movementSpeed = Math.Min(movementSpeed + ESCALON_VEL, VEL_MAXIMA);
             }
-            if (FastMath.Abs(distance.Length()) < 400)
+            if (FastMath.Abs(distance.Length()) <= 1000)
             {
-                movementSpeed = Math.Max(movementSpeed - movementSpeed / distance.Length(), 0);
+                if (FastMath.Abs(distance.Length()) > 400) 
+                { 
+                    movementSpeed = Math.Max(movementSpeed - movementSpeed / distance.Length(), 0);
+                }
+                else
+                {
+                    movementSpeed = 0;
+                }
+                
             }
 
                 movZ -= movementSpeed * FastMath.Cos(anguloRotacion) * elapsedTime;
