@@ -48,6 +48,8 @@ namespace AlumnoEjemplos.CShark
 
         //Clima
         Lluvia lluvia = new Lluvia();
+        public TgcBox lightMesh;
+        public bool lloviendo;
 
         //Terreno
         public TerrenoSimple terrain;
@@ -68,8 +70,7 @@ namespace AlumnoEjemplos.CShark
         public Effect effect;
         public Effect efectoSombra;
 
-        TgcBox lightMesh;
-        public bool lloviendo;
+        
 
         List<TgcMesh> meshes = new List<TgcMesh>();
 
@@ -322,12 +323,7 @@ namespace AlumnoEjemplos.CShark
             // Cargar variables de shader, por ejemplo el tiempo transcurrido.
             effect.SetValue("time", time);
             effect.SetValue("height", heightOlas);
-            effect.SetValue("fvLightPosition", TgcParserUtils.vector3ToFloat3Array(posLuz));
-            effect.SetValue("fvEyePosition", TgcParserUtils.vector3ToFloat3Array(GuiController.Instance.ThirdPersonCamera.getPosition()));
-            effect.SetValue("k_la", 2f);
-            effect.SetValue("k_ld", 5f);
-            effect.SetValue("k_ls", 4.5f);
-            effect.SetValue("fSpecularPower", 40);
+            posLuz = luzAguaSoleado(lightMesh);
             agua.heightOlas = heightOlas;
             agua.AlphaBlendEnable = true;
             agua.render();
@@ -354,6 +350,48 @@ namespace AlumnoEjemplos.CShark
             shipContrincante.renderizar();
             lluvia.render();
             
+        }
+
+        public Vector3 luzAguaSoleado(TgcBox lightMesh)
+        {
+            Vector3 posLuz = lightMesh.Position;
+
+            luzSoleado(lightMesh);
+
+            effect.SetValue("fvLightPosition", TgcParserUtils.vector3ToFloat3Array(posLuz));
+            effect.SetValue("fvEyePosition", TgcParserUtils.vector3ToFloat3Array(GuiController.Instance.ThirdPersonCamera.getPosition()));
+            effect.SetValue("k_la", 4f);
+            effect.SetValue("k_ld", 5f);
+            effect.SetValue("k_ls", 4.5f);
+            effect.SetValue("fSpecularPower", 40);
+            return posLuz;
+        }
+
+        public void luzSoleado(TgcBox lightMesh)
+        {
+            lightMesh.Size = new Vector3(20, 20, 20);
+            lightMesh.Color = Color.Yellow;
+        }
+
+        public Vector3 luzAguaTormentoso(TgcBox lightMesh)
+        {
+            Vector3 posLuz = lightMesh.Position;
+                
+            luzTormentoso(lightMesh);
+
+            effect.SetValue("fvLightPosition", TgcParserUtils.vector3ToFloat3Array(posLuz));
+            effect.SetValue("fvEyePosition", TgcParserUtils.vector3ToFloat3Array(GuiController.Instance.ThirdPersonCamera.getPosition()));
+            effect.SetValue("k_la", 0.3f);
+            effect.SetValue("k_ld", 0.3f);
+            effect.SetValue("k_ls", 0f);
+            effect.SetValue("fSpecularPower", 250);
+            return posLuz;
+        }
+
+        public void luzTormentoso(TgcBox lightMesh)
+        {
+            lightMesh.Size = new Vector3(10, 10, 10);
+            lightMesh.Color = Color.Gray;
         }
 
         private void update(float elapsedTime, float time)

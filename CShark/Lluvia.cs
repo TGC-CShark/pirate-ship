@@ -15,7 +15,7 @@ namespace AlumnoEjemplos.CShark
     {
 
         public Lluvia()
-            : base(GuiController.Instance.AlumnoEjemplosMediaDir + "drops-rain-rainy-wet-weather-climate.png", new Size(128, 128), 32768, 20)
+            : base(GuiController.Instance.AlumnoEjemplosMediaDir + "drops-rain-rainy-wet-weather-climate.png", new Size(128, 128), 512, 20)
         {
             Position = new Vector2(-10, 0);
             Scaling = new Vector2(12, 8);
@@ -29,7 +29,7 @@ namespace AlumnoEjemplos.CShark
 
 
                 EjemploAlumno.Instance.skyboxTormentoso(EjemploAlumno.Instance.skyBox);
-
+                EjemploAlumno.Instance.luzAguaTormentoso(EjemploAlumno.Instance.lightMesh);
                  
                 GuiController.Instance.Drawer2D.beginDrawSprite();
                 updateAndRender();
@@ -38,6 +38,7 @@ namespace AlumnoEjemplos.CShark
             else
             {
                 EjemploAlumno.Instance.skyboxSoleado(EjemploAlumno.Instance.skyBox);
+                EjemploAlumno.Instance.luzAguaSoleado(EjemploAlumno.Instance.lightMesh);
             }
         }
             
