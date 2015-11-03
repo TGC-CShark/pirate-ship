@@ -40,7 +40,7 @@
     <OutputPath>.\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>0</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
@@ -91,6 +91,7 @@
     <Compile Include="CShark\Bala.cs" />
     <Compile Include="CShark\BarraVida.cs" />
     <Compile Include="CShark\Canion.cs" />
+    <Compile Include="CShark\Lluvia.cs" />
     <Compile Include="CShark\Menu.cs" />
     <Compile Include="CShark\TerrenoSimple.cs" />
     <Compile Include="CShark\EjemploAlumno.cs" />

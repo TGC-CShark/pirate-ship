@@ -12,6 +12,7 @@ using TgcViewer.Utils.TgcSceneLoader;
 using TgcViewer.Utils.Terrain;
 using TgcViewer.Utils.Shaders;
 using TgcViewer.Utils.Sound;
+using TgcViewer.Utils.Input;
 
 namespace AlumnoEjemplos.CShark
 {
@@ -45,6 +46,9 @@ namespace AlumnoEjemplos.CShark
         TgcViewer.Utils.TgcSceneLoader.TgcMesh meshCanion;
         TgcViewer.Utils.TgcSceneLoader.TgcMesh meshCanionContrincante;
 
+        //Clima
+        Lluvia lluvia = new Lluvia();
+
         //Terreno
         public TerrenoSimple terrain;
         TerrenoSimple agua;
@@ -65,6 +69,7 @@ namespace AlumnoEjemplos.CShark
         public Effect efectoSombra;
 
         TgcBox lightMesh;
+        public bool lloviendo;
 
         List<TgcMesh> meshes = new List<TgcMesh>();
 
@@ -90,8 +95,9 @@ namespace AlumnoEjemplos.CShark
         /// </summary>
         public override string getDescription()
         {
-            return "Dispararle al barco enemigo [SPACE] hasta hundirlo. Con las flechitas RIGHT y LEFT vira el barco. Con UP se acelera y DOWN desacelera." + 
-                "Con A se activa la visibilidad del ángulo de elevación del disparo, y con W y S se incrementa o decrementa dicho ángulo.";
+            return "Dispararle al barco enemigo [SPACE] hasta hundirlo. Con las flechitas RIGHT y LEFT vira el barco. Con UP se acelera y DOWN desacelera. " +
+                "Con A se activa la visibilidad del ángulo de elevación del disparo, y con W y S se incrementa o decrementa dicho ángulo. " +
+                "Con L se activa la tormenta.";
         }
 
         /// <summary>
@@ -153,6 +159,8 @@ namespace AlumnoEjemplos.CShark
             skyBoundingBox.Position = skyBox.Center;
             skyBoundingBox.AlphaBlendEnable = true;
             skyBoundingBox.updateValues();
+
+            lloviendo = false;
             
             //Cargar meshes
             TgcViewer.Utils.TgcSceneLoader.TgcSceneLoader loader = new TgcViewer.Utils.TgcSceneLoader.TgcSceneLoader();
@@ -265,6 +273,8 @@ namespace AlumnoEjemplos.CShark
 
         private void renderJuego(float elapsedTime, Device d3dDevice)
         {
+
+
             //Poner luz a los meshes
             Vector3 posLuz = new Vector3(POS_SHIP.X, POS_SHIP.Y + 500, POS_SHIP.Z - 2500);
             lightMesh.Position = posLuz;
@@ -285,8 +295,7 @@ namespace AlumnoEjemplos.CShark
             efectoSombra.SetValue("time", time);
             efectoSombra.SetValue("height", heightOlas);
 
-            ship.renderizar();
-            shipContrincante.renderizar();
+       
 
             terrain.render();
 
@@ -307,6 +316,27 @@ namespace AlumnoEjemplos.CShark
             agua.render();
 
             d3dDevice.Transform.World = Matrix.Identity;
+
+            TgcD3dInput input = GuiController.Instance.D3dInput;
+            if (input.keyPressed(Microsoft.DirectX.DirectInput.Key.L))
+            {
+                if (lloviendo)
+                {
+                    lloviendo = false;
+                    GuiController.Instance.Logger.log("Lluvia desactivada");
+                }
+                else
+                {
+                    lloviendo = true;
+                    GuiController.Instance.Logger.log("Lluvia activada");
+
+                }
+            }
+
+            ship.renderizar();
+            shipContrincante.renderizar();
+            lluvia.render();
+            
         }
 
         private void update(float elapsedTime, float time)
@@ -330,6 +360,7 @@ namespace AlumnoEjemplos.CShark
             skyBoundingBox.dispose();
             effect.Dispose();
             lightMesh.dispose();
+            lluvia.dispose();
         }
 
     }
