@@ -93,6 +93,7 @@ namespace AlumnoEjemplos.CShark
 
             bool collide = false;
             collide = colisionSkyBox(collide);
+            collide = colisionTerreno(collide);
             adaptarMovimientoPorColision(lastPosition, newPosition, collide);
 
         }
