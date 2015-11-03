@@ -66,10 +66,9 @@ namespace AlumnoEjemplos.CShark
                 movementSpeed = Math.Max(movementSpeed - movementSpeed / distance.Length(), 0);
             }
 
-            movZ -= movementSpeed * FastMath.Cos(anguloRotacion) * elapsedTime;
-            movX -= movementSpeed * FastMath.Sin(anguloRotacion) * elapsedTime;
-            movY = agua.aplicarOlasA(getPosition(), time).Y + AltoBote / 2;
-
+                movZ -= movementSpeed * FastMath.Cos(anguloRotacion) * elapsedTime;
+                movX -= movementSpeed * FastMath.Sin(anguloRotacion) * elapsedTime;
+                movY = agua.aplicarOlasA(getPosition(), time).Y + AltoBote / 2;
 
             administrarColisiones(lastPosition, new Vector3(movX, movY, movZ));
             

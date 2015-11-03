@@ -209,6 +209,7 @@ namespace AlumnoEjemplos.CShark
             float currentScaleY = EjemploAlumno.Instance.currentScaleY;
             TerrenoSimple terrain = EjemploAlumno.Instance.terrain;
 
+            //return terrain.HeightmapData[(int)x, (int)z] * currentScaleY;
             float largo = currentScaleXZ * 64;
             float pos_i = 64f * (0.5f + x / largo);
             float pos_j = 64f * (0.5f + z / largo);
@@ -252,11 +253,15 @@ namespace AlumnoEjemplos.CShark
         public bool colisionTerreno(bool collide)
         {
             TerrenoSimple terreno = EjemploAlumno.Instance.terrain;
-            float Y = CalcularAltura(popa().X, popa().Z);
+            float YProa = CalcularAltura(proa().X, proa().Z);
+            float YPopa = CalcularAltura(popa().X, popa().Z);
+            float currentScaleY = EjemploAlumno.Instance.currentScaleY;
 
-            //GuiController.Instance.Logger.log("Y Height:" + Y.ToString() + " Y mesh:" + this.getPosition().Y.ToString());
+            float aux = (getPosition().Y) + 1625;
+            float aux2 = YProa;
+            GuiController.Instance.Logger.log("Y Height:" + aux2.ToString() + " Y mesh:" + aux.ToString());
 
-            if (Math.Abs(getPosition().Y - Y) > 0.005f)
+            if ((Math.Abs(getPosition().Y + 1625 - YProa) < 10f) && (YPopa - getPosition().Y - 1625 < 20))
             {
                 collide = true;
             }
@@ -267,6 +272,15 @@ namespace AlumnoEjemplos.CShark
         public Vector3 vectorDireccion()
         {
             return new Vector3(-FastMath.Sin(anguloRotacion), 0, -FastMath.Cos(anguloRotacion));
+        }
+
+        public Vector3 proa()
+        {
+            Vector3 offsetProa = new Vector3(FastMath.Sin(anguloRotacion), 0, FastMath.Cos(anguloRotacion));
+            Vector3 proa = getPosition() - offsetProa * (LargoBote / 2);
+            proa.Y = 0;
+
+            return proa;
         }
 
         public Vector3 popa()
