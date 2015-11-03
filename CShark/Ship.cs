@@ -105,10 +105,52 @@ namespace AlumnoEjemplos.CShark
             canion.actualizarSiEsJugador(anguloRotacion, elapsedTime, transf, movementSpeed);
         }
 
-        public bool tieneVida()
+
+        public virtual void dispose()
         {
-            return vida > 0;
+            mesh.dispose();
+            canion.dispose();
+            //barraDeVida.dispose();
         }
+
+        public Vector3 vectorDireccion()
+        {
+            return new Vector3(-FastMath.Sin(anguloRotacion), 0, -FastMath.Cos(anguloRotacion));
+        }
+
+        /************************* PARTES DEL BARCO ****************************/
+
+        public Vector3 proa()
+        {
+            Vector3 offsetProa = new Vector3(FastMath.Sin(anguloRotacion), 0, FastMath.Cos(anguloRotacion));
+            Vector3 proa = getPosition() - offsetProa * (LargoBote / 2);
+            proa.Y = 0;
+
+            return proa;
+        }
+
+        public Vector3 popa()
+        {
+            Vector3 offsetPopa = new Vector3(FastMath.Sin(anguloRotacion), 0, FastMath.Cos(anguloRotacion));
+            Vector3 popa = getPosition() + offsetPopa * (LargoBote / 2);
+            popa.Y = 0;
+
+            return popa;
+        }
+
+        /**************** DISPARO *****************************/
+
+        public void verificarDisparo(Bala bala)
+        {
+            if (TgcCollisionUtils.testSphereAABB(bala.bullet.BoundingSphere, mesh.BoundingBox))
+            {
+                GuiController.Instance.Logger.log("LE DI!");
+                reducirVida();
+                bala.dispose();
+            }
+        }
+
+        /*************************************** MOVIMIENTO ************************************************/
 
         public virtual void calcularTraslacionYRotacion(float elapsedTime, TerrenoSimple agua, float time)
         {
@@ -146,6 +188,24 @@ namespace AlumnoEjemplos.CShark
             administrarColisiones(lastPosition, new Vector3(movX, movY, movZ), lastPositionEnemy);
         }
 
+        public void adaptarMovimientoPorColision(Vector3 lastPosition, Vector3 newPosition, bool collide)
+        {
+            if (collide)
+            {
+
+                movementSpeed = 0;
+                traslacion = Matrix.Translation(lastPosition.X, lastPosition.Y, lastPosition.Z);
+
+            }
+            else
+            {
+                traslacion = Matrix.Translation(newPosition.X, newPosition.Y, newPosition.Z);
+            }
+        }
+
+
+        /****************************************** COLISIONES ***************************************************/
+
         public void administrarColisiones(Vector3 lastPosition, Vector3 newPosition, Vector3 lastPositionEnemy)
         {
 
@@ -156,7 +216,9 @@ namespace AlumnoEjemplos.CShark
             adaptarMovimientoPorColision(lastPosition, newPosition, collide);
 
         }
+        
 
+        //COLISION ENEMIGO
         public bool colisionEnemigo(bool collide, Vector3 lastPositionEnemy)
         {
             TgcCollisionUtils.BoxBoxResult result = TgcCollisionUtils.classifyBoxBox(mesh.BoundingBox, EjemploAlumno.Instance.shipContrincante.mesh.BoundingBox);
@@ -173,21 +235,8 @@ namespace AlumnoEjemplos.CShark
             return collide;
         }
 
-        public void adaptarMovimientoPorColision(Vector3 lastPosition, Vector3 newPosition, bool collide)
-        {
-            if (collide)
-            {
-
-                movementSpeed = 0;
-                traslacion = Matrix.Translation(lastPosition.X, lastPosition.Y, lastPosition.Z);
-
-            }
-            else
-            {
-                traslacion = Matrix.Translation(newPosition.X, newPosition.Y, newPosition.Z);
-            }
-        }
-
+        
+        //COLISION SKYBOX
         public bool colisionSkyBox(bool collide)
         {
             TgcCollisionUtils.BoxBoxResult result = TgcCollisionUtils.classifyBoxBox(mesh.BoundingBox, EjemploAlumno.Instance.skyBoundingBox.BoundingBox);
@@ -197,6 +246,23 @@ namespace AlumnoEjemplos.CShark
             {
                 collide = true;
 
+            }
+
+            return collide;
+        }
+
+        //COLISION TERRENO
+        public bool colisionTerreno(bool collide)
+        {
+            TerrenoSimple terreno = EjemploAlumno.Instance.terrain;
+            float YProa = CalcularAltura(proa().X, proa().Z);
+            float YPopa = CalcularAltura(popa().X, popa().Z);
+            float currentScaleY = EjemploAlumno.Instance.currentScaleY;
+            float offset = terreno.Center.Y * currentScaleY;
+
+            if ((Math.Abs(getPosition().Y - offset - YProa) < 1f) && (YPopa - getPosition().Y + offset < 1))
+            {
+                collide = true;
             }
 
             return collide;
@@ -249,54 +315,11 @@ namespace AlumnoEjemplos.CShark
         }
 
 
-        public bool colisionTerreno(bool collide)
-        {
-            TerrenoSimple terreno = EjemploAlumno.Instance.terrain;
-            float YProa = CalcularAltura(proa().X, proa().Z);
-            float YPopa = CalcularAltura(popa().X, popa().Z);
-            float currentScaleY = EjemploAlumno.Instance.currentScaleY;
-            float offset = terreno.Center.Y * currentScaleY;
+        
 
-            if ((Math.Abs(getPosition().Y - offset - YProa) < 1f) && (YPopa - getPosition().Y + offset < 1))
-            {
-                collide = true;
-            }
+        
 
-            return collide;
-        }
-
-        public Vector3 vectorDireccion()
-        {
-            return new Vector3(-FastMath.Sin(anguloRotacion), 0, -FastMath.Cos(anguloRotacion));
-        }
-
-        public Vector3 proa()
-        {
-            Vector3 offsetProa = new Vector3(FastMath.Sin(anguloRotacion), 0, FastMath.Cos(anguloRotacion));
-            Vector3 proa = getPosition() - offsetProa * (LargoBote / 2);
-            proa.Y = 0;
-
-            return proa;
-        }
-
-        public Vector3 popa()
-        {
-            Vector3 offsetPopa = new Vector3(FastMath.Sin(anguloRotacion), 0, FastMath.Cos(anguloRotacion));
-            Vector3 popa = getPosition() + offsetPopa * (LargoBote / 2);
-            popa.Y = 0;
-
-            return popa;
-        }
-
-        public void verificarDisparo(Bala bala)
-        {
-            if (TgcCollisionUtils.testSphereAABB(bala.bullet.BoundingSphere, mesh.BoundingBox))
-            {
-                GuiController.Instance.Logger.log("LE DI!");
-                reducirVida();
-                bala.dispose();
-            }
-        }
+        /****************************************** VIDA ********************************************/
 
         public virtual void iniciarBarra()
         {
@@ -315,11 +338,11 @@ namespace AlumnoEjemplos.CShark
             return (float)vida / (float)VIDA_MAX;
         }
 
-        public virtual void dispose()
+        public bool tieneVida()
         {
-            mesh.dispose();
-            canion.dispose();
-            //barraDeVida.dispose();
+            return vida > 0;
         }
+
+       
     }
 }
