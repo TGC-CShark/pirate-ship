@@ -56,6 +56,7 @@ namespace AlumnoEjemplos.CShark
 
         public void shoot(float elapsedTime, float anguloRotacion, float velBarco)
         {
+            GuiController.Instance.Logger.log("elevacion: " + anguloElevacion.ToString());
             new Bala(posicion, anguloRotacion, anguloElevacion, this, velBarco, soyPlayer);
             balasRestantes--;
 
@@ -85,8 +86,9 @@ namespace AlumnoEjemplos.CShark
             posicion = new Vector3(meshCanion.Transform.M41,meshCanion.Transform.M42,meshCanion.Transform.M43);
         }
 
-        public void actualizarSiEsEnemigo(float anguloRotacion, float elapsedTime, float velBarco)
+        public void actualizarSiEsEnemigo(float anguloRotacion, float elapsedTime, float velBarco, Vector3 distancia)
         {
+            this.calcularAnguloElevacion(distancia);
             timer.doWhenItsTimeTo(() => this.shoot(elapsedTime, anguloRotacion, velBarco), elapsedTime);
 
             for (int i = 0; i < balasEnElAire.Count; i++)
@@ -147,6 +149,12 @@ namespace AlumnoEjemplos.CShark
                 bala.actualizar(elapsedTime);
                 bala.render();
             }
+        }
+
+        private void calcularAnguloElevacion(Vector3 distancia)
+        {
+            float D = Math.Abs(distancia.Length());
+            anguloElevacion = (float)Math.Asin(Math.Sqrt((D*100)/Math.Pow(500, 2)));
         }
 
         private float toRadians(float grados)

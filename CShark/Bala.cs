@@ -14,12 +14,12 @@ namespace AlumnoEjemplos.CShark
     {
         public TgcSphere bullet;
         public TgcSphere sombra;
-        
 
-        const float linearDefaultSpeed = 400f;
+        float speed = 500f;
+        //const float linearDefaultSpeed = 400f;
         public float velInicialBarco;
-        public float verticalSpeed = 300;
-        public float verticalInitialSpeed = 300;
+        public float verticalSpeed;// = 300;
+        //public float verticalInitialSpeed = 300;
         float verticalAcceleration = 100f;
         public float anguloRotacion;
         public float anguloElevacion;
@@ -53,6 +53,8 @@ namespace AlumnoEjemplos.CShark
             sombra.Technique = "SombraBala";
 
             this.soyPlayer = soyPlayer;
+
+            verticalSpeed = speed * (float)Math.Sin(anguloElevacion);
         }
 
         public void render()
@@ -77,13 +79,17 @@ namespace AlumnoEjemplos.CShark
         {
             if (posicion.Y >= -50)
             {
-                float linearSpeed = linearDefaultSpeed + velInicialBarco;
+                //float linearSpeed = linearDefaultSpeed + velInicialBarco;
+                float linearSpeed = speed * (float)Math.Cos(anguloElevacion);
 
-                posicion.X -= Convert.ToSingle(linearSpeed * Math.Sin(anguloRotacion) * Math.Cos(anguloElevacion) * elapsedTime);
-                posicion.Z -= Convert.ToSingle(linearSpeed * Math.Cos(anguloRotacion) * Math.Cos(anguloElevacion) * elapsedTime);
+                //posicion.X -= Convert.ToSingle(linearSpeed * Math.Sin(anguloRotacion) * Math.Cos(anguloElevacion) * elapsedTime);
+                //posicion.Z -= Convert.ToSingle(linearSpeed * Math.Cos(anguloRotacion) * Math.Cos(anguloElevacion) * elapsedTime);
+                posicion.X -= Convert.ToSingle(linearSpeed * Math.Sin(anguloRotacion) * elapsedTime);
+                posicion.Z -= Convert.ToSingle(linearSpeed * Math.Cos(anguloRotacion) * elapsedTime);
 
                 verticalSpeed -= verticalAcceleration * elapsedTime;
-                posicion.Y += Convert.ToSingle(verticalSpeed * Math.Sin(anguloElevacion) * elapsedTime);
+                //posicion.Y += Convert.ToSingle(verticalSpeed * Math.Sin(anguloElevacion) * elapsedTime);
+                posicion.Y += Convert.ToSingle(verticalSpeed * elapsedTime);
 
                 Matrix transf = Matrix.Translation(posicion);
                 bullet.Transform = Matrix.Scaling(RADIO * 2, RADIO * 2, RADIO * 2) * transf;

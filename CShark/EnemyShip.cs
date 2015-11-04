@@ -20,7 +20,8 @@ namespace AlumnoEjemplos.CShark
         const float ESCALON_VEL = 0.4f;
 
         Ship player;
-        BarraVidaEnemigo barraDeVidaEnemigo;       
+        BarraVidaEnemigo barraDeVidaEnemigo;
+        Vector3 distance;
 
         public EnemyShip(Ship player, Vector3 pos, TgcMesh mesh, Canion canion) : base(pos, mesh, canion) {
             nombre = "ENEMIGO";
@@ -32,7 +33,7 @@ namespace AlumnoEjemplos.CShark
 
         public override void calcularTraslacionYRotacion(float elapsedTime, TerrenoSimple agua, float time)
         {
-            Vector3 distance = player.popa() - this.getPosition();
+            distance = player.popa() - this.getPosition();
             Vector3 iaDirectionVersor = this.vectorDireccion();
             iaDirectionVersor.Normalize();
             Vector3 lookAtPopaVersor = new Vector3(distance.X, distance.Y, distance.Z);
@@ -110,7 +111,7 @@ namespace AlumnoEjemplos.CShark
         {
             mesh.BoundingBox.transform(transf);
             canion.actualizar(anguloRotacion, elapsedTime, transf);
-            canion.actualizarSiEsEnemigo(anguloRotacion, elapsedTime, this.movementSpeed);
+            canion.actualizarSiEsEnemigo(anguloRotacion, elapsedTime, this.movementSpeed, this.distance);
         }
 
         public override void iniciarBarra()
