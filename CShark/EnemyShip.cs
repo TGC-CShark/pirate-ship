@@ -31,7 +31,7 @@ namespace AlumnoEjemplos.CShark
 
         }
 
-        public override void calcularTraslacionYRotacion(float elapsedTime, TerrenoSimple agua, float time)
+        public override void calcularTraslacionYRotacion(float elapsedTime, TerrenoSimple agua, float time, Vector3 lastPosition)
         {
             distance = player.popa() - this.getPosition();
             Vector3 iaDirectionVersor = this.vectorDireccion();
@@ -42,7 +42,7 @@ namespace AlumnoEjemplos.CShark
             float rotationAngle = FastMath.Acos(Vector3.Dot(iaDirectionVersor, lookAtPopaVersor));
             Vector3 cross = Vector3.Cross(lookAtPopaVersor, iaDirectionVersor);
 
-            Vector3 lastPosition = getPosition();
+            //Vector3 lastPosition = getPosition();
 
             if (cross.Length() > 0.1)
             {

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using TgcViewer;
 using TgcViewer.Utils._2D;
+using TgcViewer.Utils.Sound;
 using TgcViewer.Utils.Terrain;
 using TgcViewer.Utils.TgcSceneLoader;
 
@@ -13,7 +14,7 @@ namespace AlumnoEjemplos.CShark
 {
     class Lluvia : TgcAnimatedSprite
     {
-
+   
         public Lluvia()
             : base(GuiController.Instance.AlumnoEjemplosMediaDir + "drops-rain-rainy-wet-weather-climate.png", new Size(128, 128), 512, 20)
         {
@@ -24,9 +25,9 @@ namespace AlumnoEjemplos.CShark
 
         new public void render()
         {
+
             if (EjemploAlumno.Instance.lloviendo)
             {
-
 
                 EjemploAlumno.Instance.skyboxTormentoso(EjemploAlumno.Instance.skyBox);
                 EjemploAlumno.Instance.luzAguaTormentoso(EjemploAlumno.Instance.lightMesh);
@@ -37,10 +38,12 @@ namespace AlumnoEjemplos.CShark
             }
             else
             {
+
                 EjemploAlumno.Instance.skyboxSoleado(EjemploAlumno.Instance.skyBox);
                 EjemploAlumno.Instance.luzAguaSoleado(EjemploAlumno.Instance.lightMesh);
             }
         }
-            
+
+                
     }
 }

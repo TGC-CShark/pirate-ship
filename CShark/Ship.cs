@@ -17,7 +17,9 @@ namespace AlumnoEjemplos.CShark
     {
         const float ROTATION_SPEED = 1f;
         const float VEL_MAXIMA = 100f;
-        const float ESCALON_VEL = 0.4f;
+        const float ESCALON_VEL = 0.7f;
+        const float ESCALON_VEL_OLA_BAJADA = 4f;
+        const float ESCALON_VEL_OLA_SUBIDA = 1f;
         const float VIDA_MAX = 5;
 
         public float movZ;
@@ -90,12 +92,18 @@ namespace AlumnoEjemplos.CShark
 
         public virtual void actualizar(float elapsedTime, TerrenoSimple agua, float time)
         {
-            calcularTraslacionYRotacion(elapsedTime, agua, time);
+            Vector3 lastPosition = getPosition();
+
+            calcularTraslacionYRotacion(elapsedTime, agua, time, lastPosition);
 
             Matrix transformacion = rotacion * traslacion;
 
             mesh.Transform = transformacion;
             mesh.BoundingBox.transform(transformacion);
+
+            
+            alterarVelocidadPorOlas(lastPosition);
+
             actualizarCanion(anguloRotacion, elapsedTime, transformacion);
         }
 
@@ -152,9 +160,9 @@ namespace AlumnoEjemplos.CShark
 
         /*************************************** MOVIMIENTO ************************************************/
 
-        public virtual void calcularTraslacionYRotacion(float elapsedTime, TerrenoSimple agua, float time)
+        public virtual void calcularTraslacionYRotacion(float elapsedTime, TerrenoSimple agua, float time, Vector3 lastPosition)
         {
-            Vector3 lastPosition = getPosition();
+            
             Vector3 lastPositionEnemy = EjemploAlumno.Instance.shipContrincante.getPosition();
 
             if (input.keyDown(Key.Left))
@@ -180,11 +188,27 @@ namespace AlumnoEjemplos.CShark
                 movementSpeed = Math.Max(movementSpeed - ESCALON_VEL, 0);
             }
 
+            
+
             movZ -= Convert.ToSingle(movementSpeed * Math.Cos(anguloRotacion) * elapsedTime);
             movX -= Convert.ToSingle(movementSpeed * Math.Sin(anguloRotacion) * elapsedTime);
             movY = agua.aplicarOlasA(getPosition(), time).Y + AltoBote / 2;
 
             administrarColisiones(lastPosition, new Vector3(movX, movY, movZ), lastPositionEnemy);
+        }
+
+        private void alterarVelocidadPorOlas(Vector3 lastPosition)
+        {
+            if (lastPosition.Y < getPosition().Y)
+            {
+                movementSpeed = Math.Max(movementSpeed - ESCALON_VEL_OLA_SUBIDA, 0);
+            
+            } else if (lastPosition.Y > getPosition().Y)
+            {
+                movementSpeed = Math.Min(movementSpeed + ESCALON_VEL_OLA_BAJADA, VEL_MAXIMA);
+         
+            }
+
         }
 
         public void adaptarMovimientoPorColision(Vector3 lastPosition, Vector3 newPosition, bool collide)
