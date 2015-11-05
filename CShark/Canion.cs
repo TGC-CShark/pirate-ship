@@ -18,6 +18,8 @@ namespace AlumnoEjemplos.CShark
         const float ELEVACION_MAX = (float)Math.PI / 2;
         const float ELEVACION_MIN = 0f;
         const float FRECUENCIA_TIRO = 0.5f;
+        const float VEL_BALA = 500;
+        const float G = 100;
 
         public TgcMesh meshCanion;
         public int balasRestantes = 50;
@@ -56,8 +58,7 @@ namespace AlumnoEjemplos.CShark
 
         public void shoot(float elapsedTime, float anguloRotacion, float velBarco)
         {
-            GuiController.Instance.Logger.log("elevacion: " + anguloElevacion.ToString());
-            new Bala(posicion, anguloRotacion, anguloElevacion, this, velBarco, soyPlayer);
+            new Bala(posicion, anguloRotacion, anguloElevacion, this, soyPlayer, VEL_BALA, G);
             balasRestantes--;
 
         }
@@ -159,10 +160,10 @@ namespace AlumnoEjemplos.CShark
             float h = distancia.Y; //Para calcular el tiro teniendo en cuenta la altura también
 
             float D = Math.Abs(distLineal.Length());
-            float distMax = (float)(Math.Pow(500, 2) * Math.Sin(Math.PI / 2) / 100);
+            float distMax = (float)(Math.Pow(VEL_BALA, 2) * Math.Sin(Math.PI / 2) / G);
             if (D <= distMax)
             {
-                anguloElevacion = (float)Math.Asin((D * 100) / Math.Pow(500, 2)) / 2;
+                anguloElevacion = (float)Math.Asin((D * G) / Math.Pow(VEL_BALA, 2)) / 2;
             }
             else
             {
