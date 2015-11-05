@@ -323,7 +323,7 @@ namespace AlumnoEjemplos.CShark
             // Cargar variables de shader, por ejemplo el tiempo transcurrido.
             effect.SetValue("time", time);
             effect.SetValue("height", heightOlas);
-            //posLuz = luzAguaSoleado(lightMesh);
+
             agua.heightOlas = heightOlas;
             agua.AlphaBlendEnable = true;
             agua.render();

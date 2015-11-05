@@ -42,6 +42,9 @@ namespace AlumnoEjemplos.CShark
         public TgcViewer.Utils.TgcSceneLoader.TgcMesh mesh;
         static TgcD3dInput input = GuiController.Instance.D3dInput;
 
+        protected TimerFinito timer;
+        protected bool visible = true;
+
         public Ship(Vector3 pos, TgcMesh mesh, Canion canion)
         {
             Vector3 size = new Vector3(15, 10, 30);
@@ -59,6 +62,8 @@ namespace AlumnoEjemplos.CShark
             this.mesh.AutoTransformEnable = false;
 
             vida = VIDA_MAX;
+
+            timer = new TimerFinito(5);
 
             // Calcular dimensiones
             Vector3 BoundingBoxSize = mesh.BoundingBox.calculateSize();
@@ -82,8 +87,11 @@ namespace AlumnoEjemplos.CShark
         {
             if (tieneVida())
             {
-                mesh.render();
-                canion.render();
+                if (visible)
+                {
+                    mesh.render();
+                    canion.render();
+                }
                 barraDeVida.render();
             }
             else
@@ -92,8 +100,15 @@ namespace AlumnoEjemplos.CShark
             }
         }
 
+        private void alternarVisibilidad()
+        {
+            visible = visible ? false : true;
+        }
+
         public virtual void actualizar(float elapsedTime, TerrenoSimple agua, float time)
         {
+            timer.doWhenItsTimeTo(() => this.alternarVisibilidad(), elapsedTime);
+
             Vector3 lastPosition = getPosition();
 
             calcularTraslacionYRotacion(elapsedTime, agua, time, lastPosition);
@@ -155,6 +170,7 @@ namespace AlumnoEjemplos.CShark
             if (TgcCollisionUtils.testSphereAABB(bala.bullet.BoundingSphere, mesh.BoundingBox))
             {
                 GuiController.Instance.Logger.log("LE DI!");
+                timer.activo = true;
                 reducirVida();
                 bala.dispose();
             }

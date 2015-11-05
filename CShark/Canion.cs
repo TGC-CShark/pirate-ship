@@ -217,16 +217,16 @@ namespace AlumnoEjemplos.CShark
 
     public class Timer
     {
-        private float time;
-        private float frequency;
-        private bool itsTime = false;
+        protected float time;
+        protected float frequency;
+        public bool itsTime = false;
 
         public Timer(float frequency)
         {
             this.frequency = frequency;
         }
 
-        public void doWhenItsTimeTo(System.Action whatToDo, float elapsedTime)
+        public virtual void doWhenItsTimeTo(System.Action whatToDo, float elapsedTime)
         {
 
             if (itsTime)
@@ -238,7 +238,7 @@ namespace AlumnoEjemplos.CShark
             spendTime(elapsedTime);
         }
 
-        private void spendTime(float elapsedTime)
+        protected void spendTime(float elapsedTime)
         {
             if (time < Math.PI * 2)
                 time += elapsedTime * (float)Math.PI * frequency;
@@ -249,6 +249,40 @@ namespace AlumnoEjemplos.CShark
             }
         }
 
+    }
+
+    public class TimerFinito : Timer
+    {
+        public bool activo = false;
+        private int times = 0;
+
+        public TimerFinito(float frequency) : base(frequency) { }
+
+        public override void doWhenItsTimeTo(System.Action whatToDo, float elapsedTime)
+        {
+            if (activo)
+            {
+                //base.doWhenItsTimeTo(whatToDo, elapsedTime);
+                if (itsTime)
+                {
+                    whatToDo();
+                    itsTime = false;
+                    GuiController.Instance.Logger.log("dispara enemigo");
+                    times += 1;
+                }
+                spendTime(elapsedTime);
+                this.apagar();
+            }
+        }
+
+        private void apagar()
+        {
+            if (times > 7)
+            {
+                times = 0;
+                activo = false;
+            }
+        }
     }
 
 }

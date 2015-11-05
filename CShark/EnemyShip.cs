@@ -130,8 +130,11 @@ namespace AlumnoEjemplos.CShark
         {
             if (tieneVida())
             {
-                mesh.render();
-                canion.render();
+                if (visible)
+                {
+                    mesh.render();
+                    canion.render();
+                }
                 barraDeVidaEnemigo.render();
             } else
             {
