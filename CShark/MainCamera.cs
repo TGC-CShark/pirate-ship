@@ -21,6 +21,12 @@ namespace AlumnoEjemplos.CShark
 
         float zoom;
         float wheelPos;
+        Vector3 objetive;
+
+        Boolean apuntando = false;
+        Vector3 apuntado = new Vector3(0,0,0);
+        float ALTURA_APUNTANDO=0;
+        float DISTANCIA_APUNTANDO=100;
 
         public MainCamera(Ship newShip)
         {
@@ -29,9 +35,9 @@ namespace AlumnoEjemplos.CShark
             camera.Enable = true;
 
             wheelPos = input.WheelPos;
-
+            objetive = ship.mesh.Position;
             //Configurar centro al que se mira y distancia desde la que se mira
-            camera.setCamera(ship.mesh.Position, ALTURA, DISTANCIA);
+            camera.setCamera(objetive, ALTURA, DISTANCIA);
         }
 
         private void setShip(Ship newShip)
@@ -41,7 +47,29 @@ namespace AlumnoEjemplos.CShark
 
         public void actualizar(Vector3 pos)
         {
+            if (input.keyPressed(Key.P))
+            {
+                if (!apuntando)
+                {
+                    apuntando = true;
+                    apuntado = new Vector3(0, 50, -50);
+                    camera.OffsetForward = DISTANCIA_APUNTANDO;
+                    camera.OffsetHeight = ALTURA_APUNTANDO;
 
+
+                }
+                else
+                {
+                    
+                    apuntando = false;
+                    apuntado = new Vector3(0, 0, 0);
+
+                    camera.setCamera(pos, ALTURA, DISTANCIA);
+
+                    
+
+                }
+            }
             //Solo rotar si se esta aprentando el boton izq del mouse
             if (input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
             {
@@ -67,7 +95,14 @@ namespace AlumnoEjemplos.CShark
                 camera.OffsetForward += zoom;
             }
 
-            camera.Target = pos;
+           
+            
+            camera.Target = pos+apuntado;
+
+
+
+
+
             camera.updateCamera();
 
         }
