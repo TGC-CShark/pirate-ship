@@ -153,8 +153,21 @@ namespace AlumnoEjemplos.CShark
 
         private void calcularAnguloElevacion(Vector3 distancia)
         {
-            float D = Math.Abs(distancia.Length());
-            anguloElevacion = (float)Math.Asin(Math.Sqrt((D*100)/Math.Pow(500, 2)));
+            Vector3 distLineal = distancia;
+            distLineal.Y = 0;
+
+            float h = distancia.Y; //Para calcular el tiro teniendo en cuenta la altura también
+
+            float D = Math.Abs(distLineal.Length());
+            float distMax = (float)(Math.Pow(500, 2) * Math.Sin(Math.PI / 2) / 100);
+            if (D <= distMax)
+            {
+                anguloElevacion = (float)Math.Asin((D * 100) / Math.Pow(500, 2)) / 2;
+            }
+            else
+            {
+                anguloElevacion = (float)Math.PI / 4;
+            }
         }
 
         private float toRadians(float grados)
