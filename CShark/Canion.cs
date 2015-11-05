@@ -106,13 +106,7 @@ namespace AlumnoEjemplos.CShark
 
             if (input.keyPressed(Key.A))
             {
-                if (elevacion_visible)
-                {
-                    elevacion_visible = false;
-                } else
-                {
-                    elevacion_visible = true;
-                }
+                elevacion_visible = elevacion_visible ? false : true;
             }
 
             if (input.keyPressed(Key.Space))

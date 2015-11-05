@@ -81,20 +81,6 @@ namespace AlumnoEjemplos.CShark
 
             administrarColisiones(lastPosition, new Vector3(movX, movY, movZ));
             
-
-            //Cargar valor en UserVar
-/*            GuiController.Instance.UserVars.setValue("dir_p", player.vectorDireccion());
-            GuiController.Instance.UserVars.setValue("dir_ia", this.vectorDireccion());
-            GuiController.Instance.UserVars.setValue("pos_p", player.getPosition());
-            GuiController.Instance.UserVars.setValue("pos_ia", this.getPosition());
-            GuiController.Instance.UserVars.setValue("popa_p", player.popa());
-            GuiController.Instance.UserVars.setValue("popa_ia", this.popa());
-            GuiController.Instance.UserVars.setValue("distancia", distance.Length());
-            GuiController.Instance.UserVars.setValue("dist_normalizada", lookAtPopaVersor);           
-            GuiController.Instance.UserVars.setValue("angulo_rotacion", rotationAngle * 360 / FastMath.PI);
-            GuiController.Instance.UserVars.setValue("cross_product", Vector3.Cross(lookAtPopaVersor, iaDirectionVersor));
-            GuiController.Instance.UserVars.setValue("cross_product_length", Vector3.Cross(lookAtPopaVersor, iaDirectionVersor).Length());
-*/
         }
 
         public void administrarColisiones(Vector3 lastPosition, Vector3 newPosition) //Le saco la colision con enemigo. Una superclase para ship y enemyship vendria bien, pero paja...

@@ -272,7 +272,7 @@ namespace AlumnoEjemplos.CShark
         }
 
         private void cargarLuces(Vector3 posLuz){
-            Effect pointShader = TgcShaders.loadEffect(GuiController.Instance.ExamplesDir + "Shaders\\WorkshopShaders\\Shaders\\PhongShading.fx");
+            Effect pointShader = TgcShaders.loadEffect(GuiController.Instance.AlumnoEjemplosMediaDir + "Shaders\\WorkshopShaders\\Shaders\\PhongShading.fx");
                         
             foreach (TgcMesh mesh in meshes){
                 mesh.Effect = pointShader;
@@ -331,17 +331,7 @@ namespace AlumnoEjemplos.CShark
             TgcD3dInput input = GuiController.Instance.D3dInput;
             if (input.keyPressed(Microsoft.DirectX.DirectInput.Key.L))
             {
-                if (lloviendo)
-                {
-                    lloviendo = false;
-                    GuiController.Instance.Logger.log("Lluvia desactivada");
-                }
-                else
-                {
-                    lloviendo = true;
-                    GuiController.Instance.Logger.log("Lluvia activada");
-
-                }
+                lloviendo = lloviendo ? false : true;
             }
 
             ship.renderizar();
