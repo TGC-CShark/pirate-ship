@@ -47,7 +47,7 @@ namespace AlumnoEjemplos.CShark
             sombra.changeFont(new System.Drawing.Font("BlackoakStd", 35, FontStyle.Bold | FontStyle.Italic));
 
             textoComplementario = new TgcText2d();
-            textoComplementario.Text = "Hacé clic para comenzar a jugar";
+            textoComplementario.Text = "Hacé clic para comenzar a jugar." + '\n' + "Apretá I durante el juego para ver las instrucciones.";
             textoComplementario.Color = Color.Gold;
             textoComplementario.Align = TgcText2d.TextAlign.CENTER;
             textoComplementario.Position = new Point(450, 250);
@@ -74,24 +74,34 @@ namespace AlumnoEjemplos.CShark
             render(juego);
             textoComplementario.render();
 
-
             jugar(juego);
 
+        }
+
+        public void renderInstrucciones(EjemploAlumno juego)
+        {
+            titulo.Text = "INSTRUCCIONES";
+            sombra.Text = "INSTRUCCIONES";
+
+            textoComplementario.Position = new Point(230, 250);
+            textoComplementario.Size = new Size(700, 100);
+            textoComplementario.Text = "Dispararle al barco enemigo [SPACE] hasta hundirlo. Con las flechitas RIGHT y LEFT vira el barco. Con UP se acelera y DOWN desacelera." + '\n' +
+                "Con A se activa la visibilidad del ángulo de elevación del disparo, y con W y S se incrementa o decrementa dicho ángulo." + '\n' +
+                "Con L se activa la tormenta." + '\n' + '\n' +
+                "Hacé clic para continuar.";
+
+            render(juego);
+            textoComplementario.render();
+
+            jugar(juego);
         }
 
         public void renderGanado(EjemploAlumno juego)
         {
             titulo.Text = "¡GANASTE!";
             sombra.Text = "¡GANASTE!";
-            
-
-            //textoComplementario.Text = "Hacé clic para volver a jugar";
 
             render(juego);
-           // textoComplementario.render();
-
-
-            //jugar(juego);
             
         }
 
@@ -99,14 +109,9 @@ namespace AlumnoEjemplos.CShark
         {
             titulo.Text = "¡PERDISTE!";
             sombra.Text = "¡PERDISTE!";
-            
-
-            //textoComplementario.Text = "Hacé clic para volver a jugar";
 
             render(juego);
-            //textoComplementario.render();
 
-            //jugar(juego);
             
         }
 
@@ -114,6 +119,7 @@ namespace AlumnoEjemplos.CShark
         {
             if (input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
             {
+
                 juego.estado = EstadoDelJuego.Jugando;
             }
         }

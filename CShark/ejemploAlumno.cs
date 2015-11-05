@@ -20,7 +20,7 @@ namespace AlumnoEjemplos.CShark
     public enum EstadoDelJuego
     {
         Jugando,
-        Pausa,
+        Instrucciones,
         Ganado,
         Perdido,
         SinEmpezar
@@ -197,19 +197,6 @@ namespace AlumnoEjemplos.CShark
             //Crear caja para indicar ubicacion de la luz
             lightMesh = TgcBox.fromSize(new Vector3(20, 20, 20), Color.Yellow);
 
-            //Crear una UserVar
-/*            GuiController.Instance.UserVars.addVar("dir_p");
-            GuiController.Instance.UserVars.addVar("dir_ia");
-            GuiController.Instance.UserVars.addVar("pos_p");
-            GuiController.Instance.UserVars.addVar("pos_ia");
-            GuiController.Instance.UserVars.addVar("popa_p");
-            GuiController.Instance.UserVars.addVar("popa_ia");
-            GuiController.Instance.UserVars.addVar("distancia");
-            GuiController.Instance.UserVars.addVar("dist_normalizada");
-            GuiController.Instance.UserVars.addVar("angulo_rotacion");
-            GuiController.Instance.UserVars.addVar("cross_product");
-            GuiController.Instance.UserVars.addVar("cross_product_length");
-*/
         }
 
         public void skyboxSoleado(TgcSkyBox skyBox)
@@ -249,11 +236,22 @@ namespace AlumnoEjemplos.CShark
             //Device de DirectX para renderizar
             Device d3dDevice = GuiController.Instance.D3dDevice;
 
-            
+            TgcD3dInput input = GuiController.Instance.D3dInput;
+            if (input.keyPressed(Microsoft.DirectX.DirectInput.Key.I))
+            {
+                estado = EstadoDelJuego.Instrucciones;
+            }
+
+
 
             if (EjemploAlumno.Instance.estado == EstadoDelJuego.SinEmpezar)
             {
                 menu.renderSinEmpezar(this);
+            }
+
+            if (EjemploAlumno.Instance.estado == EstadoDelJuego.Instrucciones)
+            {
+                menu.renderInstrucciones(this);
             }
                         
             if (EjemploAlumno.Instance.estado == EstadoDelJuego.Ganado)
