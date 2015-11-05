@@ -20,6 +20,8 @@ namespace AlumnoEjemplos.CShark
         const float ESCALON_VEL = 0.7f;
         const float ESCALON_VEL_OLA_BAJADA = 4f;
         const float ESCALON_VEL_OLA_SUBIDA = 1f;
+        const float COEF_VEL_OLA_BAJADA = 1.03f;
+        const float COEF_VEL_OLA_SUBIDA = 1.03f; 
         const float VIDA_MAX = 5;
 
         public float movZ;
@@ -201,11 +203,11 @@ namespace AlumnoEjemplos.CShark
         {
             if (lastPosition.Y < getPosition().Y)
             {
-                movementSpeed = Math.Max(movementSpeed - ESCALON_VEL_OLA_SUBIDA, 0);
+                movementSpeed = Math.Max(movementSpeed / COEF_VEL_OLA_SUBIDA, 0);//- ESCALON_VEL_OLA_SUBIDA, 0);
             
             } else if (lastPosition.Y > getPosition().Y)
             {
-                movementSpeed = Math.Min(movementSpeed + ESCALON_VEL_OLA_BAJADA, VEL_MAXIMA);
+                movementSpeed = Math.Min(movementSpeed * COEF_VEL_OLA_BAJADA, VEL_MAXIMA);//+ ESCALON_VEL_OLA_BAJADA, VEL_MAXIMA);
          
             }
 

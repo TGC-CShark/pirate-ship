@@ -17,7 +17,7 @@ namespace AlumnoEjemplos.CShark
 
         float speed = 500f;
         //const float linearDefaultSpeed = 400f;
-        public float velInicialBarco;
+        //public float velInicialBarco;
         public float verticalSpeed;// = 300;
         //public float verticalInitialSpeed = 300;
         float verticalAcceleration = 100f;
@@ -40,7 +40,7 @@ namespace AlumnoEjemplos.CShark
             bullet.LevelOfDetail = 1;
             this.anguloRotacion = anguloRotacion;
             this.anguloElevacion = anguloElevacion;
-            this.velInicialBarco = velBarco;
+            //this.velInicialBarco = velBarco;
             bullet.updateValues();
             bullet.AutoTransformEnable = false;
             this.canion = canion;
