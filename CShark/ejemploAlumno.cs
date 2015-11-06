@@ -272,7 +272,7 @@ namespace AlumnoEjemplos.CShark
         }
 
         private void cargarLuces(Vector3 posLuz){
-            Effect pointShader = TgcShaders.loadEffect(GuiController.Instance.AlumnoEjemplosMediaDir + "Shaders\\WorkshopShaders\\Shaders\\PhongShading.fx");
+            Effect pointShader = TgcShaders.loadEffect(GuiController.Instance.AlumnoEjemplosMediaDir + "PhongShading.fx");
                         
             foreach (TgcMesh mesh in meshes){
                 mesh.Effect = pointShader;
