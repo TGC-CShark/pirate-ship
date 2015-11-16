@@ -167,7 +167,7 @@ namespace AlumnoEjemplos.CShark
         //Solo para el agua!
         internal Vector3 aplicarOlasA(Vector3 posicion, float time)
         {
-            float ola = heightOlas*2 *((float)Math.Cos(0.005*posicion.X-time) + (float)Math.Sin(0.005*posicion.Z  - time)) ;
+            float ola = heightOlas *((float)Math.Cos(0.005*posicion.X-time) + (float)Math.Sin(0.005*posicion.Z  - time)) ;
 
             
             Vector3 nuevaPosicion;
@@ -192,6 +192,7 @@ namespace AlumnoEjemplos.CShark
             Device d3dDevice = GuiController.Instance.D3dDevice;
 
             //Rotar e invertir textura
+            
             Bitmap b = (Bitmap)Bitmap.FromFile(path);
             b.RotateFlip(RotateFlipType.Rotate90FlipX);
             terrainTexture = Texture.FromBitmap(d3dDevice, b, Usage.None, Pool.Managed);

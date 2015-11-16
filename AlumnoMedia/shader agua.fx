@@ -25,7 +25,7 @@ sampler2D diffuseMap = sampler_state
 };
 
 float time = 0;
-float transparency = 0.9;
+float transparency = 1;
 float height;
 
 float radioBala;
@@ -64,45 +64,51 @@ struct VS_OUTPUT
 };
 
 
+float3 CalculoAltura(float x, float z) {
+
+	float y = height * ( cos(0.005 * x - time) + sin(0.005 * z - time) );
+	return float3(x, y, z);
+}
+
+float3 CalculoNormal(float3 pos) {
+
+	float delta = 1;
+
+	float3 vecino1 = CalculoAltura(pos.x + delta, pos.z);
+	float3 vecino2 = CalculoAltura(pos.x, pos.z + delta);
+
+	vecino1 = mul(vecino1, matWorldViewProj).xyz;
+	vecino2 = mul(vecino2, matWorldViewProj).xyz;
+
+	float3 tg = vecino1 - pos;
+	float3 bitg = vecino2 - pos;
+
+	return normalize(cross(tg, bitg));
+}
 
 //Vertex Shader
-VS_OUTPUT vs_main( VS_INPUT Input )
+VS_OUTPUT vs_main( VS_INPUT input )
 {
-	VS_OUTPUT Output;
+	
+	VS_OUTPUT output;
 
-	float Y = Input.Position.y;
-	float Z = Input.Position.z;
-	float X = Input.Position.x;
+	//Calculo vertice desplazado por la ola
+	input.Position = float4(CalculoAltura(input.Position.x, input.Position.z), 1);
+	//Lo transformo en salida
+	output.Position = mul(input.Position, matWorldViewProj);
 
-	float length = 10;
-	float k = 6.2831853 / length; //2pi
-	float3 K = (0.7854, 0, 0.7854);
-	float w = sqrt(9.8 * k);
-	height = height * 2;
+	//Calculo normal
+	output.Norm = CalculoNormal(input.Position.xyz);
 
-	Input.Position.x = X;
-	Input.Position.z = Z;
-	Input.Position.y = height * (cos(0.005*X-time) + sin(0.005*Z-time));
-
-	   //Proyectar posicion
-	   Output.Position = mul( Input.Position, matWorldViewProj);
+	//Propago las coordenadas de textura
+	output.Texcoord = input.Texcoord;
+	//Propago el color x vertice
+	output.Color = input.Color;
    
-	   //Propago las coordenadas de textura
-	   Output.Texcoord = Input.Texcoord;
+	// Calculo la posicion real (en world space)
+	output.Pos = mul(input.Position, matWorld).xyz;
 
-	   //Propago el color x vertice
-	   Output.Color = Input.Color;
-   
-	   // Calculo la posicion real (en world space)
-	   float4 pos_real = mul(Input.Position, matWorld);
-	   // Y la propago usando las coordenadas de texturas
-	   Output.Pos = float3(pos_real.x, pos_real.y, pos_real.z);
-   
-	   // Transformo la normal y la normalizo
-	   Output.Norm = normalize(mul(Input.Normal, matWorld));
-
-	return( Output );
-   
+	return output;
 }
 
 
@@ -116,8 +122,6 @@ float4 ps_main( float2 Texcoord: TEXCOORD0, float3 N:TEXCOORD1,
 	float ld = 0;		// luz difusa
 	float le = 0;		// luz specular
 	
-	N = normalize(N);
-
 	// 1- calculo la luz diffusa
 	float3 LD = normalize(fvLightPosition-float3(Pos.x,Pos.y,Pos.z));
 	ld += saturate(dot(N, LD))*k_ld;
@@ -135,15 +139,6 @@ float4 ps_main( float2 Texcoord: TEXCOORD0, float3 N:TEXCOORD1,
 	// suma luz diffusa, ambiente y especular
 	float4 RGBColor = 0;
 	RGBColor.rgb = saturate(fvBaseColor*(saturate(k_la+ld)) + le);
-	
-	// saturate deja los valores entre [0,1]. Una tecnica muy usada en motores modernos
-	// es usar floating point textures auxialres, para almacenar mucho mas que 256 valores posibles 
-	// de iluminiacion. En esos casos, el valor del rgb podria ser mucho mas que 1. 
-	// Imaginen una excena outdoor, a la luz de sol, hay mucha diferencia de iluminacion
-	// entre los distintos puntos, que no se pueden almacenar usando solo 8bits por canal.
-	// Estas tecnicas se llaman HDRLighting (High Dynamic Range Lighting). 
-	// Muchas inclusive simulan el efecto de la pupila que se contrae o dilata para 
-	// adaptarse a la nueva cantidad de luz ambiente. 
 	
 	// Obtener el texel de textura
 	// diffuseMap es el sampler, Texcoord son las coordenadas interpoladas
