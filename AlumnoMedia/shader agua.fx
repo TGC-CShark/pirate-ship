@@ -70,7 +70,7 @@ float3 CalculoAltura(float x, float z) {
 	return float3(x, y, z);
 }
 
-float3 CalculoNormal(float3 pos) {
+/*float3 CalculoNormal(float3 pos) {
 
 	float delta = 1;
 
@@ -84,7 +84,18 @@ float3 CalculoNormal(float3 pos) {
 	float3 bitg = vecino2 - pos;
 
 	return normalize(cross(tg, bitg));
+}*/
+float3 Gradiente(float3 pos){
+	float x=pos.x;
+	float z=pos.z;
+	return (height*(-sin(0.005*x-time))*0.005,-1,height*(cos(0.005*z-time)*0.005));
 }
+
+float3 CalculoNormal(float3 pos) {
+	return normalize(Gradiente(pos));
+}
+
+
 
 //Vertex Shader
 VS_OUTPUT vs_main( VS_INPUT input )
