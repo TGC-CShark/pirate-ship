@@ -25,7 +25,7 @@ sampler2D diffuseMap = sampler_state
 };
 
 float time = 0;
-float transparency = 1;
+float transparency = 0.9;
 float height;
 
 float radioBala;
@@ -67,34 +67,36 @@ struct VS_OUTPUT
 float3 CalculoAltura(float x, float z) {
 
 	float y = height * ( cos(0.005 * x - time) + sin(0.005 * z - time) );
+	//float y = height;
 	return float3(x, y, z);
 }
 
-/*float3 CalculoNormal(float3 pos) {
+float3 CalculoNormal(float3 pos) {
 
 	float delta = 1;
 
 	float3 vecino1 = CalculoAltura(pos.x + delta, pos.z);
 	float3 vecino2 = CalculoAltura(pos.x, pos.z + delta);
 
-	vecino1 = mul(vecino1, matWorldViewProj).xyz;
-	vecino2 = mul(vecino2, matWorldViewProj).xyz;
+	//vecino1 = mul(vecino1, matWorldViewProj).xyz;
+	//vecino2 = mul(vecino2, matWorldViewProj).xyz;
 
 	float3 tg = vecino1 - pos;
 	float3 bitg = vecino2 - pos;
 
-	return normalize(cross(tg, bitg));
-}*/
+	return normalize(cross(bitg, tg));
+}
+
 float3 Gradiente(float3 pos){
 	float x=pos.x;
 	float z=pos.z;
-	return (height*(-sin(0.005*x-time))*0.005,-1,height*(cos(0.005*z-time)*0.005));
+	return (height*(-sin(0.005*x-time))*0.005,1,height*(cos(0.005*z-time)*0.005));
 }
-
+/*
 float3 CalculoNormal(float3 pos) {
 	return normalize(Gradiente(pos));
 }
-
+*/
 
 
 //Vertex Shader
@@ -144,6 +146,16 @@ float4 ps_main( float2 Texcoord: TEXCOORD0, float3 N:TEXCOORD1,
 	le += ks*k_ls;
 
 	//Obtener el texel de textura
+	//Texcoord.x += 0.5+cos(Texcoord.x*time*0.05)/2;
+	Texcoord.x += 0.1*cos(time*0.01);
+	/*if (Texcoord.x > 1){
+		Texcoord.x -= 1;
+	}*/
+	//Texcoord.y += 0.5+cos(Texcoord.y*time*0.05)/2;
+	Texcoord.y += 0.1*cos(time*0.01);
+	/*if (Texcoord.y > 1){
+		Texcoord.y -= 1;
+	}*/
 	float4 fvBaseColor = tex2D( diffuseMap, Texcoord );
 	//float4 fvBaseColor      = float4(1,0.5,0.5,1);
 
@@ -159,6 +171,7 @@ float4 ps_main( float2 Texcoord: TEXCOORD0, float3 N:TEXCOORD1,
 	retorno.a = transparency;
 	
 	return retorno;
+	//return float4(N.xyz,1);
 }
 
 //Pixel Shader para la sombra de la bala

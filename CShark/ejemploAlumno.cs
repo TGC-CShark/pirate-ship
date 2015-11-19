@@ -120,8 +120,8 @@ namespace AlumnoEjemplos.CShark
 
             
             //Terreno
-            currentHeightmap = GuiController.Instance.ExamplesMediaDir + "Heighmaps\\" + "Heightmap3.jpg";
-            currentTexture = GuiController.Instance.ExamplesMediaDir + "Heighmaps\\" + "TerrainTexture3.jpg";
+            currentHeightmap = GuiController.Instance.AlumnoEjemplosMediaDir + "Heightmap3.jpg";
+            currentTexture = GuiController.Instance.AlumnoEjemplosMediaDir + "TerrainTexture3.jpg";
 
             terrain = new TerrenoSimple();
             terrain.loadHeightmap(currentHeightmap, currentScaleXZ, currentScaleY, new Vector3(0, -125, 0));
@@ -292,7 +292,7 @@ namespace AlumnoEjemplos.CShark
 
 
             //Poner luz a los meshes
-            Vector3 posLuz = new Vector3(POS_SHIP.X, POS_SHIP.Y + 500, POS_SHIP.Z - 2500);
+            Vector3 posLuz = new Vector3(POS_SHIP.X - 10000, POS_SHIP.Y + 5000, POS_SHIP.Z - 25000);
             lightMesh.Position = posLuz;
 
             this.cargarLuces(posLuz);
@@ -350,8 +350,8 @@ namespace AlumnoEjemplos.CShark
             effect.SetValue("fvEyePosition", TgcParserUtils.vector3ToFloat3Array(GuiController.Instance.ThirdPersonCamera.getPosition()));
             effect.SetValue("k_la", 4f);
             effect.SetValue("k_ld", 5f);
-            effect.SetValue("k_ls", 4.5f);
-            effect.SetValue("fSpecularPower", 40);
+            effect.SetValue("k_ls", 2.5f);
+            effect.SetValue("fSpecularPower", 60);
             return posLuz;
         }
 
