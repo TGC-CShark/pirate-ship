@@ -53,7 +53,7 @@ namespace AlumnoEjemplos.CShark
 
         //Terreno
         public TerrenoSimple terrain;
-        TerrenoSimple agua;
+        public TerrenoSimple agua;
         string currentHeightmap;
         string currentTexture;
         public float currentScaleXZ = 200f;
@@ -61,8 +61,8 @@ namespace AlumnoEjemplos.CShark
         public TgcSkyBox skyBox;
         public TgcBox skyBoundingBox;
 
-        float time;
-        float heightOlas;
+        public float time;
+        public float heightOlas;
 
         public EstadoDelJuego estado;
         Menu menu;
@@ -391,6 +391,11 @@ namespace AlumnoEjemplos.CShark
         {
             lightMesh.Size = new Vector3(10, 10, 10);
             lightMesh.Color = Color.Gray;
+        }
+
+        public float alturaOla(Vector3 posicion)
+        {
+            return agua.alturaOla(posicion, time);
         }
 
         private void update(float elapsedTime, float time)

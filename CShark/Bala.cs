@@ -14,6 +14,7 @@ namespace AlumnoEjemplos.CShark
     {
         public TgcSphere bullet;
         public TgcSphere sombra;
+        bool sombraActiva = true;
 
         float speed;
         public float verticalSpeed;
@@ -60,10 +61,15 @@ namespace AlumnoEjemplos.CShark
         {
             bullet.render();
 
+            sombra.Effect.SetValue("height", EjemploAlumno.Instance.heightOlas);
+            sombra.Effect.SetValue("time", EjemploAlumno.Instance.time);
             sombra.Effect.SetValue("radioBala", bullet.Radius);
             sombra.Effect.SetValue("posBalaX", posicion.X);
             sombra.Effect.SetValue("posBalaZ", posicion.Z);
-            sombra.render();
+            if (sombraActiva)
+            {
+                sombra.render();
+            }
         }
 
         public void dispose()
@@ -86,10 +92,23 @@ namespace AlumnoEjemplos.CShark
                 verticalSpeed -= verticalAcceleration * elapsedTime;
                 posicion.Y += Convert.ToSingle(verticalSpeed * elapsedTime);
 
+                Vector3 posSombra = posicion;
+                posSombra.Y = EjemploAlumno.Instance.alturaOla(posicion);
+                Matrix transfSombra = Matrix.Translation(posSombra);
+
                 Matrix transf = Matrix.Translation(posicion);
                 bullet.Transform = Matrix.Scaling(RADIO * 2, RADIO * 2, RADIO * 2) * transf;
-                transf.M42 = 0;
-                sombra.Transform = Matrix.Scaling(RADIO*2, 1, RADIO*2) * transf;
+                //transf.M42 = EjemploAlumno.Instance.alturaOla(posicion);
+
+                if (posicion.Y >= EjemploAlumno.Instance.alturaOla(posicion))
+                {
+                    sombra.Transform = Matrix.Scaling(RADIO * 2, 1, RADIO * 2) * transfSombra;
+                }
+                else
+                {
+                    sombraActiva = false;
+
+                }
 
                 bullet.BoundingSphere.moveCenter(posicion - bullet.BoundingSphere.Position);
 

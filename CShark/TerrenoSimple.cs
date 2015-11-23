@@ -185,6 +185,12 @@ namespace AlumnoEjemplos.CShark
             return nuevaPosicion;
         }
 
+        public float alturaOla(Vector3 posicion, float time)
+        {
+            Vector3 pos = aplicarOlasA(posicion, time);
+            return pos.Y;
+        }
+
         /// <summary>
         /// Carga la textura del terreno
         /// </summary>
