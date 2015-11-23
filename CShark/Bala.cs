@@ -49,6 +49,7 @@ namespace AlumnoEjemplos.CShark
             sombra.AutoTransformEnable = false;
             sombra.Effect = EjemploAlumno.Instance.efectoSombra;
             sombra.Technique = "SombraBala";
+            //sombra.AlphaBlendEnable = true;
 
             this.soyPlayer = soyPlayer;
 

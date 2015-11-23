@@ -308,9 +308,6 @@ namespace AlumnoEjemplos.CShark
 
             update(elapsedTime, time);
 
-            efectoSombra.SetValue("time", time);
-            efectoSombra.SetValue("height", heightOlas);
-
        
 
             terrain.render();
@@ -318,9 +315,23 @@ namespace AlumnoEjemplos.CShark
             skyBox.render();
             //skyBoundingBox.render();
 
+            // Convertir el path del heightmap en una textura para poder pasárselo al shader del agua
+            TerrenoSimple conversor = new TerrenoSimple();
+            conversor.loadTexture(currentHeightmap);
+
             // Cargar variables de shader, por ejemplo el tiempo transcurrido.
             effect.SetValue("time", time);
             effect.SetValue("height", heightOlas);
+            effect.SetValue("menorAltura", terrain.menorVerticeEnY);
+            effect.SetValue("offset", (float)(terrain.Center.Y * currentScaleY));
+            effect.SetValue("texHeightmap", conversor.terrainTexture);
+            //GuiController.Instance.Logger.log("OFFSET: " + (terrain.Center.Y * currentScaleY).ToString() + "MENOR ALTURA: " + terrain.menorVerticeEnY);
+
+            efectoSombra.SetValue("time", time);
+            efectoSombra.SetValue("height", heightOlas);
+            efectoSombra.SetValue("menorAltura", terrain.menorVerticeEnY);
+            efectoSombra.SetValue("offset", (float)(terrain.Center.Y * currentScaleY));
+            efectoSombra.SetValue("texHeightmap", conversor.terrainTexture);
 
             agua.heightOlas = heightOlas;
             agua.AlphaBlendEnable = true;

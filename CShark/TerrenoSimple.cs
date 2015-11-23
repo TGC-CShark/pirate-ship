@@ -17,6 +17,7 @@ namespace AlumnoEjemplos.CShark
     public class TerrenoSimple : IRenderObject
     {
         public float heightOlas;
+        public float menorVerticeEnY;
 
         VertexBuffer vbTerrain;
         public Texture terrainTexture;
@@ -140,6 +141,12 @@ namespace AlumnoEjemplos.CShark
                     Vector3 v3 = new Vector3(center.X + (i + 1) * scaleXZ, center.Y + heightmapData[i + 1, j] * scaleY, center.Z + j * scaleXZ);
                     Vector3 v4 = new Vector3(center.X + (i + 1) * scaleXZ, center.Y + heightmapData[i + 1, j + 1] * scaleY, center.Z + (j + 1) * scaleXZ);
 
+                    //Guardo el menor valor de y detodos los vértices
+                    menorVerticeEnY = Math.Min(menorVerticeEnY, v1.Y);
+                    menorVerticeEnY = Math.Min(menorVerticeEnY, v2.Y);
+                    menorVerticeEnY = Math.Min(menorVerticeEnY, v3.Y);
+                    menorVerticeEnY = Math.Min(menorVerticeEnY, v4.Y);
+
                     //Coordendas de textura
                     Vector2 t1 = new Vector2(i / width, j / length);
                     Vector2 t2 = new Vector2(i / width, (j + 1) / length);
@@ -255,7 +262,6 @@ namespace AlumnoEjemplos.CShark
             effect.End();
 
         }
-
 
         public Vector3 Position
         {

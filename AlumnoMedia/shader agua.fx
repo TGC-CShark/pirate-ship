@@ -25,7 +25,7 @@ sampler2D diffuseMap = sampler_state
 };
 
 float time = 0;
-float transparency = 0.9;
+float transparency;// = 0.9;
 float height;
 
 float radioBala;
@@ -39,6 +39,20 @@ float k_la = 0.3;							// luz ambiente global
 float k_ld = 0.9;							// luz difusa
 float k_ls = 0.4;							// luz specular
 float fSpecularPower = 16.84;				// exponente de la luz specular
+
+//Para el alpha blending
+texture texHeightmap;
+sampler2D heightmap = sampler_state
+{
+	Texture = (texHeightmap);
+	ADDRESSU = WRAP;
+	ADDRESSV = WRAP;
+	MINFILTER = LINEAR;
+	MAGFILTER = LINEAR;
+	MIPFILTER = LINEAR;
+};
+float offset;
+float menorAltura;
 
 /**************************************************************************************/
 /* RenderScene */
@@ -61,7 +75,8 @@ struct VS_OUTPUT
    float4 Color :			COLOR0;
    float3 Norm :          TEXCOORD1;			// Normales
    float3 Pos :   		TEXCOORD2;		// Posicion real 3d
-};
+	float Alpha :		COLOR1;
+   };
 
 
 float3 CalculoAltura(float x, float z) {
@@ -105,11 +120,22 @@ VS_OUTPUT vs_main( VS_INPUT input )
 	
 	VS_OUTPUT output;
 
+	//Calcular el alpha blending de acuerdo a la altura del agua con respecto al heightmap
+/*
+	float4 posHeightmap = tex2Dlod(heightmap, float4(input.Position.xy/64000,0,0));
+	input.Position.y = 4000*(posHeightmap.r * 0.299 + posHeightmap.g * 0.587 + posHeightmap.b * 0.114) - 1625;
+	//float difAltura = input.Position.y + offset - posHeightmap;
+	//output.Alpha = abs(difAltura / menorAltura);
+*/
+	//Esta variable es donde quiero cargar el valor de alfa de cada posición
+	//Como todavía no funciona bien, lo cargo con la constante que teníamos
+	output.Alpha = 0.9;
+	
 	//Calculo vertice desplazado por la ola
 	input.Position = float4(CalculoAltura(input.Position.x, input.Position.z), 1);
 	//Lo transformo en salida
 	output.Position = mul(input.Position, matWorldViewProj);
-
+	
 	//Calculo normal
 	output.Norm = CalculoNormal(input.Position.xyz);
 
@@ -130,7 +156,7 @@ VS_OUTPUT vs_main( VS_INPUT input )
 
 //Pixel Shader
 float4 ps_main( float2 Texcoord: TEXCOORD0, float3 N:TEXCOORD1,
-	float3 Pos: TEXCOORD2, float4 Color:COLOR0) : COLOR0
+	float3 Pos: TEXCOORD2, float4 Color:COLOR0, float alpha:COLOR1) : COLOR0
 {      
 	float ld = 0;		// luz difusa
 	float le = 0;		// luz specular
@@ -168,17 +194,17 @@ float4 ps_main( float2 Texcoord: TEXCOORD0, float3 N:TEXCOORD1,
 	// combino color y textura
 	// en este ejemplo combino un 80% el color de la textura y un 20%el del vertice
 	float4 retorno = 0.8*RGBColor + 0.2*Color;
-	retorno.a = transparency;
+	retorno.a = alpha;
 	
 	return retorno;
-	//return float4(N.xyz,1);
+	//return float4(alpha, alpha, alpha,1);
 }
 
 //Pixel Shader para la sombra de la bala
 float4 ps_sombra( float2 Texcoord: TEXCOORD0, float4 Color:COLOR0) : COLOR0
 {      
-	float4 retorno = float4(0,0,0,0);	
-	retorno.a = transparency;
+	float4 retorno = float4(0,0,0,0.5);	
+	Color.a = transparency;
 	return retorno;
 }
 
@@ -191,7 +217,7 @@ technique RenderScene
 		AlphaBlendEnable = TRUE;
         DestBlend = INVSRCALPHA;
         SrcBlend = SRCALPHA;
-	  VertexShader = compile vs_2_0 vs_main();
+	  VertexShader = compile vs_3_0 vs_main();
 	  PixelShader = compile ps_2_0 ps_main();
    }
 
@@ -202,7 +228,7 @@ technique SombraBala{
 		AlphaBlendEnable = TRUE;
         DestBlend = INVSRCALPHA;
         SrcBlend = SRCALPHA;
-	  VertexShader = compile vs_2_0 vs_main();
+	  VertexShader = compile vs_3_0 vs_main();
 	  PixelShader = compile ps_2_0 ps_sombra();
 	}
 }
