@@ -14,6 +14,8 @@ namespace AlumnoEjemplos.CShark
     {
         public TgcSphere bullet;
         public TgcSphere sombra;
+        TgcCylinder salpicadura;
+        Vector3 posSalpicadura;
         bool sombraActiva = true;
 
         float speed;
@@ -52,6 +54,13 @@ namespace AlumnoEjemplos.CShark
             sombra.Technique = "SombraBala";
             //sombra.AlphaBlendEnable = true;
 
+            salpicadura = new TgcCylinder(pos, RADIO, 10);
+            salpicadura.Color = Color.LightSkyBlue;
+            salpicadura.updateValues();
+            salpicadura.AutoTransformEnable = false;
+            salpicadura.Effect = EjemploAlumno.Instance.efectoSombra;
+            salpicadura.Technique = "SalpicaduraBala";
+
             this.soyPlayer = soyPlayer;
 
             verticalSpeed = speed * (float)Math.Sin(anguloElevacion);
@@ -63,12 +72,20 @@ namespace AlumnoEjemplos.CShark
 
             sombra.Effect.SetValue("height", EjemploAlumno.Instance.heightOlas);
             sombra.Effect.SetValue("time", EjemploAlumno.Instance.time);
-            sombra.Effect.SetValue("radioBala", bullet.Radius);
-            sombra.Effect.SetValue("posBalaX", posicion.X);
-            sombra.Effect.SetValue("posBalaZ", posicion.Z);
+            //sombra.Effect.SetValue("radioBala", bullet.Radius);
+            //sombra.Effect.SetValue("posBalaX", posicion.X);
+            //sombra.Effect.SetValue("posBalaZ", posicion.Z);
+
+            salpicadura.Effect.SetValue("height", EjemploAlumno.Instance.heightOlas);
+            salpicadura.Effect.SetValue("time", EjemploAlumno.Instance.time);
+
             if (sombraActiva)
             {
                 sombra.render();
+            }
+            else
+            {
+                salpicadura.render();
             }
         }
 
@@ -106,8 +123,15 @@ namespace AlumnoEjemplos.CShark
                 }
                 else
                 {
+                    posSalpicadura.Y = EjemploAlumno.Instance.alturaOla(posicion);
+                    if (sombraActiva)
+                    {
+                        posSalpicadura.X = posSombra.X;
+                        posSalpicadura.Z = posSombra.Z;
+                    }
                     sombraActiva = false;
-
+                    Matrix transfSalp = Matrix.Translation(posSalpicadura);
+                    salpicadura.Transform = Matrix.Scaling(RADIO * 2, 10, RADIO * 2) * transfSalp;
                 }
 
                 bullet.BoundingSphere.moveCenter(posicion - bullet.BoundingSphere.Position);

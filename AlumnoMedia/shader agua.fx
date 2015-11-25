@@ -208,6 +208,12 @@ float4 ps_sombra( float2 Texcoord: TEXCOORD0, float4 Color:COLOR0) : COLOR0
 	return retorno;
 }
 
+float4 ps_salpicadura( float2 Texcoord: TEXCOORD0, float4 Color:COLOR0) : COLOR0
+{      
+	float4 retorno = float4(0.9,0.9,1,1);
+	return retorno;
+}
+
 
 // ------------------------------------------------------------------
 technique RenderScene
@@ -230,5 +236,15 @@ technique SombraBala{
         SrcBlend = SRCALPHA;
 	  VertexShader = compile vs_3_0 vs_main();
 	  PixelShader = compile ps_2_0 ps_sombra();
+	}
+}
+
+technique SalpicaduraBala{
+	pass Pass_0{
+	AlphaBlendEnable = TRUE;
+        DestBlend = INVSRCALPHA;
+        SrcBlend = SRCALPHA;
+	  //VertexShader = compile vs_3_0 vs_main();
+	  PixelShader = compile ps_2_0 ps_salpicadura();
 	}
 }
