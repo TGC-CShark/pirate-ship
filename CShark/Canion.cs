@@ -15,7 +15,7 @@ namespace AlumnoEjemplos.CShark
 {
     public class Canion
     {
-        const float ELEVACION_MAX = (float)Math.PI / 2;
+        const float ELEVACION_MAX = (float)Math.PI / 3 ;
         const float ELEVACION_MIN = 0f;
         const float FRECUENCIA_TIRO = 0.5f;
         const float VEL_BALA = 500;
@@ -83,7 +83,7 @@ namespace AlumnoEjemplos.CShark
         internal void actualizar(float anguloRotacion, float elapsedTime, Matrix transformacion)
         {
             this.anguloRotacion = anguloRotacion;
-            meshCanion.Transform = transformacion;
+            meshCanion.Transform = calcularMatrizRotacion(transformacion);
             posicion = new Vector3(meshCanion.Transform.M41,meshCanion.Transform.M42,meshCanion.Transform.M43);
         }
 
@@ -205,6 +205,53 @@ namespace AlumnoEjemplos.CShark
         {
             this.balasEnElAire.Remove(bala);
         }
+
+        private Matrix calcularMatrizRotacion(Matrix matrizOriginal)
+        {
+            Matrix matriz = matrizOriginal;
+            
+            Vector3 pos = obtenerPosicion(matrizOriginal);
+            
+
+            //muevo la matriz al 0 (negativo para mandar al centro)
+            matriz.Multiply(Matrix.Translation(-pos));
+           
+
+            //matriz.Multiply(crearMatrizRotacion(anguloElevacion));
+            matriz.Multiply(Matrix.RotationX(anguloElevacion));
+            
+
+            //devuelvo al lugar
+            matriz.Multiply(Matrix.Translation(pos));
+            
+            return matriz;
+        }
+
+       /* private Matrix crearMatrizTraslacion(Vector3 posicion, Matrix transform)
+        {
+            Matrix traslacion = Matrix.Identity;
+            traslacion.M41 = posicion.X;
+            traslacion.M42 = posicion.Y;
+            traslacion.M43 = posicion.Z;
+            return traslacion;
+        }*/
+
+        /*private Matrix crearMatrizRotacion(float anguloElevacion)
+        {
+            Matrix rotacion = Matrix.Identity;
+            rotacion.M22 = (float)Math.Cos(anguloElevacion);
+            rotacion.M33 = rotacion.M22;
+            rotacion.M23 = (float)Math.Cos(anguloElevacion);
+            rotacion.M32 = -rotacion.M23;
+            return rotacion;
+           
+
+        }*/
+
+        private Vector3 obtenerPosicion(Matrix transform)
+        {
+            return new Vector3(transform.M41, transform.M42, transform.M43);
+        }
     }
 
     /**************************** Timer ****************************************/
@@ -277,6 +324,8 @@ namespace AlumnoEjemplos.CShark
                 activo = false;
             }
         }
+
+       
     }
 
 }
