@@ -17,6 +17,7 @@ namespace AlumnoEjemplos.CShark
     {
         const float ELEVACION_MAX = (float)Math.PI / 3 ;
         const float ELEVACION_MIN = 0f;
+        const float ELEVACION_INICIAL = (float)Math.PI / 12;
         const float FRECUENCIA_TIRO = 0.5f;
         const float VEL_BALA = 500;
         const float G = 100;
@@ -26,7 +27,7 @@ namespace AlumnoEjemplos.CShark
         static TgcD3dInput input = GuiController.Instance.D3dInput;
         public List<Bala> balasEnElAire = new List<Bala>();
         public float anguloRotacion;
-        public float anguloElevacion = (float)Math.PI/4;
+        public float anguloElevacion = ELEVACION_INICIAL;
         public bool elevacion_visible = false;
         public TgcText2d texto_elevacion;
         bool soyPlayer;
@@ -35,8 +36,11 @@ namespace AlumnoEjemplos.CShark
 
         Timer timer;
 
+        public Ship barco;
+
         public Canion(Vector3 pos, float offsetShip, TgcMesh mesh, bool soyPlayer)
         {
+            
             meshCanion = mesh;
             meshCanion.Position = new Vector3(0, offsetShip, 0) + pos;
             posicion = new Vector3(0, offsetShip, 0) + pos;
@@ -218,7 +222,7 @@ namespace AlumnoEjemplos.CShark
            
 
             //matriz.Multiply(crearMatrizRotacion(anguloElevacion));
-            matriz.Multiply(Matrix.RotationX(anguloElevacion));
+            matriz.Multiply(Matrix.RotationAxis(girar90GradosEnXZ(barco.delante),anguloElevacion-ELEVACION_INICIAL));
             
 
             //devuelvo al lugar
@@ -251,6 +255,13 @@ namespace AlumnoEjemplos.CShark
         private Vector3 obtenerPosicion(Matrix transform)
         {
             return new Vector3(transform.M41, transform.M42, transform.M43);
+        }
+
+        private Vector3 girar90GradosEnXZ(Vector3 vector)
+        {
+            Vector3 resultado;
+            resultado = -Vector3.Cross(vector, new Vector3(0, 1, 0));
+            return resultado;
         }
     }
 

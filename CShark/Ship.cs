@@ -45,6 +45,8 @@ namespace AlumnoEjemplos.CShark
         protected TimerFinito timer;
         protected bool visible = true;
 
+        public Vector3 delante = new Vector3(1,0,0);
+
         public Ship(Vector3 pos, TgcMesh mesh, Canion canion)
         {
             Vector3 size = new Vector3(15, 10, 30);
@@ -73,6 +75,7 @@ namespace AlumnoEjemplos.CShark
             AltoBote = Math.Abs(BoundingBoxSize.Y);
 
             this.canion = canion;
+            canion.barco = this;
 
             iniciarBarra();
         }
@@ -114,6 +117,7 @@ namespace AlumnoEjemplos.CShark
             calcularTraslacionYRotacion(elapsedTime, agua, time, lastPosition);
 
             Matrix transformacion = rotacion * traslacion;
+            delante = new Vector3((float)Math.Sin(anguloRotacion), 0, (float)Math.Cos(anguloRotacion));
 
             mesh.Transform = transformacion;
             mesh.BoundingBox.transform(transformacion);
