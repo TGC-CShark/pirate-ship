@@ -47,7 +47,7 @@ namespace AlumnoEjemplos.CShark
             this.canion = canion;
             canion.agregarBalaEnElAire(this);
 
-            sombra = new TgcSphere(RADIO, Color.Black, pos);
+            sombra = new TgcSphere(RADIO, Color.Black, new Vector3(pos.X, EjemploAlumno.Instance.alturaOla(pos), pos.Z));
             sombra.updateValues();
             sombra.AutoTransformEnable = false;
             sombra.Effect = EjemploAlumno.Instance.efectoSombra;
@@ -58,9 +58,9 @@ namespace AlumnoEjemplos.CShark
             salpicadura.Color = Color.LightSkyBlue;
             salpicadura.updateValues();
             salpicadura.AutoTransformEnable = false;
-            salpicadura.Effect = EjemploAlumno.Instance.efectoSombra;
+           /* salpicadura.Effect = EjemploAlumno.Instance.efectoSombra;
             salpicadura.Technique = "SalpicaduraBala";
-
+            */
             this.soyPlayer = soyPlayer;
 
             verticalSpeed = speed * (float)Math.Sin(anguloElevacion);
@@ -76,9 +76,9 @@ namespace AlumnoEjemplos.CShark
             //sombra.Effect.SetValue("posBalaX", posicion.X);
             //sombra.Effect.SetValue("posBalaZ", posicion.Z);
 
-            salpicadura.Effect.SetValue("height", EjemploAlumno.Instance.heightOlas);
+            /*salpicadura.Effect.SetValue("height", EjemploAlumno.Instance.heightOlas);
             salpicadura.Effect.SetValue("time", EjemploAlumno.Instance.time);
-
+            */
             if (sombraActiva)
             {
                 sombra.render();
@@ -99,7 +99,7 @@ namespace AlumnoEjemplos.CShark
 
         internal void dispararParabolico(float elapsedTime)
         {
-            if (posicion.Y >= -50)
+            if (posicion.Y >= -100)
             {
                 float linearSpeed = speed * (float)Math.Cos(anguloElevacion);
 
