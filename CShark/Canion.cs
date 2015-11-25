@@ -269,7 +269,8 @@ namespace AlumnoEjemplos.CShark
             Vector3 boca;
             boca = barco.delante;
             boca.Y = (float)Math.Sin(anguloElevacion);
-            boca.Y += posicion.Y+12;
+            boca += posicion;
+            boca.Y += 12;
             return boca;
         }
     }
