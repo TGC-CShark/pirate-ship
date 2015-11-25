@@ -62,7 +62,7 @@ namespace AlumnoEjemplos.CShark
 
         public void shoot(float elapsedTime, float anguloRotacion, float velBarco)
         {
-            new Bala(posicion, anguloRotacion, anguloElevacion, this, soyPlayer, VEL_BALA, G);
+            new Bala(bocaCanion(), anguloRotacion, anguloElevacion, this, soyPlayer, VEL_BALA, G);
             balasRestantes--;
 
         }
@@ -262,6 +262,15 @@ namespace AlumnoEjemplos.CShark
             Vector3 resultado;
             resultado = -Vector3.Cross(vector, new Vector3(0, 1, 0));
             return resultado;
+        }
+
+        private Vector3 bocaCanion()
+        {
+            Vector3 boca;
+            boca = barco.delante;
+            boca.Y = (float)Math.Sin(anguloElevacion);
+            boca.Y += posicion.Y+12;
+            return boca;
         }
     }
 
