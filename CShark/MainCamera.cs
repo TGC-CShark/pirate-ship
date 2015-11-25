@@ -70,10 +70,18 @@ namespace AlumnoEjemplos.CShark
 
                 }
             }
+            if (apuntando)
+            {
+                camera.RotationY = ship.anguloRotacion;
+            }
             //Solo rotar si se esta aprentando el boton izq del mouse
             if (input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
             {
-                camera.rotateY(-input.XposRelative * ROTATION_SPEED);
+                
+                if(!apuntando)
+                {
+                    camera.rotateY(-input.XposRelative * ROTATION_SPEED);
+                }
             }
 
             if (input.keyDown(Key.LeftShift))
@@ -95,9 +103,10 @@ namespace AlumnoEjemplos.CShark
                 camera.OffsetForward += zoom;
             }
 
-           
-            
-            camera.Target = pos+apuntado;
+
+            Vector3 aux = ship.delante;
+            aux.Y = 0;
+            camera.Target = pos+new Vector3(0,apuntado.Y,0)+(apuntado.Z*aux);
 
 
 
