@@ -6,6 +6,8 @@ using System.Linq;
 using System.Text;
 using TgcViewer;
 using TgcViewer.Utils.TgcGeometry;
+using TgcViewer.Utils.Shaders;
+using TgcViewer.Utils.TgcSceneLoader;
 using Microsoft.DirectX.Direct3D;
 
 namespace AlumnoEjemplos.CShark
@@ -17,6 +19,7 @@ namespace AlumnoEjemplos.CShark
         TgcCylinder salpicadura;
         Vector3 posSalpicadura;
         bool sombraActiva = true;
+        float tiempo;
 
         float speed;
         public float verticalSpeed;
@@ -55,12 +58,14 @@ namespace AlumnoEjemplos.CShark
             //sombra.AlphaBlendEnable = true;
 
             salpicadura = new TgcCylinder(pos, RADIO, 10);
-            salpicadura.Color = Color.LightSkyBlue;
+            salpicadura.Color = Color.White;
+            salpicadura.UseTexture = true;
+            salpicadura.setTexture(TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "4141-diffuse.jpg"));//"el-agua-cae-textura-del-fondo-11558332.jpg"));
             salpicadura.updateValues();
             salpicadura.AutoTransformEnable = false;
-           /* salpicadura.Effect = EjemploAlumno.Instance.efectoSombra;
+            salpicadura.Effect = TgcShaders.loadEffect(GuiController.Instance.AlumnoEjemplosMediaDir + "shader agua.fx");
             salpicadura.Technique = "SalpicaduraBala";
-            */
+            
             this.soyPlayer = soyPlayer;
 
             verticalSpeed = speed * (float)Math.Sin(anguloElevacion);
@@ -76,9 +81,28 @@ namespace AlumnoEjemplos.CShark
             //sombra.Effect.SetValue("posBalaX", posicion.X);
             //sombra.Effect.SetValue("posBalaZ", posicion.Z);
 
-            /*salpicadura.Effect.SetValue("height", EjemploAlumno.Instance.heightOlas);
-            salpicadura.Effect.SetValue("time", EjemploAlumno.Instance.time);
-            */
+            //salpicadura.Effect.SetValue("height", EjemploAlumno.Instance.heightOlas);
+            salpicadura.Effect.SetValue("time", tiempo);//EjemploAlumno.Instance.time);
+            //EjemploAlumno.Instance.cargarEfectoLuz(salpicadura.Effect);
+            if (EjemploAlumno.Instance.lloviendo)
+            {
+                salpicadura.Effect.SetValue("fvLightPosition", TgcParserUtils.vector3ToFloat3Array(EjemploAlumno.Instance.lightMesh.Position));
+                salpicadura.Effect.SetValue("fvEyePosition", TgcParserUtils.vector3ToFloat3Array(GuiController.Instance.ThirdPersonCamera.getPosition()));
+                salpicadura.Effect.SetValue("k_la", 0.3f);
+                salpicadura.Effect.SetValue("k_ld", 0.3f);
+                salpicadura.Effect.SetValue("k_ls", 0f);
+                salpicadura.Effect.SetValue("fSpecularPower", 250);
+            }
+            else
+            {
+                salpicadura.Effect.SetValue("fvLightPosition", TgcParserUtils.vector3ToFloat3Array(EjemploAlumno.Instance.lightMesh.Position));
+                salpicadura.Effect.SetValue("fvEyePosition", TgcParserUtils.vector3ToFloat3Array(GuiController.Instance.ThirdPersonCamera.getPosition()));
+                salpicadura.Effect.SetValue("k_la", 4f);
+                salpicadura.Effect.SetValue("k_ld", 5f);
+                salpicadura.Effect.SetValue("k_ls", 2.5f);
+                salpicadura.Effect.SetValue("fSpecularPower", 60);
+            }
+            
             if (sombraActiva)
             {
                 sombra.render();
@@ -99,7 +123,7 @@ namespace AlumnoEjemplos.CShark
 
         internal void dispararParabolico(float elapsedTime)
         {
-            if (posicion.Y >= -100)
+            if (posicion.Y >= - 150)
             {
                 float linearSpeed = speed * (float)Math.Cos(anguloElevacion);
 
@@ -115,7 +139,6 @@ namespace AlumnoEjemplos.CShark
 
                 Matrix transf = Matrix.Translation(posicion);
                 bullet.Transform = Matrix.Scaling(RADIO * 2, RADIO * 2, RADIO * 2) * transf;
-                //transf.M42 = EjemploAlumno.Instance.alturaOla(posicion);
 
                 if (posicion.Y >= EjemploAlumno.Instance.alturaOla(posicion))
                 {
@@ -128,8 +151,10 @@ namespace AlumnoEjemplos.CShark
                     {
                         posSalpicadura.X = posSombra.X;
                         posSalpicadura.Z = posSombra.Z;
+                        tiempo = 0;
                     }
                     sombraActiva = false;
+                    tiempo += elapsedTime * 5;
                     Matrix transfSalp = Matrix.Translation(posSalpicadura);
                     salpicadura.Transform = Matrix.Scaling(RADIO * 2, 10, RADIO * 2) * transfSalp;
                 }

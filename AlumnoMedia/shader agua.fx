@@ -194,10 +194,10 @@ float4 ps_main( float2 Texcoord: TEXCOORD0, float3 N:TEXCOORD1,
 	// combino color y textura
 	// en este ejemplo combino un 80% el color de la textura y un 20%el del vertice
 	float4 retorno = 0.8*RGBColor + 0.2*Color;
-	retorno.a = alpha;
-	
-	return retorno;
-	//return float4(alpha, alpha, alpha,1);
+
+	//retorno = fvBaseColor;
+	return float4(retorno.r, retorno.g, retorno.b, alpha);
+	//return float4(N,1);
 }
 
 //Pixel Shader para la sombra de la bala
@@ -208,9 +208,38 @@ float4 ps_sombra( float2 Texcoord: TEXCOORD0, float4 Color:COLOR0) : COLOR0
 	return retorno;
 }
 
+VS_OUTPUT vs_salpicadura( VS_INPUT input )
+{	
+	VS_OUTPUT output;
+	
+	//Calculo normal
+	output.Norm = normalize(float3(input.Position.x, 0, input.Position.z));
+	
+	input.Position.xz = output.Norm.xz * time;
+	float altmax = 100;
+	//input.Position.y = altmax * sin(0.005*time);
+
+	//Lo transformo en salida
+	output.Position = mul(input.Position, matWorldViewProj);
+
+	output.Alpha = 0.75;
+	
+	//Propago las coordenadas de textura
+	output.Texcoord = input.Texcoord;
+	//Propago el color x vertice
+	output.Color = input.Color;
+   
+	// Calculo la posicion real (en world space)
+	output.Pos = mul(input.Position, matWorld).xyz;
+
+	return output;
+}
+
 float4 ps_salpicadura( float2 Texcoord: TEXCOORD0, float4 Color:COLOR0) : COLOR0
 {      
-	float4 retorno = float4(0.9,0.9,1,1);
+	float4 fvBaseColor = tex2D( diffuseMap, Texcoord );
+	float4 retorno = 0.8*fvBaseColor + 0.2*Color;//float4(0.2,0.7,0.9,0.2);
+	retorno.a = 0.5;
 	return retorno;
 }
 
@@ -244,7 +273,7 @@ technique SalpicaduraBala{
 	AlphaBlendEnable = TRUE;
         DestBlend = INVSRCALPHA;
         SrcBlend = SRCALPHA;
-	  //VertexShader = compile vs_3_0 vs_main();
-	  PixelShader = compile ps_2_0 ps_salpicadura();
+	  VertexShader = compile vs_2_0 vs_salpicadura();
+	  PixelShader = compile ps_2_0 ps_main();
 	}
 }

@@ -211,6 +211,14 @@ namespace AlumnoEjemplos.CShark
             terrainTexture = Texture.FromBitmap(d3dDevice, b, Usage.None, Pool.Managed);
         }
 
+        // Utilidad para convertir directorios de texturas en texturas
+        public static Texture toTexture(string path)
+        {
+            TerrenoSimple conversor = new TerrenoSimple();
+            conversor.loadTexture(path);
+            return conversor.terrainTexture;
+        }
+
 
 
 

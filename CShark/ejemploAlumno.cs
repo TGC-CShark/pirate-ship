@@ -315,23 +315,19 @@ namespace AlumnoEjemplos.CShark
             skyBox.render();
             //skyBoundingBox.render();
 
-            // Convertir el path del heightmap en una textura para poder pasárselo al shader del agua
-            TerrenoSimple conversor = new TerrenoSimple();
-            conversor.loadTexture(currentHeightmap);
-
             // Cargar variables de shader, por ejemplo el tiempo transcurrido.
             effect.SetValue("time", time);
             effect.SetValue("height", heightOlas);
             effect.SetValue("menorAltura", terrain.menorVerticeEnY);
             effect.SetValue("offset", (float)(terrain.Center.Y * currentScaleY));
-            effect.SetValue("texHeightmap", conversor.terrainTexture);
+            effect.SetValue("texHeightmap", TerrenoSimple.toTexture(currentHeightmap));
             //GuiController.Instance.Logger.log("OFFSET: " + (terrain.Center.Y * currentScaleY).ToString() + "MENOR ALTURA: " + terrain.menorVerticeEnY);
 
             efectoSombra.SetValue("time", time);
             efectoSombra.SetValue("height", heightOlas);
             efectoSombra.SetValue("menorAltura", terrain.menorVerticeEnY);
             efectoSombra.SetValue("offset", (float)(terrain.Center.Y * currentScaleY));
-            efectoSombra.SetValue("texHeightmap", conversor.terrainTexture);
+            efectoSombra.SetValue("texHeightmap", TerrenoSimple.toTexture(currentHeightmap));
 
             agua.heightOlas = heightOlas;
             agua.AlphaBlendEnable = true;
@@ -351,19 +347,35 @@ namespace AlumnoEjemplos.CShark
             
         }
 
-        public Vector3 luzAguaSoleado(TgcBox lightMesh)
-        {
+        public void cargarEfectoLuz(Effect efecto){
             Vector3 posLuz = lightMesh.Position;
 
+            if (lloviendo)
+            {
+                efecto.SetValue("fvLightPosition", TgcParserUtils.vector3ToFloat3Array(posLuz));
+                efecto.SetValue("fvEyePosition", TgcParserUtils.vector3ToFloat3Array(GuiController.Instance.ThirdPersonCamera.getPosition()));
+                efecto.SetValue("k_la", 0.3f);
+                efecto.SetValue("k_ld", 0.3f);
+                efecto.SetValue("k_ls", 0f);
+                efecto.SetValue("fSpecularPower", 250);
+            }
+            else
+            {
+                efecto.SetValue("fvLightPosition", TgcParserUtils.vector3ToFloat3Array(posLuz));
+                efecto.SetValue("fvEyePosition", TgcParserUtils.vector3ToFloat3Array(GuiController.Instance.ThirdPersonCamera.getPosition()));
+                efecto.SetValue("k_la", 4f);
+                efecto.SetValue("k_ld", 5f);
+                efecto.SetValue("k_ls", 2.5f);
+                efecto.SetValue("fSpecularPower", 60);
+            }
+        }
+
+        public void luzAguaSoleado(TgcBox lightMesh)
+        {
             luzSoleado(lightMesh);
 
-            effect.SetValue("fvLightPosition", TgcParserUtils.vector3ToFloat3Array(posLuz));
-            effect.SetValue("fvEyePosition", TgcParserUtils.vector3ToFloat3Array(GuiController.Instance.ThirdPersonCamera.getPosition()));
-            effect.SetValue("k_la", 4f);
-            effect.SetValue("k_ld", 5f);
-            effect.SetValue("k_ls", 2.5f);
-            effect.SetValue("fSpecularPower", 60);
-            return posLuz;
+            cargarEfectoLuz(this.effect);
+            //return posLuz;
         }
 
         public void luzSoleado(TgcBox lightMesh)
@@ -372,19 +384,12 @@ namespace AlumnoEjemplos.CShark
             lightMesh.Color = Color.Yellow;
         }
 
-        public Vector3 luzAguaTormentoso(TgcBox lightMesh)
-        {
-            Vector3 posLuz = lightMesh.Position;
-                
+        public void luzAguaTormentoso(TgcBox lightMesh)
+        {             
             luzTormentoso(lightMesh);
 
-            effect.SetValue("fvLightPosition", TgcParserUtils.vector3ToFloat3Array(posLuz));
-            effect.SetValue("fvEyePosition", TgcParserUtils.vector3ToFloat3Array(GuiController.Instance.ThirdPersonCamera.getPosition()));
-            effect.SetValue("k_la", 0.3f);
-            effect.SetValue("k_ld", 0.3f);
-            effect.SetValue("k_ls", 0f);
-            effect.SetValue("fSpecularPower", 250);
-            return posLuz;
+            cargarEfectoLuz(this.effect);
+            //return posLuz;
         }
 
         public void luzTormentoso(TgcBox lightMesh)
